@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+:root {
+  --paper: #f6f3ec;
+  --paper-raised: #efeade;
+  --pine: #1f2e27;
+  --moss: #3c6e52;
+  --moss-dark: #2a4d3a;
+  --clay: #b5652b;
+  --clay-dark: #8f4e20;
+  --brass: #c9a227;
+  --stone: #7a7568;
+  --stone-light: #a8a396;
+  --border-line: #ddd6c4;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-pine: var(--pine);
+  --color-moss: var(--moss);
+  --color-moss-dark: var(--moss-dark);
+  --color-clay: var(--clay);
+  --color-clay-dark: var(--clay-dark);
+  --color-brass: var(--brass);
+  --color-stone: var(--stone);
+  --color-stone-light: var(--stone-light);
+  --color-border-line: var(--border-line);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--paper);
+  color: var(--pine);
+}
+
+.ticket-edge {
+  position: relative;
+}
+
+.ticket-edge::before,
+.ticket-edge::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  background: var(--paper);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.ticket-edge::before {
+  left: -7px;
+}
+
+.ticket-edge::after {
+  right: -7px;
+}
+
+.route-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.route-line::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
