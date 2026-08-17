@@ -43,12 +43,16 @@
 import { XMLParser } from "fast-xml-parser";
 import { JSDOM } from "jsdom";
 import { Readability } from "@mozilla/readability";
+import DOMPurify from "dompurify";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 import fs from "node:fs/promises";
 import path from "node:path";
 
 dotenv.config({ path: ".env.local" });
+
+const purifyWindow = new JSDOM("").window;
+const purify = DOMPurify(purifyWindow);
 
 const SITE = "https://www.realtravelguides.com";
 const RSS_URL = `${SITE}/blog-feed.xml`;
@@ -178,6 +182,18 @@ function getCategoryLinksFromPage(document) {
   return Array.from(slugs);
 }
 
+// Wix typically repeats the post's featured image as the first image inside
+// the article body — but our page already shows that same image separately
+// as the cover, above the body. Strip just that first image so it isn't
+// duplicated.
+function stripLeadImage(document) {
+  const firstImg = document.querySelector("img");
+  if (firstImg) {
+    const figure = firstImg.closest("figure");
+    (figure ?? firstImg).remove();
+  }
+}
+
 async function fetchAndParsePage(postUrl) {
   const res = await fetch(postUrl);
   if (!res.ok) throw new Error(`Post page fetch failed (${res.status}): ${postUrl}`);
@@ -189,7 +205,18 @@ async function fetchAndParsePage(postUrl) {
   const article = reader.parse();
   if (!article) throw new Error(`Readability could not parse: ${postUrl}`);
 
+  const contentDom = new JSDOM(`<body>${article.content}</body>`);
+  stripLeadImage(contentDom.window.document);
+  const bodyHtml = purify.sanitize(contentDom.window.document.body.innerHTML, {
+    ALLOWED_TAGS: [
+      "p", "h2", "h3", "h4", "ul", "ol", "li", "blockquote", "strong", "em",
+      "a", "img", "figure", "figcaption", "br", "hr",
+    ],
+    ALLOWED_ATTR: ["href", "src", "alt", "title"],
+  });
+
   return {
+    bodyHtml,
     text: article.textContent.trim(),
     ogTitle: getMetaContent(document, "og:title"),
     ogImage: getMetaContent(document, "og:image"),
@@ -321,12 +348,12 @@ async function main() {
         categories,
         read_minutes: estimateReadMinutes(page.text),
         published_at,
-        body: page.text,
+        body: page.bodyHtml,
       };
 
       if (DRY_RUN) {
         console.log(
-          JSON.stringify({ ...record, body: record.body.slice(0, 120) + "..." }, null, 2)
+          JSON.stringify({ ...record, body: record.body.slice(0, 200) + "..." }, null, 2)
         );
       } else {
         const { error } = await supabase.from("posts").upsert(record);

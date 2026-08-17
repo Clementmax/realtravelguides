@@ -59,12 +59,12 @@ export default async function PostPage({
         <Image src={post.cover} alt={post.title} fill className="object-cover" />
       </div>
 
-      <div className="prose prose-stone mt-10 max-w-none text-sm leading-relaxed text-pine">
-        {post.body.split("\n\n").map((para, i) => (
-          <p key={i} className="mb-4">
-            {para}
-          </p>
-        ))}
+      <div className="post-content mt-10">
+        {/\<[a-z][\s\S]*>/i.test(post.body) ? (
+          <div dangerouslySetInnerHTML={{ __html: post.body }} />
+        ) : (
+          post.body.split("\n\n").map((para, i) => <p key={i}>{para}</p>)
+        )}
       </div>
 
       <div className="mt-16">
