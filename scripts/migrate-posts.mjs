@@ -36,6 +36,8 @@
  * Usage:
  *   node scripts/migrate-posts.mjs --limit=5 --dry-run   # test on 5 posts first
  *   node scripts/migrate-posts.mjs                       # full run, all posts
+ *   node scripts/migrate-posts.mjs --slug=some-post-slug --dry-run   # debug one post
+ *   node scripts/migrate-posts.mjs --slug=slug-a --slug=slug-b       # re-run just these
  */
 
 import { XMLParser } from "fast-xml-parser";
@@ -57,6 +59,9 @@ const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");
 const limitArg = args.find((a) => a.startsWith("--limit="));
 const LIMIT = limitArg ? parseInt(limitArg.split("=")[1], 10) : Infinity;
+const slugArgs = args
+  .filter((a) => a.startsWith("--slug="))
+  .map((a) => a.slice("--slug=".length));
 
 const xmlParser = new XMLParser({ ignoreAttributes: false });
 
@@ -237,7 +242,14 @@ async function main() {
       process.env.SUPABASE_SERVICE_ROLE_KEY
     );
 
-  const slugs = Array.from(allSlugs).slice(0, LIMIT);
+  const slugs = slugArgs.length > 0
+    ? slugArgs.filter((s) => allSlugs.has(s))
+    : Array.from(allSlugs).slice(0, LIMIT);
+
+  if (slugArgs.length > 0 && slugs.length === 0) {
+    console.error("None of the --slug values were found in the sitemap. Check for typos.");
+    process.exit(1);
+  }
   let ok = 0;
   const failed = [];
   const needsCategoryReview = [];
