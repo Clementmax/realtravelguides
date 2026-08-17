@@ -1,6 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getBooks, getPosts, getAuthors, getCategoryLabelMap } from "@/lib/queries";
+
+// Re-checks Supabase for fresh content every 60 seconds, rather than only
+// at deploy time — otherwise edits made directly in Supabase (books,
+// posts, categories) wouldn't appear on the live site until the next push.
+export const revalidate = 60;
 import BookCard from "@/components/BookCard";
 import PostCard from "@/components/PostCard";
 import DestinationCard from "@/components/DestinationCard";
@@ -37,7 +42,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative flex h-[85vh] min-h-[560px] items-end overflow-hidden">
+      <section className="relative flex h-[60vh] max-h-[560px] min-h-[420px] items-end overflow-hidden">
         <Image
           src="/images/hero.jpg"
           alt="Scenic European rail journey"

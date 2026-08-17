@@ -4,6 +4,8 @@ import { getPosts, getCategories, getCategoryLabelMap } from "@/lib/queries";
 import PostCard from "@/components/PostCard";
 import Newsletter from "@/components/Newsletter";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Journeys by Rail",
   description:

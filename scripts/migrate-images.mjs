@@ -16,6 +16,10 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 const IMAGES = [
+  // Note: logo.png is NOT downloaded here — it's the real high-res logo
+  // shipped directly in the repo at public/images/logo.png. Don't add a
+  // Wix-sourced entry for it here, or a re-run would overwrite it with the
+  // old site's low-res 65x75 icon version.
   {
     url: "https://static.wixstatic.com/media/fef05b_b18df15a486f4ba2a9fc37db6e3bd998~mv2.jpg",
     dest: "public/images/hero.jpg",

@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import { getBooks, getAuthors } from "@/lib/queries";
 import Newsletter from "@/components/Newsletter";
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Books",
   description:

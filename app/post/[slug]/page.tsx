@@ -5,6 +5,8 @@ import { Metadata } from "next";
 import { getPost, getPosts, getCategoryLabelMap } from "@/lib/queries";
 import Newsletter from "@/components/Newsletter";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const posts = await getPosts();
   return posts.map((p) => ({ slug: p.slug }));
