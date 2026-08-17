@@ -2,7 +2,23 @@ import { supabase } from "@/lib/supabase";
 import { authors as seedAuthors } from "@/lib/seed-data/authors";
 import { books as seedBooks } from "@/lib/seed-data/books";
 import { posts as seedPosts } from "@/lib/seed-data/posts";
-import { Author, Book, Post } from "@/lib/types";
+import { categories as seedCategories } from "@/lib/seed-data/categories";
+import { Author, Book, Post, CategoryRecord } from "@/lib/types";
+
+export async function getCategories(): Promise<CategoryRecord[]> {
+  if (!supabase) return seedCategories;
+  const { data, error } = await supabase
+    .from("categories")
+    .select("*")
+    .order("label");
+  if (error || !data || data.length === 0) return seedCategories;
+  return data as CategoryRecord[];
+}
+
+export async function getCategoryLabelMap(): Promise<Record<string, string>> {
+  const list = await getCategories();
+  return Object.fromEntries(list.map((c) => [c.slug, c.label]));
+}
 
 export async function getAuthors(): Promise<Author[]> {
   if (!supabase) return seedAuthors;
@@ -50,5 +66,5 @@ export async function getPost(slug: string): Promise<Post | undefined> {
 
 export async function getPostsByCategory(category: string): Promise<Post[]> {
   const list = await getPosts();
-  return list.filter((p) => p.category === category);
+  return list.filter((p) => p.categories.includes(category));
 }

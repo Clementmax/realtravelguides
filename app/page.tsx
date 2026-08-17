@@ -1,129 +1,269 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getBooks, getPosts } from "@/lib/queries";
+import { getBooks, getPosts, getAuthors, getCategoryLabelMap } from "@/lib/queries";
 import BookCard from "@/components/BookCard";
 import PostCard from "@/components/PostCard";
+import DestinationCard from "@/components/DestinationCard";
+import JourneyCard from "@/components/JourneyCard";
+import AuthorCard from "@/components/AuthorCard";
 import Newsletter from "@/components/Newsletter";
 
+// The four countries the guides cover — shown as "Featured Destinations".
+// This is intentionally separate from the full (dynamic) category list,
+// since topic tags like "Food & Drink" or "Culture" aren't destinations.
+const FEATURED_DESTINATIONS = [
+  { slug: "italy", label: "Italy" },
+  { slug: "france", label: "France" },
+  { slug: "switzerland", label: "Switzerland" },
+  { slug: "spain", label: "Spain" },
+];
+
 export default async function HomePage() {
-  const [books, posts] = await Promise.all([getBooks(), getPosts()]);
-  const latestPosts = posts.slice(0, 3);
+  const [books, posts, authors, categoryLabels] = await Promise.all([
+    getBooks(),
+    getPosts(),
+    getAuthors(),
+    getCategoryLabelMap(),
+  ]);
+
+  const journeyPosts = posts.slice(0, 6);
+  const storyPosts = posts.slice(0, 3);
+
+  // Destination images borrow the cover of that region's first post until
+  // dedicated destination photography is migrated (see MIGRATION.md).
+  const destinationImage = (slug: string) =>
+    posts.find((p) => p.categories.includes(slug))?.cover ?? "/images/hero.jpg";
 
   return (
-    <div className="mx-auto max-w-5xl px-6">
+    <div>
       {/* Hero */}
-      <section className="grid gap-10 py-16 md:grid-cols-2 md:items-center md:py-24">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-clay-dark">
-            Slow · Sustainable · Self-guided
+      <section className="relative flex h-[85vh] min-h-[560px] items-end overflow-hidden">
+        <Image
+          src="/images/hero.jpg"
+          alt="Scenic European rail journey"
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-ink/10" />
+        <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-16">
+          <p className="eyebrow text-paper/70">
+            Slow travel across Europe by rail
           </p>
-          <h1 className="mt-4 font-display text-4xl font-semibold leading-tight text-pine md:text-5xl">
-            Discover Europe the way it was meant to be seen — by rail
+          <h1 className="mt-4 max-w-2xl font-display text-4xl font-semibold leading-tight text-paper md:text-6xl">
+            Travel Europe <span className="accent-italic">independently</span>{" "}
+            with confidence
           </h1>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-stone">
-            Independent, low-impact travel guides for people who&apos;d
-            rather wander a hill town than sit on a coach tour. No organized
-            tours, no rigid schedules — just practical advice from local
-            experts.
+          <p className="mt-5 max-w-md text-base leading-relaxed text-paper/75">
+            Discover authentic rail journeys, insider knowledge, and
+            practical travel guides written by local experts.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/books"
-              className="rounded-md bg-moss px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-moss-dark"
+              className="rounded-md bg-paper px-6 py-3 text-sm font-medium text-ink transition-colors hover:bg-paper-raised"
             >
-              Explore the guides
+              Explore our guides
             </Link>
             <Link
               href="/journeysbyrail"
-              className="rounded-md border border-border-line px-6 py-3 text-sm font-medium text-pine transition-colors hover:bg-paper-raised"
+              className="rounded-md border border-paper/40 px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-paper/10"
             >
-              Read the blog
+              Read the journal
             </Link>
           </div>
         </div>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border-line">
-          <Image
-            src="/images/hero.jpg"
-            alt="Scenic European rail journey"
-            fill
-            priority
-            className="object-cover"
-          />
-        </div>
       </section>
 
-      {/* Why us */}
-      <section className="grid gap-8 border-t border-border-line py-16 md:grid-cols-3">
-        <div>
-          <p className="font-display text-lg font-semibold text-pine">
-            Independent self-guided travel
+      <div className="mx-auto max-w-5xl px-6">
+        {/* Featured guides */}
+        <section className="py-16 md:py-24">
+          <p className="eyebrow text-clay-dark">The library of discovery</p>
+          <div className="mt-3 flex items-baseline justify-between">
+            <h2 className="font-display text-3xl font-semibold text-pine">
+              Featured travel guides
+            </h2>
+            <Link href="/books" className="hidden text-sm text-moss hover:underline md:block">
+              View all guides
+            </Link>
+          </div>
+          <p className="mt-2 max-w-lg text-sm text-stone">
+            Four essential companions, each researched on the ground, written
+            by our authors, and refined over years of independent travel.
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-stone">
-            Clear, step-by-step itineraries you can customise or combine, with
-            maps, journey times, and money-saving tips for every trip.
-          </p>
-        </div>
-        <div>
-          <p className="font-display text-lg font-semibold text-pine">
-            Local insight, real expertise
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-stone">
-            Written with on-the-ground contributors who live the culture
-            every day — honest advice on food, customs, safety, and hidden
-            gems.
-          </p>
-        </div>
-        <div>
-          <p className="font-display text-lg font-semibold text-pine">
-            Slow, responsible exploration
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-stone">
-            Travel by rail and other low-impact transport, visiting
-            lesser-known towns and coastal getaways while respecting local
-            communities.
-          </p>
-        </div>
-      </section>
+          <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">
+            {books.map((book) => (
+              <BookCard key={book.slug} book={book} />
+            ))}
+          </div>
+        </section>
+      </div>
 
-      {/* Books */}
-      <section className="border-t border-border-line py-16">
-        <div className="flex items-baseline justify-between">
-          <h2 className="font-display text-2xl font-semibold text-pine">
-            Our guides
+      {/* Expertise — dark section */}
+      <section className="bg-ink py-16 md:py-24">
+        <div className="mx-auto max-w-5xl px-6">
+          <p className="eyebrow text-paper/50">Why Real Travel Guides</p>
+          <h2 className="mt-3 max-w-lg font-display text-3xl font-semibold leading-tight text-paper">
+            Expertise behind every guide
           </h2>
-          <Link href="/books" className="text-sm text-moss hover:underline">
-            View all
-          </Link>
-        </div>
-        <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
-          {books.map((book) => (
-            <BookCard key={book.slug} book={book} />
-          ))}
+          <p className="mt-3 max-w-lg text-sm text-paper/60">
+            We do the slow, difficult work of independent travel so you can
+            arrive with quiet confidence and a sense of discovery intact.
+          </p>
+          <div className="mt-10 grid gap-x-8 gap-y-8 rounded-md border border-ink-border bg-ink-raised p-8 sm:grid-cols-2 md:grid-cols-3">
+            {[
+              {
+                title: "Independent travel experts",
+                body: "Decades of experience across Europe's rails, distilled into itineraries that respect your time, budget, and curiosity.",
+              },
+              {
+                title: "Local insider knowledge",
+                body: "Quiet corners, family-run gems, and bakeries locals actually visit, never the tourist trail.",
+              },
+              {
+                title: "Step-by-step rail itineraries",
+                body: "Timetables, platform and connection logic worked in person, so you travel with quiet confidence.",
+              },
+              {
+                title: "Budget-friendly advice",
+                body: "Rail passes, off-peak windows, and fare tricks that quietly halve the cost of seeing more.",
+              },
+              {
+                title: "Sustainable travel",
+                body: "Rail-first journeys that travel lightly, each route shown against the equivalent flight.",
+              },
+              {
+                title: "Hidden gems",
+                body: "The frescoed chapel, the lakeside trail — the places that make a journey unforgettable.",
+              },
+            ].map((f) => (
+              <div key={f.title}>
+                <p className="font-display text-base font-semibold text-paper">
+                  {f.title}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-paper/60">
+                  {f.body}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Blog */}
-      <section className="border-t border-border-line py-16">
-        <div className="flex items-baseline justify-between">
-          <h2 className="font-display text-2xl font-semibold text-pine">
-            Latest from journeys by rail
+      <div className="mx-auto max-w-5xl px-6">
+        {/* Popular rail journeys */}
+        <section className="py-16 md:py-24">
+          <p className="eyebrow text-clay-dark">Route chronology</p>
+          <div className="mt-3 flex items-baseline justify-between">
+            <h2 className="font-display text-3xl font-semibold text-pine">
+              Popular rail journeys
+            </h2>
+            <Link
+              href="/journeysbyrail"
+              className="hidden text-sm text-moss hover:underline md:block"
+            >
+              View all journeys
+            </Link>
+          </div>
+          <p className="mt-2 max-w-lg text-sm text-stone">
+            Hand-picked scenic routes across the continent, each mapped,
+            timed, and travelled by our authors.
+          </p>
+          <div className="mt-10 -mx-6 flex gap-6 overflow-x-auto px-6 pb-4 [scrollbar-width:thin]">
+            {journeyPosts.map((post) => (
+              <JourneyCard
+                key={post.slug}
+                post={post}
+                categoryLabel={categoryLabels[post.categories[0]]}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Featured destinations */}
+        <section className="border-t border-border-line py-16 md:py-24">
+          <p className="eyebrow text-clay-dark">Where we&apos;ll take you</p>
+          <h2 className="mt-3 font-display text-3xl font-semibold text-pine">
+            Featured destinations
           </h2>
-          <Link
-            href="/journeysbyrail"
-            className="text-sm text-moss hover:underline"
-          >
-            View all
-          </Link>
-        </div>
-        <div className="mt-8 grid gap-8 md:grid-cols-3">
-          {latestPosts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
+          <p className="mt-2 max-w-lg text-sm text-stone">
+            Four countries, countless rail trails. Explore each region&apos;s
+            guides and stories.
+          </p>
+          <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
+            {FEATURED_DESTINATIONS.map((d) => (
+              <DestinationCard
+                key={d.slug}
+                slug={d.slug}
+                label={d.label}
+                image={destinationImage(d.slug)}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Stories */}
+        <section className="border-t border-border-line py-16 md:py-24">
+          <p className="eyebrow text-clay-dark">Travel inspiration</p>
+          <div className="mt-3 flex items-baseline justify-between">
+            <h2 className="font-display text-3xl font-semibold text-pine">
+              Stories from the slow road
+            </h2>
+            <Link
+              href="/journeysbyrail"
+              className="hidden text-sm text-moss hover:underline md:block"
+            >
+              Read the journal
+            </Link>
+          </div>
+          <div className="mt-10 grid gap-10 sm:grid-cols-2 md:grid-cols-3">
+            {storyPosts.map((post) => (
+              <PostCard
+                key={post.slug}
+                post={post}
+                categoryLabel={categoryLabels[post.categories[0]]}
+              />
+            ))}
+          </div>
+        </section>
+      </div>
+
+      {/* Authors — dark section */}
+      <section className="bg-ink py-16 md:py-24">
+        <div className="mx-auto max-w-5xl px-6">
+          <p className="eyebrow text-paper/50">Authorship &amp; presence</p>
+          <h2 className="mt-3 font-display text-3xl font-semibold text-paper">
+            Meet the authors
+          </h2>
+          <p className="mt-2 max-w-lg text-sm text-paper/60">
+            Every guide is written and walked by people who&apos;ve given
+            their lives to independent European travel.
+          </p>
+          <div className="mt-10 grid max-w-lg grid-cols-2 gap-8">
+            {authors.map((author) => (
+              <AuthorCard key={author.slug} author={author} />
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="border-t border-border-line py-16">
-        <Newsletter />
+      {/* Newsletter CTA — dark section */}
+      <section className="bg-ink-raised py-16 md:py-24">
+        <div className="mx-auto max-w-2xl px-6 text-center">
+          <p className="eyebrow justify-center text-paper/50">
+            Stay in the loop
+          </p>
+          <h2 className="mt-3 font-display text-3xl font-semibold text-paper">
+            Keep abreast of new guides &amp; stories
+          </h2>
+          <p className="mt-2 text-sm text-paper/60">
+            New routes, honest travel notes, and the occasional discount on
+            our guides — no spam, unsubscribe whenever.
+          </p>
+          <div className="mt-8">
+            <Newsletter variant="dark" />
+          </div>
+        </div>
       </section>
     </div>
   );

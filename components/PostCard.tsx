@@ -1,10 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Post, CATEGORY_LABELS, Category } from "@/lib/types";
+import { Post } from "@/lib/types";
 
-export default function PostCard({ post }: { post: Post }) {
-  const categoryLabel =
-    CATEGORY_LABELS[post.category as Category] ?? post.category;
+export default function PostCard({
+  post,
+  categoryLabel,
+}: {
+  post: Post;
+  categoryLabel?: string;
+}) {
+  const label = categoryLabel ?? post.categories[0];
 
   return (
     <Link href={`/post/${post.slug}`} className="group block">
@@ -18,7 +23,8 @@ export default function PostCard({ post }: { post: Post }) {
       </div>
       <div className="mt-3">
         <div className="route-line text-xs font-medium uppercase tracking-wide text-clay-dark">
-          {categoryLabel}
+          {label}
+          {post.categories.length > 1 && ` +${post.categories.length - 1}`}
         </div>
         <h3 className="mt-1 font-display text-base font-semibold leading-snug text-pine">
           {post.title}

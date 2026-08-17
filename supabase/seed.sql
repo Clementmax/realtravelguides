@@ -4,6 +4,22 @@
 -- changes needed. Image paths below assume you've uploaded covers/photos to
 -- Supabase Storage and updated the URLs (see MIGRATION.md, step 3).
 
+-- Categories are just rows in a table now — to add a new one later (say,
+-- "Hiking"), insert it here or via the Supabase Table Editor:
+--   insert into categories (slug, label) values ('hiking', 'Hiking');
+-- It'll automatically appear in the nav filters and get its own page at
+-- /journeysbyrail/categories/hiking — no code change needed.
+insert into categories (slug, label) values
+('switzerland', 'Switzerland'),
+('france', 'France'),
+('italy', 'Italy'),
+('spain', 'Spain'),
+('fooddrink', 'Food & Drink'),
+('culture', 'Culture'),
+('scenicroutes', 'Scenic Routes'),
+('hiddenplaces', 'Hidden Places')
+on conflict (slug) do nothing;
+
 insert into authors (slug, name, photo, short_bio, full_bio, contact_email) values
 ('elenarossetti', 'Elena Rossetti', '/images/authors/elena-rossetti.jpg',
  'Elena Rossetti is the author of Touring Italy by Train and Touring Switzerland by Train.',
@@ -49,11 +65,11 @@ on conflict (slug) do nothing;
 -- Posts: metadata only — paste the full `body` text from Wix for each post
 -- (see MIGRATION.md). Slugs match the live Wix URLs exactly so no redirects
 -- are needed.
-insert into posts (slug, title, excerpt, cover, category, read_minutes, published_at, body) values
-('madrid-to-siguenza-by-train-a-medieval-escape-into-the-heart-of-castile', 'Madrid to Sigüenza by Train: A Medieval Escape into the Heart of Castile', 'A day trip from Madrid into one of Castile''s best-kept medieval secrets, reachable entirely by rail.', '/images/posts/siguenza.jpg', 'spain', 7, '2025-01-01', '[Paste full post body here]'),
-('around-mount-etna-by-train-sicily-s-most-extraordinary-railway-journey', 'Around Mount Etna by Train: Sicily''s Most Extraordinary Railway Journey', 'Circling an active volcano on one of Europe''s most unusual narrow-gauge railways.', '/images/posts/mount-etna.jpg', 'italy', 5, '2025-01-01', '[Paste full post body here]'),
-('lucerne-to-st-gallen-on-the-voralpen-express-switzerland-beyond-the-high-alps', 'Lucerne to St Gallen on the Voralpen-Express: Switzerland Beyond the High Alps', 'A gentler side of Switzerland''s rail network, away from the famous high-alpine panoramic routes.', '/images/posts/st-gallen.jpg', 'switzerland', 6, '2025-01-01', '[Paste full post body here]'),
-('bellinzona-to-lucerne-across-switzerland-on-the-historic-gotthard-route', 'Bellinzona to Lucerne: Across Switzerland on the Historic Gotthard Route', 'Tracing one of the great historic rail crossings of the Alps.', '/images/posts/bellinzona.jpg', 'scenicroutes', 6, '2025-01-01', '[Paste full post body here]'),
-('train-des-pignes-discover-provence-s-hidden-railway-from-nice-to-digne-les-bains', 'Train des Pignes: Discover Provence''s Hidden Railway from Nice to Digne-les-Bains', 'A narrow-gauge line into Provence''s lavender-scented back country.', '/images/posts/digne-les-bains.jpg', 'france', 4, '2025-01-01', '[Paste full post body here]'),
-('marseille-to-ventimiglia-by-train-one-of-europe-s-most-beautiful-coastal-rail-journeys', 'Marseille to Ventimiglia by Train: One of Europe''s Most Beautiful Coastal Rail Journeys', 'Hugging the Mediterranean from Marseille through the French Riviera and across the Italian border.', '/images/posts/menton.jpg', 'france', 4, '2025-01-01', '[Paste full post body here]')
+insert into posts (slug, title, excerpt, cover, categories, read_minutes, published_at, body) values
+('madrid-to-siguenza-by-train-a-medieval-escape-into-the-heart-of-castile', 'Madrid to Sigüenza by Train: A Medieval Escape into the Heart of Castile', 'A day trip from Madrid into one of Castile''s best-kept medieval secrets, reachable entirely by rail.', '/images/posts/siguenza.jpg', ARRAY['spain'], 7, '2025-01-01', '[Paste full post body here]'),
+('around-mount-etna-by-train-sicily-s-most-extraordinary-railway-journey', 'Around Mount Etna by Train: Sicily''s Most Extraordinary Railway Journey', 'Circling an active volcano on one of Europe''s most unusual narrow-gauge railways.', '/images/posts/mount-etna.jpg', ARRAY['italy'], 5, '2025-01-01', '[Paste full post body here]'),
+('lucerne-to-st-gallen-on-the-voralpen-express-switzerland-beyond-the-high-alps', 'Lucerne to St Gallen on the Voralpen-Express: Switzerland Beyond the High Alps', 'A gentler side of Switzerland''s rail network, away from the famous high-alpine panoramic routes.', '/images/posts/st-gallen.jpg', ARRAY['switzerland'], 6, '2025-01-01', '[Paste full post body here]'),
+('bellinzona-to-lucerne-across-switzerland-on-the-historic-gotthard-route', 'Bellinzona to Lucerne: Across Switzerland on the Historic Gotthard Route', 'Tracing one of the great historic rail crossings of the Alps.', '/images/posts/bellinzona.jpg', ARRAY['scenicroutes'], 6, '2025-01-01', '[Paste full post body here]'),
+('train-des-pignes-discover-provence-s-hidden-railway-from-nice-to-digne-les-bains', 'Train des Pignes: Discover Provence''s Hidden Railway from Nice to Digne-les-Bains', 'A narrow-gauge line into Provence''s lavender-scented back country.', '/images/posts/digne-les-bains.jpg', ARRAY['france'], 4, '2025-01-01', '[Paste full post body here]'),
+('marseille-to-ventimiglia-by-train-one-of-europe-s-most-beautiful-coastal-rail-journeys', 'Marseille to Ventimiglia by Train: One of Europe''s Most Beautiful Coastal Rail Journeys', 'Hugging the Mediterranean from Marseille through the French Riviera and across the Italian border.', '/images/posts/menton.jpg', ARRAY['france'], 4, '2025-01-01', '[Paste full post body here]')
 on conflict (slug) do nothing;

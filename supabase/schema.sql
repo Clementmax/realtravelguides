@@ -21,12 +21,17 @@ create table if not exists books (
   amazon_url text not null
 );
 
+create table if not exists categories (
+  slug text primary key,
+  label text not null
+);
+
 create table if not exists posts (
   slug text primary key,
   title text not null,
   excerpt text not null,
   cover text not null,
-  category text not null,
+  categories text[] not null,
   read_minutes int not null default 5,
   published_at date not null default current_date,
   body text not null
@@ -41,11 +46,13 @@ create table if not exists subscribers (
 -- Row-level security: content tables are public-readable (this is a public
 -- website), writes happen only via the Supabase dashboard or service-role
 -- key, never from the browser.
+alter table categories enable row level security;
 alter table authors enable row level security;
 alter table books enable row level security;
 alter table posts enable row level security;
 alter table subscribers enable row level security;
 
+create policy "Public read access" on categories for select using (true);
 create policy "Public read access" on authors for select using (true);
 create policy "Public read access" on books for select using (true);
 create policy "Public read access" on posts for select using (true);

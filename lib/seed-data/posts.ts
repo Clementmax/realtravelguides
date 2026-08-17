@@ -10,7 +10,7 @@ export const posts: Post[] = [
     excerpt:
       "A day trip from Madrid into one of Castile's best-kept medieval secrets, reachable entirely by rail.",
     cover: "/images/posts/siguenza.jpg",
-    category: "spain",
+    categories: ["spain"],
     read_minutes: 7,
     published_at: "2025-01-01",
     body: "[Full post body to be migrated from Wix — see MIGRATION.md]",
@@ -21,7 +21,7 @@ export const posts: Post[] = [
     excerpt:
       "Circling an active volcano on one of Europe's most unusual narrow-gauge railways.",
     cover: "/images/posts/mount-etna.jpg",
-    category: "italy",
+    categories: ["italy"],
     read_minutes: 5,
     published_at: "2025-01-01",
     body: "[Full post body to be migrated from Wix — see MIGRATION.md]",
@@ -32,7 +32,7 @@ export const posts: Post[] = [
     excerpt:
       "A gentler side of Switzerland's rail network, away from the famous high-alpine panoramic routes.",
     cover: "/images/posts/st-gallen.jpg",
-    category: "switzerland",
+    categories: ["switzerland"],
     read_minutes: 6,
     published_at: "2025-01-01",
     body: "[Full post body to be migrated from Wix — see MIGRATION.md]",
@@ -43,7 +43,7 @@ export const posts: Post[] = [
     excerpt:
       "Tracing one of the great historic rail crossings of the Alps, from Ticino to central Switzerland.",
     cover: "/images/posts/bellinzona.jpg",
-    category: "scenicroutes",
+    categories: ["scenicroutes"],
     read_minutes: 6,
     published_at: "2025-01-01",
     body: "[Full post body to be migrated from Wix — see MIGRATION.md]",
@@ -54,7 +54,7 @@ export const posts: Post[] = [
     excerpt:
       "A narrow-gauge line into Provence's lavender-scented back country, far from the Riviera crowds.",
     cover: "/images/posts/digne-les-bains.jpg",
-    category: "france",
+    categories: ["france"],
     read_minutes: 4,
     published_at: "2025-01-01",
     body: "[Full post body to be migrated from Wix — see MIGRATION.md]",
@@ -65,7 +65,7 @@ export const posts: Post[] = [
     excerpt:
       "Hugging the Mediterranean from Marseille through the French Riviera and across the Italian border.",
     cover: "/images/posts/menton.jpg",
-    category: "france",
+    categories: ["france"],
     read_minutes: 4,
     published_at: "2025-01-01",
     body: "[Full post body to be migrated from Wix — see MIGRATION.md]",

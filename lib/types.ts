@@ -23,32 +23,28 @@ export type Post = {
   title: string;
   excerpt: string;
   cover: string;
-  category: string;
+  categories: string[];
   read_minutes: number;
   published_at: string;
   body: string;
 };
 
-export const CATEGORIES = [
-  "switzerland",
-  "france",
-  "italy",
-  "spain",
-  "food",
-  "culture",
-  "scenicroutes",
-  "hiddenplaces",
-] as const;
+export type Category = string;
 
-export type Category = (typeof CATEGORIES)[number];
-
-export const CATEGORY_LABELS: Record<Category, string> = {
-  switzerland: "Switzerland",
-  france: "France",
-  italy: "Italy",
-  spain: "Spain",
-  food: "Food & drink",
-  culture: "Culture",
-  scenicroutes: "Scenic routes",
-  hiddenplaces: "Hidden places",
+export type CategoryRecord = {
+  slug: string;
+  label: string;
 };
+
+// Derives a stable slug from any category label — used both by the app and
+// the migration script, so new categories (added on the live site later,
+// e.g. in Supabase or during a future Wix migration) just work without a
+// code change. "Food & Drink" -> "fooddrink", "Scenic Routes" -> "scenicroutes".
+export function slugifyCategory(label: string): string {
+  return label
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // strip accents
+    .replace(/[^a-z0-9]+/g, "");
+}

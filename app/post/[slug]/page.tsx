@@ -2,8 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { getPost, getPosts } from "@/lib/queries";
-import { CATEGORY_LABELS, Category } from "@/lib/types";
+import { getPost, getPosts, getCategoryLabelMap } from "@/lib/queries";
 import Newsletter from "@/components/Newsletter";
 
 export async function generateStaticParams() {
@@ -34,16 +33,21 @@ export default async function PostPage({
   const post = await getPost(slug);
   if (!post) notFound();
 
-  const categoryLabel = CATEGORY_LABELS[post.category as Category] ?? post.category;
+  const categoryLabels = await getCategoryLabelMap();
 
   return (
     <article className="mx-auto max-w-2xl px-6 py-16">
-      <Link
-        href={`/journeysbyrail/categories/${post.category}`}
-        className="route-line text-xs font-medium uppercase tracking-wide text-clay-dark hover:underline"
-      >
-        {categoryLabel}
-      </Link>
+      <div className="flex flex-wrap gap-3">
+        {post.categories.map((c) => (
+          <Link
+            key={c}
+            href={`/journeysbyrail/categories/${c}`}
+            className="route-line text-xs font-medium uppercase tracking-wide text-clay-dark hover:underline"
+          >
+            {categoryLabels[c] ?? c}
+          </Link>
+        ))}
+      </div>
       <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-pine md:text-4xl">
         {post.title}
       </h1>

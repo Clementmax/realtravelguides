@@ -1,12 +1,12 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { getPostsByCategory } from "@/lib/queries";
-import { CATEGORIES, CATEGORY_LABELS, Category } from "@/lib/types";
+import { getPostsByCategory, getCategories, getCategoryLabelMap } from "@/lib/queries";
 import PostCard from "@/components/PostCard";
 import Newsletter from "@/components/Newsletter";
 
 export async function generateStaticParams() {
-  return CATEGORIES.map((category) => ({ category }));
+  const categories = await getCategories();
+  return categories.map((c) => ({ category: c.slug }));
 }
 
 export async function generateMetadata({
@@ -15,8 +15,9 @@ export async function generateMetadata({
   params: Promise<{ category: string }>;
 }): Promise<Metadata> {
   const { category } = await params;
-  if (!CATEGORIES.includes(category as Category)) return {};
-  const label = CATEGORY_LABELS[category as Category];
+  const labels = await getCategoryLabelMap();
+  const label = labels[category];
+  if (!label) return {};
   return {
     title: `${label} | Journeys by Rail`,
     description: `Rail travel guides, itineraries and insider tips for ${label}.`,
@@ -29,10 +30,11 @@ export default async function CategoryPage({
   params: Promise<{ category: string }>;
 }) {
   const { category } = await params;
-  if (!CATEGORIES.includes(category as Category)) notFound();
+  const labels = await getCategoryLabelMap();
+  const label = labels[category];
+  if (!label) notFound();
 
   const posts = await getPostsByCategory(category);
-  const label = CATEGORY_LABELS[category as Category];
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-16">
@@ -50,7 +52,15 @@ export default async function CategoryPage({
       ) : (
         <div className="mt-12 grid gap-10 sm:grid-cols-2 md:grid-cols-3">
           {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
+            <PostCard
+              key={post.slug}
+              post={post}
+              categoryLabel={
+                post.categories[0] === category
+                  ? label
+                  : labels[post.categories[0]]
+              }
+            />
           ))}
         </div>
       )}

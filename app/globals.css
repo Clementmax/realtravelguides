@@ -12,6 +12,9 @@
   --stone: #7a7568;
   --stone-light: #a8a396;
   --border-line: #ddd6c4;
+  --ink: #16211c;
+  --ink-raised: #1e2b24;
+  --ink-border: #2c3a32;
 }
 
 @theme inline {
@@ -26,6 +29,9 @@
   --color-stone: var(--stone);
   --color-stone-light: var(--stone-light);
   --color-border-line: var(--border-line);
+  --color-ink: var(--ink);
+  --color-ink-raised: var(--ink-raised);
+  --color-ink-border: var(--ink-border);
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-inter);
 }
@@ -73,4 +79,27 @@ body {
   border-radius: 50%;
   background: currentColor;
   flex-shrink: 0;
+}
+
+.accent-italic {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--clay);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1px;
+  background: currentColor;
 }
