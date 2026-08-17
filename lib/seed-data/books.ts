@@ -22,7 +22,7 @@ export const books: Book[] = [
     slug: "touring-switzerland-by-train",
     title: "Touring Switzerland by Train",
     author_slug: "elenarossetti",
-    cover: "/images/books/touring-switzerland-by-train.jpg",
+    cover: "/images/books/touring-switzerland-by-train.png",
     tagline:
       "Discover the most scenic, stress-free way to explore Switzerland — by rail, at your own pace.",
     description:
@@ -39,7 +39,7 @@ export const books: Book[] = [
     slug: "touring-spain-by-train",
     title: "Touring Spain by Train",
     author_slug: "elenarossetti",
-    cover: "/images/books/touring-spain-by-train.jpg",
+    cover: "/images/books/touring-spain-by-train.png",
     tagline:
       "The ultimate travel guide to Spain, with easy rail itineraries and expert travel tips.",
     description:
