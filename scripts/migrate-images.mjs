@@ -29,11 +29,17 @@ const IMAGES = [
     dest: "public/images/books/touring-italy-by-train.jpg",
   },
   {
-    url: "https://static.wixstatic.com/media/fef05b_c7fea9ffe01e4b32a9e9b6d7db6bdc47~mv2.png",
+    // Switzerland and Spain covers need their crop preserved (their source
+    // uploads have extra padding around the book graphic that Wix normally
+    // crops away) — unlike the other two, so this one keeps the /v1/crop/...
+    // step rather than using the bare base asset URL. Fill dimensions are
+    // scaled up from Wix's original 336x516 for better resolution, keeping
+    // the same aspect ratio so the crop region isn't distorted.
+    url: "https://static.wixstatic.com/media/fef05b_c7fea9ffe01e4b32a9e9b6d7db6bdc47~mv2.png/v1/crop/x_320,y_51,w_409,h_620/fill/w_800,h_1213,al_c,q_90/file.png",
     dest: "public/images/books/touring-switzerland-by-train.png",
   },
   {
-    url: "https://static.wixstatic.com/media/fef05b_7d2f3978b9b14eadb930dd494531edef~mv2.png",
+    url: "https://static.wixstatic.com/media/fef05b_7d2f3978b9b14eadb930dd494531edef~mv2.png/v1/crop/x_293,y_90,w_372,h_563/fill/w_800,h_1211,al_c,q_90/file.png",
     dest: "public/images/books/touring-spain-by-train.png",
   },
   {
