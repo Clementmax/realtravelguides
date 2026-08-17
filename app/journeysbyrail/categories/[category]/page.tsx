@@ -4,6 +4,8 @@ import { getPostsByCategory, getCategories, getCategoryLabelMap } from "@/lib/qu
 import PostCard from "@/components/PostCard";
 import Newsletter from "@/components/Newsletter";
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const categories = await getCategories();
   return categories.map((c) => ({ category: c.slug }));

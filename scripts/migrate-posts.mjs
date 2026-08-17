@@ -182,6 +182,49 @@ function getCategoryLinksFromPage(document) {
   return Array.from(slugs);
 }
 
+// Wix media URLs look like:
+//   .../media/{id}~mv2.jpg/v1/fill/w_147,h_83,...,blur_2,enc_avif,.../file.jpg
+// The /v1/... suffix requests a specific rendition — often a small, blurred
+// lazy-load placeholder (note "blur_2" above). Stripping it down to the base
+// asset URL gets the original, full-quality upload instead.
+function normalizeWixImageUrl(url) {
+  if (!url) return url;
+  const match = url.match(/(https:\/\/static\.wixstatic\.com\/media\/[^/]+~mv2\.\w+)/i);
+  return match ? match[1] : url;
+}
+
+// Wix's lazy-loading can put the real image URL in data-src or srcset rather
+// than src (which may hold a tiny blurred placeholder). Prefers those, then
+// normalizes whatever URL is chosen to the full-resolution original.
+function getBestImageSrc(img) {
+  const srcset = img.getAttribute("srcset") || img.getAttribute("data-srcset");
+  let fromSrcset = null;
+  if (srcset) {
+    const entries = srcset
+      .split(",")
+      .map((s) => s.trim().split(/\s+/))
+      .filter((e) => e[0]);
+    entries.sort((a, b) => (parseInt(b[1]) || 0) - (parseInt(a[1]) || 0));
+    fromSrcset = entries[0]?.[0];
+  }
+  const candidate =
+    fromSrcset || img.getAttribute("data-src") || img.getAttribute("src");
+  return normalizeWixImageUrl(candidate);
+}
+
+// Rewrites every remaining <img> in the article body to its full-resolution
+// source, fixing Wix's blurred lazy-load placeholders.
+function upgradeInlineImages(document) {
+  const imgs = document.querySelectorAll("img");
+  for (const img of imgs) {
+    const best = getBestImageSrc(img);
+    if (best) img.setAttribute("src", best);
+    img.removeAttribute("srcset");
+    img.removeAttribute("data-src");
+    img.removeAttribute("data-srcset");
+  }
+}
+
 // Wix typically repeats the post's featured image as the first image inside
 // the article body — but our page already shows that same image separately
 // as the cover, above the body. Strip just that first image so it isn't
@@ -206,6 +249,7 @@ async function fetchAndParsePage(postUrl) {
   if (!article) throw new Error(`Readability could not parse: ${postUrl}`);
 
   const contentDom = new JSDOM(`<body>${article.content}</body>`);
+  upgradeInlineImages(contentDom.window.document);
   stripLeadImage(contentDom.window.document);
   const bodyHtml = purify.sanitize(contentDom.window.document.body.innerHTML, {
     ALLOWED_TAGS: [
@@ -330,7 +374,9 @@ async function main() {
       const published_at = publishedRaw
         ? new Date(publishedRaw).toISOString().slice(0, 10)
         : new Date().toISOString().slice(0, 10);
-      const imageUrl = rssItem?.enclosure?.["@_url"] ?? page.ogImage;
+      const imageUrl = normalizeWixImageUrl(
+        rssItem?.enclosure?.["@_url"] ?? page.ogImage
+      );
 
       const imageName = `${slugifyImageName(slug)}.jpg`;
       const imageDest = path.join(IMAGES_DIR, imageName);

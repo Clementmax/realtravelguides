@@ -7,6 +7,8 @@ import Newsletter from "@/components/Newsletter";
 
 const VALID_SLUGS = ["elenarossetti", "sophiepicot"];
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const authors = await getAuthors();
   return authors.map((a) => ({ author: a.slug }));
