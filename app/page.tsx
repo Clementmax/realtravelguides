@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { getBooks, getPosts, getAuthors, getCategoryLabelMap } from "@/lib/queries";
 
 // Re-checks Supabase for fresh content every 60 seconds, rather than only
@@ -12,6 +11,7 @@ import DestinationCard from "@/components/DestinationCard";
 import JourneyCard from "@/components/JourneyCard";
 import AuthorCard from "@/components/AuthorCard";
 import Newsletter from "@/components/Newsletter";
+import HeroCarousel from "@/components/HeroCarousel";
 
 // The four countries the guides cover — shown as "Featured Destinations".
 // This is intentionally separate from the full (dynamic) category list,
@@ -21,6 +21,43 @@ const FEATURED_DESTINATIONS = [
   { slug: "france", label: "France" },
   { slug: "switzerland", label: "Switzerland" },
   { slug: "spain", label: "Spain" },
+];
+
+// Hero carousel slides, in upload order. Each photo was color-graded to
+// match the site's palette (see public/images/hero/ — processed from the
+// originals for a consistent, editorial look across very different source
+// photos). Add more here the same way if you source additional shots.
+const HERO_SLIDES = [
+  {
+    src: "/images/hero/eiffel-tower-paris-seine-sunset.jpg",
+    alt: "The Eiffel Tower reflected in the Seine at sunset, Paris, France",
+    location: "France · Paris",
+  },
+  {
+    src: "/images/hero/cevennes-line-train-viaduct-france.jpg",
+    alt: "A red regional train crossing a stone viaduct on the Cévennes line, southern France",
+    location: "France · Cévennes",
+  },
+  {
+    src: "/images/hero/alhambra-granada-sierra-nevada-spain.jpg",
+    alt: "The Alhambra palace and fortress in Granada at sunset, with the snow-capped Sierra Nevada mountains behind, Spain",
+    location: "Spain · Granada",
+  },
+  {
+    src: "/images/hero/switzerland-alpine-lake-train.jpg",
+    alt: "A red Rhaetian Railway train winding beside a turquoise alpine lake in the Swiss Alps",
+    location: "Switzerland · Graubünden",
+  },
+  {
+    src: "/images/hero/venice-grand-canal-sunset-italy.jpg",
+    alt: "Sunset over Venice's Grand Canal with gondolas and the dome of Santa Maria della Salute, Italy",
+    location: "Italy · Venice",
+  },
+  {
+    src: "/images/hero/bernina-express-landwasser-viaduct-switzerland.jpg",
+    alt: "The Bernina Express crossing the Landwasser Viaduct through the Swiss Alps in autumn",
+    location: "Switzerland · Bernina Express",
+  },
 ];
 
 export default async function HomePage() {
@@ -43,13 +80,7 @@ export default async function HomePage() {
     <div>
       {/* Hero */}
       <section className="relative flex h-[60vh] max-h-[560px] min-h-[420px] items-end overflow-hidden">
-        <Image
-          src="/images/hero.jpg"
-          alt="Scenic European rail journey"
-          fill
-          priority
-          className="object-cover"
-        />
+        <HeroCarousel slides={HERO_SLIDES} />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-ink/10" />
         <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-16">
           <p className="eyebrow text-paper/70">
