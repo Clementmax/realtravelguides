@@ -46,7 +46,7 @@ export default function HeroCarousel({
       ))}
 
       {slides[index]?.location && (
-        <div className="absolute left-6 top-6 z-10 rounded-full border border-paper/30 bg-ink/40 px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-paper/90 backdrop-blur-sm md:left-10 md:top-10">
+        <div className="absolute right-6 top-6 z-10 rounded-full border border-paper/30 bg-ink/40 px-3 py-1 text-[11px] font-medium uppercase tracking-widest text-paper/90 backdrop-blur-sm md:right-10 md:top-10">
           {slides[index].location}
         </div>
       )}
