@@ -79,7 +79,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="relative flex h-[60vh] max-h-[560px] min-h-[420px] items-end overflow-hidden">
+      <section className="relative flex h-[72vh] max-h-[640px] min-h-[460px] items-end overflow-hidden">
         <HeroCarousel slides={HERO_SLIDES} />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-ink/10" />
         <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-16">
