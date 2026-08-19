@@ -91,8 +91,8 @@ export default async function HomePage() {
             with confidence
           </h1>
           <p className="mt-5 max-w-md text-base leading-relaxed text-paper/75">
-            Discover authentic rail journeys, insider knowledge, and
-            practical travel guides written by local experts.
+            Discover authentic rail journeys, insider knowledge and practical
+            travel guides designed for independent travellers.
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
