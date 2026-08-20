@@ -2,19 +2,21 @@ import Image from "next/image";
 import { Book } from "@/lib/types";
 
 const BOOK_DESCRIPTIONS: Record<string, string> = {
-  italy:
+  "Touring Italy by Train":
     "From Renaissance cities and Tuscan landscapes to Alpine lakes and the Amalfi Coast, discover Italy through flexible, rail-led journeys.",
-  france:
+  "Touring France by Train":
     "From Paris and Provence to Atlantic shores, vineyards and the Riviera, explore the extraordinary diversity of France by rail.",
-  switzerland:
+  "Touring Switzerland by Train":
     "Master Switzerland’s remarkable rail network, from legendary panoramic trains and Alpine passes to lakeside towns and mountain villages.",
-  spain:
+  "Touring Spain by Train":
     "From Andalucía and the Mediterranean to the Basque Country and Galicia, discover Spain’s great cities, coastlines and hidden gems by rail.",
 };
 
 export default function BookCard({ book }: { book: Book }) {
+  const description = BOOK_DESCRIPTIONS[book.title] ?? book.tagline;
+
   return (
-    <div className="flex flex-col">
+    <div className="flex h-full flex-col">
       <a
         href={book.amazon_url}
         target="_blank"
@@ -30,21 +32,21 @@ export default function BookCard({ book }: { book: Book }) {
           />
         </div>
       </a>
-      <div className="ticket-edge mt-3 border-t border-dashed border-border-line pt-3">
-        <div>
-          <p className="font-display text-sm font-semibold text-pine">
-            {book.title}
-          </p>
-          <p className="mt-2 text-xs leading-relaxed text-stone">
-            {BOOK_DESCRIPTIONS[book.slug] ?? book.tagline}
-          </p>
-        </div>
+
+      <div className="ticket-edge mt-3 flex flex-1 flex-col border-t border-dashed border-border-line pt-3">
+        <p className="font-display text-sm font-semibold text-pine">
+          {book.title}
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-stone">
+          {description}
+        </p>
       </div>
+
       <a
         href={book.amazon_url}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-3 inline-block rounded-md bg-clay px-4 py-2 text-center text-xs font-medium uppercase tracking-wide text-paper transition-colors hover:bg-clay-dark"
+        className="mt-4 inline-block rounded-md bg-clay px-4 py-2 text-center text-xs font-medium uppercase tracking-wide text-paper transition-colors hover:bg-clay-dark"
       >
         Buy on Amazon
       </a>
