@@ -84,11 +84,12 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/30 to-ink/10" />
         <div className="relative z-10 mx-auto w-full max-w-5xl px-6 pb-16">
           <p className="eyebrow text-paper/70">
-            Slow travel across Europe by rail
+            Explore Europe by Rail
           </p>
           <h1 className="mt-4 max-w-2xl font-display text-4xl font-semibold leading-tight text-paper md:text-6xl">
-            Travel Europe <span className="accent-italic">Independently</span>{" "}
-            With Confidence
+            <span className="block">Travel Europe</span>
+            <span className="block accent-italic">Independently</span>
+            <span className="block">With Confidence</span>
           </h1>
           <p className="mt-5 max-w-md text-base leading-relaxed text-paper/75">
             Discover authentic rail journeys, insider knowledge and practical
@@ -105,7 +106,7 @@ export default async function HomePage() {
               href="/journeysbyrail"
               className="rounded-md border border-paper/40 px-6 py-3 text-sm font-medium text-paper transition-colors hover:bg-paper/10"
             >
-              Read the journal
+              Explore our Journeys
             </Link>
           </div>
         </div>
