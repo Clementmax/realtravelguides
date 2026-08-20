@@ -71,6 +71,17 @@ export default async function HomePage() {
   const journeyPosts = posts.slice(0, 6);
   const storyPosts = posts.slice(0, 3);
 
+  const bookOrder = [
+    "Touring Italy by Train",
+    "Touring France by Train",
+    "Touring Switzerland by Train",
+    "Touring Spain by Train",
+  ];
+
+  const orderedBooks = [...books].sort(
+    (a, b) => bookOrder.indexOf(a.title) - bookOrder.indexOf(b.title),
+  );
+
   // Destination images borrow the cover of that region's first post until
   // dedicated destination photography is migrated (see MIGRATION.md).
   const destinationImage = (slug: string) =>
@@ -130,7 +141,7 @@ export default async function HomePage() {
             and authentic experiences to help you discover more of Europe.
           </p>
           <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">
-            {books.map((book) => (
+            {orderedBooks.map((book) => (
               <BookCard key={book.slug} book={book} />
             ))}
           </div>
