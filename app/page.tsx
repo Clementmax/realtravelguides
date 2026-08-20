@@ -125,8 +125,9 @@ export default async function HomePage() {
             </Link>
           </div>
           <p className="mt-2 max-w-lg text-sm text-stone">
-            Four essential companions, each researched on the ground, written
-            by our authors, and refined over years of independent travel.
+            Built on local expertise and years of independent travel, our guides
+            bring together carefully researched rail itineraries, practical advice
+            and authentic experiences to help you discover more of Europe.
           </p>
           <div className="mt-10 grid grid-cols-2 gap-6 md:grid-cols-4">
             {books.map((book) => (
