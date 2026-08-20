@@ -87,8 +87,8 @@ export default async function HomePage() {
             Slow travel across Europe by rail
           </p>
           <h1 className="mt-4 max-w-2xl font-display text-4xl font-semibold leading-tight text-paper md:text-6xl">
-            Travel Europe <span className="accent-italic">independently</span>{" "}
-            with confidence
+            Travel Europe <span className="accent-italic">Independently</span>{" "}
+            With Confidence
           </h1>
           <p className="mt-5 max-w-md text-base leading-relaxed text-paper/75">
             Discover authentic rail journeys, insider knowledge and practical
