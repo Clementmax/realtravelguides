@@ -33,7 +33,7 @@ export default function BookCard({ book }: { book: Book }) {
         </div>
       </a>
 
-      <div className="ticket-edge mt-3 flex flex-1 flex-col border-t border-dashed border-border-line pt-3">
+      <div className="mt-3 flex flex-1 flex-col border-t border-dashed border-border-line pt-3">
         <p className="font-display text-sm font-semibold text-pine">
           {book.title}
         </p>
