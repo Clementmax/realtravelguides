@@ -237,8 +237,8 @@ export default async function HomePage() {
             Featured destinations
           </h2>
           <p className="mt-2 max-w-lg text-sm text-stone">
-            Four countries, countless rail trails. Explore each region&apos;s
-            guides and stories.
+            Four countries, endless possibilities. Discover inspiring rail
+            journeys, unforgettable places and new ways to explore Europe.
           </p>
           <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
             {FEATURED_DESTINATIONS.map((d) => (
