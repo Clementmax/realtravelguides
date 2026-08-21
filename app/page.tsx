@@ -156,35 +156,35 @@ export default async function HomePage() {
             Expertise behind every guide
           </h2>
           <p className="mt-3 max-w-lg text-sm text-paper/60">
-            Practical knowledge, local expertise and carefully researched
-            journeys — giving you the confidence to explore Europe independently
-            and make more of every trip.
+            We bring together specialist expertise, local insight and practical
+            planning to make independent rail travel simpler — giving you the
+            confidence to explore Europe your way.
           </p>
           <div className="mt-10 grid gap-x-8 gap-y-8 rounded-md border border-ink-border bg-ink-raised p-8 sm:grid-cols-2 md:grid-cols-3">
             {[
               {
-                title: "Independent travel expertise",
-                body: "Decades of experience exploring Europe independently, turned into practical advice and flexible itineraries that give you the freedom to travel your way.",
+                title: "Independent travel specialists",
+                body: "Created by experienced travel professionals and rail specialists who simplify the planning and help you shape a journey around your time and interests.",
               },
               {
                 title: "Local insider knowledge",
-                body: "Authentic neighbourhoods, local favourites and memorable experiences that take you beyond the obvious sights and closer to the places you visit.",
+                body: "Discover must-see highlights alongside local favourites, hidden gems and authentic experiences that connect you more deeply with the places you visit.",
               },
               {
-                title: "Tried-and-tested rail itineraries",
-                body: "Carefully researched routes, realistic journey times and practical connections that make planning your own rail adventure simple.",
+                title: "Flexible rail itineraries",
+                body: "Recommended 5, 7, 10 and 14+ day routes, with the best bases, realistic time in each place and easy day trips and onward journeys by rail.",
               },
               {
-                title: "Smarter travel, better value",
-                body: "Straightforward advice on tickets, rail passes, booking ahead and when to travel, helping you make the most of your time and budget.",
+                title: "Everything planned, your way",
+                body: "Know where to stay, what to see and do, and what needs booking ahead — from trains to popular attractions — then tailor the journey to suit you.",
               },
               {
-                title: "More sustainable journeys",
-                body: "Rail-first travel that makes it easier to explore more of Europe while reducing your reliance on flights and cars.",
+                title: "Smarter rail travel, better value",
+                body: "Practical train advice, booking tips and travel hacks — from tickets and rail passes to reservations and cheaper fares — helping you travel confidently and get more for your money.",
               },
               {
-                title: "Hidden gems worth discovering",
-                body: "Lesser-known towns, spectacular rail routes and unexpected experiences that take you beyond the tourist trail and make a journey memorable.",
+                title: "Travel freely, travel sustainably",
+                body: "Skip restrictive tours and stressful car hire. Explore independently by rail, at your own pace, for a more authentic and sustainable way to travel.",
               },
             ].map((f) => (
               <div key={f.title}>
