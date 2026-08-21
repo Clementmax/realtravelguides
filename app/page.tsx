@@ -156,34 +156,35 @@ export default async function HomePage() {
             Expertise behind every guide
           </h2>
           <p className="mt-3 max-w-lg text-sm text-paper/60">
-            We do the slow, difficult work of independent travel so you can
-            arrive with quiet confidence and a sense of discovery intact.
+            Practical knowledge, local expertise and carefully researched
+            journeys — giving you the confidence to explore Europe independently
+            and make more of every trip.
           </p>
           <div className="mt-10 grid gap-x-8 gap-y-8 rounded-md border border-ink-border bg-ink-raised p-8 sm:grid-cols-2 md:grid-cols-3">
             {[
               {
-                title: "Independent travel experts",
-                body: "Decades of experience across Europe's rails, distilled into itineraries that respect your time, budget, and curiosity.",
+                title: "Independent travel expertise",
+                body: "Decades of experience exploring Europe independently, turned into practical advice and flexible itineraries that give you the freedom to travel your way.",
               },
               {
                 title: "Local insider knowledge",
-                body: "Quiet corners, family-run gems, and bakeries locals actually visit, never the tourist trail.",
+                body: "Authentic neighbourhoods, local favourites and memorable experiences that take you beyond the obvious sights and closer to the places you visit.",
               },
               {
-                title: "Step-by-step rail itineraries",
-                body: "Timetables, platform and connection logic worked in person, so you travel with quiet confidence.",
+                title: "Tried-and-tested rail itineraries",
+                body: "Carefully researched routes, realistic journey times and practical connections that make planning your own rail adventure simple.",
               },
               {
-                title: "Budget-friendly advice",
-                body: "Rail passes, off-peak windows, and fare tricks that quietly halve the cost of seeing more.",
+                title: "Smarter travel, better value",
+                body: "Straightforward advice on tickets, rail passes, booking ahead and when to travel, helping you make the most of your time and budget.",
               },
               {
-                title: "Sustainable travel",
-                body: "Rail-first journeys that travel lightly, each route shown against the equivalent flight.",
+                title: "More sustainable journeys",
+                body: "Rail-first travel that makes it easier to explore more of Europe while reducing your reliance on flights and cars.",
               },
               {
-                title: "Hidden gems",
-                body: "The frescoed chapel, the lakeside trail — the places that make a journey unforgettable.",
+                title: "Hidden gems worth discovering",
+                body: "Lesser-known towns, spectacular rail routes and unexpected experiences that take you beyond the tourist trail and make a journey memorable.",
               },
             ].map((f) => (
               <div key={f.title}>
