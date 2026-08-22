@@ -17,10 +17,10 @@ import HeroCarousel from "@/components/HeroCarousel";
 // This is intentionally separate from the full (dynamic) category list,
 // since topic tags like "Food & Drink" or "Culture" aren't destinations.
 const FEATURED_DESTINATIONS = [
-  { slug: "italy", label: "Italy" },
-  { slug: "france", label: "France" },
-  { slug: "switzerland", label: "Switzerland" },
-  { slug: "spain", label: "Spain" },
+  { slug: "italy", label: "Italy", image: "/images/destinations/italy.jpg" },
+  { slug: "france", label: "France", image: "/images/destinations/france.jpg" },
+  { slug: "switzerland", label: "Switzerland", image: "/images/destinations/switzerland.jpg" },
+  { slug: "spain", label: "Spain", image: "/images/destinations/spain.jpg" },
 ];
 
 // Hero carousel slides, in upload order. Each photo was color-graded to
@@ -81,11 +81,6 @@ export default async function HomePage() {
   const orderedBooks = [...books].sort(
     (a, b) => bookOrder.indexOf(a.title) - bookOrder.indexOf(b.title),
   );
-
-  // Destination images borrow the cover of that region's first post until
-  // dedicated destination photography is migrated (see MIGRATION.md).
-  const destinationImage = (slug: string) =>
-    posts.find((p) => p.categories.includes(slug))?.cover ?? "/images/hero.jpg";
 
   return (
     <div>
@@ -246,7 +241,7 @@ export default async function HomePage() {
                 key={d.slug}
                 slug={d.slug}
                 label={d.label}
-                image={destinationImage(d.slug)}
+                image={d.image}
               />
             ))}
           </div>
