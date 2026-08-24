@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { getBooks, getPosts, getAuthors, getCategoryLabelMap } from "@/lib/queries";
+import Image from "next/image";
+import { getBooks, getPosts, getCategoryLabelMap } from "@/lib/queries";
 
 // Re-checks Supabase for fresh content every 60 seconds, rather than only
 // at deploy time — otherwise edits made directly in Supabase (books,
@@ -9,7 +10,6 @@ import BookCard from "@/components/BookCard";
 import PostCard from "@/components/PostCard";
 import DestinationCard from "@/components/DestinationCard";
 import JourneyCard from "@/components/JourneyCard";
-import AuthorCard from "@/components/AuthorCard";
 import Newsletter from "@/components/Newsletter";
 import HeroCarousel from "@/components/HeroCarousel";
 
@@ -21,6 +21,33 @@ const FEATURED_DESTINATIONS = [
   { slug: "france", label: "France", image: "/images/destinations/france.jpg" },
   { slug: "switzerland", label: "Switzerland", image: "/images/destinations/switzerland.jpg" },
   { slug: "spain", label: "Spain", image: "/images/destinations/spain.jpg" },
+];
+
+const TRAVEL_EXPERTS = [
+  {
+    name: "Elena Rossetti",
+    role: "Author",
+    photo: "/images/authors/elena-rossetti.jpg",
+    bio: "Travel writer and tourism professional with over 20 years’ experience, specialising in independent rail travel across Europe. Elena is the principal author of the Touring by Train guides to Italy, Switzerland and Spain.",
+  },
+  {
+    name: "Sophie Picot",
+    role: "Author",
+    photo: "/images/authors/sophie-picot.jpg",
+    bio: "French travel writer and consultant with extensive first-hand knowledge of France by rail, combining local insight with a passion for independent, meaningful travel.",
+  },
+  {
+    name: "Jonas Graf",
+    role: "Contributor",
+    photo: "/images/authors/jonas-graf.jpg",
+    bio: "Switzerland-based rail specialist and regional researcher with expertise in sustainable tourism, alpine routes and Switzerland’s extensive national and regional rail network.",
+  },
+  {
+    name: "Carla Ríos",
+    role: "Contributor",
+    photo: "/images/authors/carla-rios.jpg",
+    bio: "Spain-based travel researcher and rail specialist, bringing local expertise in Spain’s rail network, regional cultures and authentic experiences beyond the major tourist hubs.",
+  },
 ];
 
 // Hero carousel slides, in upload order. Each photo was color-graded to
@@ -61,10 +88,9 @@ const HERO_SLIDES = [
 ];
 
 export default async function HomePage() {
-  const [books, posts, authors, categoryLabels] = await Promise.all([
+  const [books, posts, categoryLabels] = await Promise.all([
     getBooks(),
     getPosts(),
-    getAuthors(),
     getCategoryLabelMap(),
   ]);
 
@@ -276,18 +302,35 @@ export default async function HomePage() {
       {/* Authors — dark section */}
       <section className="bg-ink py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6">
-          <p className="eyebrow text-paper/50">The People Behind the Guides</p>
+          <p className="eyebrow text-paper/50">Authorship &amp; presence</p>
           <h2 className="mt-3 font-display text-3xl font-semibold text-paper">
-            Meet Our Travel Experts
+            Meet the authors
           </h2>
           <p className="mt-2 max-w-lg text-sm text-paper/60">
-            Written by experienced travel professionals and shaped by local
-            expertise, every guide combines practical rail knowledge with genuine
-            insight into the places you&apos;ll explore.
+            Every guide is written and walked by people who&apos;ve given
+            their lives to independent European travel.
           </p>
-          <div className="mt-10 grid max-w-lg grid-cols-2 gap-8">
-            {authors.map((author) => (
-              <AuthorCard key={author.slug} author={author} />
+          <div className="mt-10 grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+            {TRAVEL_EXPERTS.map((expert) => (
+              <div key={expert.name}>
+                <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md">
+                  <Image
+                    src={expert.photo}
+                    alt={expert.name}
+                    fill
+                    className="object-cover grayscale"
+                  />
+                </div>
+                <p className="mt-4 text-xs uppercase tracking-wide text-paper/50">
+                  {expert.role}
+                </p>
+                <p className="mt-1 font-display text-lg font-semibold text-paper">
+                  {expert.name}
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-paper/60">
+                  {expert.bio}
+                </p>
+              </div>
             ))}
           </div>
         </div>
