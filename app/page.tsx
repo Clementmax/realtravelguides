@@ -302,13 +302,14 @@ export default async function HomePage() {
       {/* Authors — dark section */}
       <section className="bg-ink py-16 md:py-24">
         <div className="mx-auto max-w-5xl px-6">
-          <p className="eyebrow text-paper/50">Authorship &amp; presence</p>
+          <p className="eyebrow text-paper/50">The People Behind the Guides</p>
           <h2 className="mt-3 font-display text-3xl font-semibold text-paper">
-            Meet the authors
+            Meet Our Travel Experts
           </h2>
           <p className="mt-2 max-w-lg text-sm text-paper/60">
-            Every guide is written and walked by people who&apos;ve given
-            their lives to independent European travel.
+            Written by experienced travel professionals and shaped by local
+            expertise, every guide combines practical rail knowledge with genuine
+            insight into the places you&apos;ll explore.
           </p>
           <div className="mt-10 grid gap-8 sm:grid-cols-2 md:grid-cols-4">
             {TRAVEL_EXPERTS.map((expert) => (
