@@ -312,13 +312,13 @@ export default async function HomePage() {
           </p>
           <div className="mt-10 grid gap-8 sm:grid-cols-2 md:grid-cols-4">
             {TRAVEL_EXPERTS.map((expert) => (
-              <div key={expert.name}>
+              <div key={expert.name} className="group">
                 <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md">
                   <Image
                     src={expert.photo}
                     alt={expert.name}
                     fill
-                    className="object-cover grayscale"
+                    className="object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
                   />
                 </div>
                 <p className="mt-4 text-xs uppercase tracking-wide text-paper/50">
