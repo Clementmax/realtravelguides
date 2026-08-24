@@ -278,15 +278,18 @@ export default async function HomePage() {
           <p className="eyebrow text-clay-dark">Travel inspiration</p>
           <div className="mt-3 flex items-baseline justify-between">
             <h2 className="font-display text-3xl font-semibold text-pine">
-              Stories from the slow road
+              Journeys worth discovering
             </h2>
             <Link
               href="/journeysbyrail"
               className="hidden text-sm text-moss hover:underline md:block"
             >
-              Read the journal
+              Explore Our Journeys
             </Link>
           </div>
+          <p className="mt-2 max-w-2xl text-sm text-ink/70">
+            Explore inspiring rail journeys, scenic routes and remarkable places across Europe.
+          </p>
           <div className="mt-10 grid gap-10 sm:grid-cols-2 md:grid-cols-3">
             {storyPosts.map((post) => (
               <PostCard
