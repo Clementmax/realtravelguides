@@ -244,9 +244,9 @@ export default async function HomePage() {
 
         {/* Featured destinations */}
         <section className="border-t border-border-line py-16 md:py-24">
-          <p className="eyebrow text-clay-dark">Where we&apos;ll take you</p>
+          <p className="eyebrow text-clay-dark">Where We&apos;ll Take You</p>
           <h2 className="mt-3 font-display text-3xl font-semibold text-pine">
-            Featured destinations
+            Explore by Country
           </h2>
           <p className="mt-2 max-w-lg text-sm text-stone">
             Four countries, endless possibilities. Discover inspiring rail
