@@ -7,7 +7,6 @@ import { getBooks, getPosts, getCategoryLabelMap } from "@/lib/queries";
 // posts, categories) wouldn't appear on the live site until the next push.
 export const revalidate = 60;
 import BookCard from "@/components/BookCard";
-import PostCard from "@/components/PostCard";
 import DestinationCard from "@/components/DestinationCard";
 import JourneyCard from "@/components/JourneyCard";
 import Newsletter from "@/components/Newsletter";
@@ -94,8 +93,12 @@ export default async function HomePage() {
     getCategoryLabelMap(),
   ]);
 
-  const journeyPosts = posts.slice(0, 6);
-  const storyPosts = posts.slice(0, 3);
+  const latestPosts = [...posts]
+    .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())
+    .slice(0, 8);
+
+  const scenicPosts = posts.filter((post) => post.categories.includes("scenicroutes"));
+  const culturePosts = posts.filter((post) => post.categories.includes("culture"));
 
   const bookOrder = [
     "Touring Italy by Train",
@@ -222,31 +225,19 @@ export default async function HomePage() {
       </section>
 
       <div className="mx-auto max-w-5xl px-6">
-        {/* Popular rail journeys */}
+        {/* Latest rail blogs */}
         <section className="py-16 md:py-24">
-          <p className="eyebrow text-clay-dark">Route chronology</p>
+          <p className="eyebrow text-clay-dark">Travel Inspiration</p>
           <div className="mt-3 flex items-baseline justify-between">
-            <h2 className="font-display text-3xl font-semibold text-pine">
-              Popular rail journeys
-            </h2>
-            <Link
-              href="/journeysbyrail"
-              className="hidden text-sm text-moss hover:underline md:block"
-            >
-              View all journeys
-            </Link>
+            <h2 className="font-display text-3xl font-semibold text-pine">Discover Something New</h2>
+            <Link href="/journeysbyrail" className="hidden text-sm text-moss hover:underline md:block">View All Journeys</Link>
           </div>
-          <p className="mt-2 max-w-lg text-sm text-stone">
-            Hand-picked scenic routes across the continent, each mapped,
-            timed, and travelled by our authors.
+          <p className="mt-2 max-w-2xl text-sm text-stone">
+            Our latest journeys, seasonal escapes and inspiring places to discover across Europe by rail.
           </p>
           <div className="mt-10 -mx-6 flex gap-6 overflow-x-auto px-6 pb-4 [scrollbar-width:thin]">
-            {journeyPosts.map((post) => (
-              <JourneyCard
-                key={post.slug}
-                post={post}
-                categoryLabel={categoryLabels[post.categories[0]]}
-              />
+            {latestPosts.map((post) => (
+              <JourneyCard key={post.slug} post={post} categoryLabel={categoryLabels[post.categories[0]]} />
             ))}
           </div>
         </section>
@@ -273,30 +264,36 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* Stories */}
+        {/* Scenic rail journeys */}
         <section className="border-t border-border-line py-16 md:py-24">
-          <p className="eyebrow text-clay-dark">Travel inspiration</p>
+          <p className="eyebrow text-clay-dark">Scenic Rail Journeys</p>
           <div className="mt-3 flex items-baseline justify-between">
-            <h2 className="font-display text-3xl font-semibold text-pine">
-              Journeys worth discovering
-            </h2>
-            <Link
-              href="/journeysbyrail"
-              className="hidden text-sm text-moss hover:underline md:block"
-            >
-              Explore Our Journeys
-            </Link>
+            <h2 className="font-display text-3xl font-semibold text-pine">Take the Scenic Route</h2>
+            <Link href="/category/scenicroutes" className="hidden text-sm text-moss hover:underline md:block">Explore Scenic Journeys</Link>
           </div>
-          <p className="mt-2 max-w-2xl text-sm text-ink/70">
-            Explore inspiring rail journeys, scenic routes and remarkable places across Europe.
+          <p className="mt-2 max-w-2xl text-sm text-stone">
+            Hand-picked scenic routes across Europe, carefully researched with practical advice to help you discover some of the continent&apos;s most memorable rail journeys.
           </p>
-          <div className="mt-10 grid gap-10 sm:grid-cols-2 md:grid-cols-3">
-            {storyPosts.map((post) => (
-              <PostCard
-                key={post.slug}
-                post={post}
-                categoryLabel={categoryLabels[post.categories[0]]}
-              />
+          <div className="mt-10 -mx-6 flex gap-6 overflow-x-auto px-6 pb-4 [scrollbar-width:thin]">
+            {scenicPosts.map((post) => (
+              <JourneyCard key={post.slug} post={post} categoryLabel="Scenic Journeys" />
+            ))}
+          </div>
+        </section>
+
+        {/* Culture and experiences */}
+        <section className="border-t border-border-line py-16 md:py-24">
+          <p className="eyebrow text-clay-dark">Culture &amp; Experiences</p>
+          <div className="mt-3 flex items-baseline justify-between">
+            <h2 className="font-display text-3xl font-semibold text-pine">Discover More by Rail</h2>
+            <Link href="/category/culture" className="hidden text-sm text-moss hover:underline md:block">Explore Culture &amp; Experiences</Link>
+          </div>
+          <p className="mt-2 max-w-2xl text-sm text-stone">
+            Explore historic cities, local traditions, food, festivals and unique experiences — with practical advice on getting there and exploring independently by train.
+          </p>
+          <div className="mt-10 -mx-6 flex gap-6 overflow-x-auto px-6 pb-4 [scrollbar-width:thin]">
+            {culturePosts.map((post) => (
+              <JourneyCard key={post.slug} post={post} categoryLabel="Culture & Experiences" />
             ))}
           </div>
         </section>
