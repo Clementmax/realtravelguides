@@ -57,11 +57,7 @@ export default async function PostPage({
         {post.read_minutes} min read
       </p>
 
-      <div className="relative mt-8 aspect-[16/10] w-full overflow-hidden rounded-md border border-border-line">
-        <Image src={post.cover} alt={post.title} fill className="object-cover" />
-      </div>
-
-      {post.video_url && (
+      {post.video_url ? (
         <div className="mt-8 overflow-hidden rounded-md border border-border-line bg-ink">
           <video
             controls
@@ -72,6 +68,10 @@ export default async function PostPage({
             <source src={post.video_url} type="video/mp4" />
             Your browser does not support HTML5 video.
           </video>
+        </div>
+      ) : (
+        <div className="relative mt-8 aspect-[16/10] w-full overflow-hidden rounded-md border border-border-line">
+          <Image src={post.cover} alt={post.title} fill className="object-cover" />
         </div>
       )}
 
