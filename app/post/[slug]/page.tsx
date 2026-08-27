@@ -61,6 +61,20 @@ export default async function PostPage({
         <Image src={post.cover} alt={post.title} fill className="object-cover" />
       </div>
 
+      {post.video_url && (
+        <div className="mt-8 overflow-hidden rounded-md border border-border-line bg-ink">
+          <video
+            controls
+            playsInline
+            preload="metadata"
+            className="aspect-video w-full bg-black"
+          >
+            <source src={post.video_url} type="video/mp4" />
+            Your browser does not support HTML5 video.
+          </video>
+        </div>
+      )}
+
       <div className="post-content mt-10">
         {/\<[a-z][\s\S]*>/i.test(post.body) ? (
           <div dangerouslySetInnerHTML={{ __html: post.body }} />

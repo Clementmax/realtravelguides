@@ -27,6 +27,7 @@ export type Post = {
   read_minutes: number;
   published_at: string;
   body: string;
+  video_url?: string | null;
 };
 
 export type Category = string;
