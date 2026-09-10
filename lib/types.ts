@@ -1,3 +1,9 @@
+export type ManagedPostImage = {
+  src: string;
+  alt: string;
+  caption?: string | null;
+};
+
 export type Author = {
   slug: string;
   name: string;
@@ -28,7 +34,7 @@ export type Post = {
   published_at: string;
   body: string;
   video_url?: string | null;
-  images?: string[] | null;
+  images?: ManagedPostImage[] | null;
 };
 
 export type Category = string;
