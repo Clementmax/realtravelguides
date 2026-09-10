@@ -1,0 +1,52 @@
+REAL TRAVEL GUIDES — BLOG IMAGE AUDIT
+=====================================
+
+This is READ-ONLY. It does not change Supabase or your live website.
+
+UNZIP
+-----
+Unzip this package directly into your /realtravelguide/ project folder.
+
+It adds:
+  scripts/audit-blog-images.mjs
+  BLOG-IMAGE-AUDIT-INSTRUCTIONS.txt
+
+It expects your photographs to already be in:
+  public/images/blog/
+
+RUN
+---
+1. Open your /realtravelguide/ folder in File Explorer.
+2. Click the address bar, type:
+     cmd
+   and press Enter.
+3. In Command Prompt, type:
+     node scripts/audit-blog-images.mjs
+   and press Enter.
+
+THE SCRIPT
+----------
+- Uses the same NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+  already stored in your .env.local file.
+- Reads all rows from the Supabase posts table.
+- Reads all images under public/images/blog/.
+- Detects inline images already present in each article.
+- Keeps the current cover/thumbnail separate.
+- Excludes an image already used by that post as its cover or inline image.
+- Uses the descriptive image filenames to suggest up to 3 likely matches.
+- Makes NO database changes.
+
+RESULTS
+-------
+It creates:
+  reports/blog-image-audit.html
+  reports/blog-image-audit.csv
+
+Open reports/blog-image-audit.html in your browser. It shows the suggested
+photographs visually for each article.
+
+IMPORTANT
+---------
+Do not run any update/migration script yet. This first stage is deliberately
+suggestions-only. Review the matches first; then the approved second stage can
+insert selected images into sensible places in each article body.
