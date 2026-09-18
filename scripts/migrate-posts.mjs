@@ -21,11 +21,14 @@
  *   4. Either way, the full article body comes from Readability (Firefox's
  *      Reader Mode engine) run against the live page — this works
  *      regardless of Wix's exact markup.
- *   5. Cover images are downloaded into public/images/posts/, and
- *      everything is upserted into Supabase.
+ *   5. Cover images are uploaded to the "post-images" bucket in Supabase
+ *      Storage (not committed into the repo), and everything is upserted
+ *      into Supabase's posts table.
  *
  * Setup:
  *   npm install
+ *   npm install sharp   (if not already a dependency — used to resize/
+ *                         compress cover images before upload)
  *   Create a .env.local file in the project root with:
  *     NEXT_PUBLIC_SUPABASE_URL=...
  *     SUPABASE_SERVICE_ROLE_KEY=...
@@ -46,8 +49,7 @@ import { Readability } from "@mozilla/readability";
 import DOMPurify from "dompurify";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
-import fs from "node:fs/promises";
-import path from "node:path";
+import sharp from "sharp";
 
 dotenv.config({ path: ".env.local" });
 
@@ -57,7 +59,13 @@ const purify = DOMPurify(purifyWindow);
 const SITE = "https://www.realtravelguides.com";
 const RSS_URL = `${SITE}/blog-feed.xml`;
 const SITEMAP_INDEX_URL = `${SITE}/sitemap.xml`;
-const IMAGES_DIR = path.join(process.cwd(), "public", "images", "posts");
+
+// Cover images now go to Supabase Storage instead of public/images/posts —
+// committing ~170 binary images into git history was the main cause of the
+// repo bloating to ~2 GB and slowing every Vercel build's git clone step.
+// Create this bucket once in the Supabase dashboard (Storage -> New bucket),
+// name it exactly this, and mark it Public.
+const POST_IMAGES_BUCKET = "post-images";
 
 const args = process.argv.slice(2);
 const DRY_RUN = args.includes("--dry-run");
@@ -270,11 +278,44 @@ async function fetchAndParsePage(postUrl) {
   };
 }
 
-async function downloadImage(url, destPath) {
+// Wix's original full-resolution uploads (which normalizeWixImageUrl()
+// deliberately grabs, bypassing Wix's own thumbnail sizing) are often
+// several MB straight from a photographer's source file. Covers get run
+// through Vercel's on-the-fly image optimization when served via
+// next/image, so oversized originals mainly cost extra Storage space and a
+// slower first load — but there's no reason to keep multi-MB files around
+// when a resized copy looks identical on screen. 2000px on the long edge is
+// comfortably larger than this site's cover ever renders at.
+const COVER_MAX_DIMENSION = 2000;
+const COVER_JPEG_QUALITY = 80;
+
+// Downloads a cover image, resizes/re-compresses it, and uploads the result
+// to Supabase Storage, returning its public URL. `upsert: true` means
+// re-running the migration for a post safely overwrites that post's
+// existing image in place, rather than accumulating new versions the way
+// committing to git did.
+async function uploadCoverImage(supabase, url, storagePath) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Image fetch failed (${res.status}): ${url}`);
-  const buffer = Buffer.from(await res.arrayBuffer());
-  await fs.writeFile(destPath, buffer);
+  const originalBuffer = Buffer.from(await res.arrayBuffer());
+
+  const buffer = await sharp(originalBuffer)
+    .resize({
+      width: COVER_MAX_DIMENSION,
+      height: COVER_MAX_DIMENSION,
+      fit: "inside",
+      withoutEnlargement: true,
+    })
+    .jpeg({ quality: COVER_JPEG_QUALITY })
+    .toBuffer();
+
+  const { error } = await supabase.storage
+    .from(POST_IMAGES_BUCKET)
+    .upload(storagePath, buffer, { contentType: "image/jpeg", upsert: true });
+  if (error) throw error;
+
+  const { data } = supabase.storage.from(POST_IMAGES_BUCKET).getPublicUrl(storagePath);
+  return data.publicUrl;
 }
 
 function estimateReadMinutes(text) {
@@ -294,8 +335,6 @@ async function main() {
       process.exit(1);
     }
   }
-
-  await fs.mkdir(IMAGES_DIR, { recursive: true });
 
   console.log("Fetching sitemap for the full list of posts...");
   const allSlugs = await fetchAllPostSlugs(SITEMAP_INDEX_URL);
@@ -379,11 +418,12 @@ async function main() {
       );
 
       const imageName = `${slugifyImageName(slug)}.jpg`;
-      const imageDest = path.join(IMAGES_DIR, imageName);
-      const coverPath = `/images/posts/${imageName}`;
 
+      // In a dry run (or if no image was found), fall back to a placeholder
+      // path so the logged/printed record still looks sensible.
+      let coverPath = `/images/posts/${imageName}`;
       if (!DRY_RUN && imageUrl) {
-        await downloadImage(imageUrl, imageDest);
+        coverPath = await uploadCoverImage(supabase, imageUrl, imageName);
       }
 
       const record = {
