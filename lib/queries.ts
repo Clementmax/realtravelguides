@@ -61,7 +61,8 @@ export async function getPosts(): Promise<Post[]> {
 
 export async function getPost(slug: string): Promise<Post | undefined> {
   const list = await getPosts();
-  return list.find((p) => p.slug === slug);
+  const target = slug.normalize("NFC");
+  return list.find((p) => p.slug.normalize("NFC") === target);
 }
 
 export async function getPostsByCategory(category: string): Promise<Post[]> {
