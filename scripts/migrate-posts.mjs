@@ -172,15 +172,20 @@ function getJsonLdCategories(document) {
   return [];
 }
 
-// Primary category source for posts outside the RSS window: Wix blog posts
-// typically show clickable category tags right on the page, linking to the
-// category archive (e.g. /journeysbyrail/categories/switzerland — the same
-// URL structure we preserved from the live site). Readability strips these
-// as "not article content" since they're navigation, not prose, but they're
-// still present in the raw page HTML. Returns canonical slugs directly
-// (no slugifyCategory needed, since these ARE the live site's real slugs).
+// Primary category source for posts outside the RSS window: each post page
+// renders its own assigned categories in a footer list marked
+// aria-label="Post categories" — that's the ONLY place to look. The site's
+// header navigation also links to every category (as a sitewide browse
+// menu), and matches the same /categories/ URL pattern, so an unscoped
+// a[href*="/categories/"] search picks up all 8 site categories from the
+// nav instead of the 1-2 actually assigned to this post. Readability
+// strips the real tag list too (as "not article content"), so this reads
+// straight from the raw page HTML rather than Readability's output.
+// Returns canonical slugs directly (no slugifyCategory needed, since these
+// ARE the live site's real slugs).
 function getCategoryLinksFromPage(document) {
-  const links = document.querySelectorAll('a[href*="/categories/"]');
+  const container = document.querySelector('ul[aria-label="Post categories"]');
+  const links = container ? container.querySelectorAll('a[href*="/categories/"]') : [];
   const slugs = new Set();
   for (const link of links) {
     const href = link.getAttribute("href") || "";
