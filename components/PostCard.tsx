@@ -7,7 +7,7 @@ export default function PostCard({
   post,
   categoryLabel,
 }: {
-  post: Post;
+  post: Pick<Post, "slug" | "title" | "cover" | "categories" | "read_minutes">;
   categoryLabel?: string;
 }) {
   const label = categoryLabel ?? post.categories[0];

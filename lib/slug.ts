@@ -7,8 +7,19 @@ export function normalizePostSlug(slug: string): string {
   } catch {
     // already decoded, or malformed encoding
   }
-  return decoded
+  return stripDiacritics(decoded);
+}
+
+export function stripDiacritics(value: string): string {
+  return value
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
+    .replace(/æ/gi, "ae")
+    .replace(/œ/gi, "oe")
+    .replace(/ß/g, "ss")
     .normalize("NFC");
+}
+
+export function foldForSearch(value: string): string {
+  return stripDiacritics(value || "").toLowerCase();
 }
