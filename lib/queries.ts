@@ -100,6 +100,7 @@ export async function getPosts(): Promise<Post[]> {
 }
 
 export async function getPost(slug: string): Promise<Post | undefined> {
+  if (!slug) return undefined;
   const list = await getPosts();
   const target = slug.normalize("NFC");
   return list.find((p) => p.slug.normalize("NFC") === target);
