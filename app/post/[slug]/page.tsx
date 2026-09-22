@@ -5,12 +5,14 @@ import { Metadata } from "next";
 import { getPost, getPosts, getCategoryLabelMap } from "@/lib/queries";
 import Newsletter from "@/components/Newsletter";
 import { ManagedPostImage } from "@/lib/types";
+import { normalizePostSlug } from "@/lib/slug";
 
 export const revalidate = 60;
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const posts = await getPosts();
-  return posts.map((p) => ({ slug: p.slug }));
+  return posts.map((p) => ({ slug: normalizePostSlug(p.slug) }));
 }
 
 export async function generateMetadata({

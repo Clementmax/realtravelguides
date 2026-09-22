@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Post } from "@/lib/types";
+import { normalizePostSlug } from "@/lib/slug";
 
 export default function JourneyCard({
   post,
@@ -13,7 +14,7 @@ export default function JourneyCard({
 
   return (
     <Link
-      href={`/post/${post.slug}`}
+      href={`/post/${normalizePostSlug(post.slug)}`}
       className="group block w-64 shrink-0 md:w-72"
     >
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-md">

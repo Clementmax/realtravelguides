@@ -5,6 +5,7 @@ import { books as seedBooks } from "@/lib/seed-data/books";
 import { posts as seedPosts } from "@/lib/seed-data/posts";
 import { categories as seedCategories } from "@/lib/seed-data/categories";
 import { Author, Book, Post, CategoryRecord } from "@/lib/types";
+import { normalizePostSlug } from "@/lib/slug";
 
 // Matches the `revalidate = 60` already set on the pages that use these.
 // Without this cache, every statically generated post page independently
@@ -102,8 +103,8 @@ export async function getPosts(): Promise<Post[]> {
 export async function getPost(slug: string): Promise<Post | undefined> {
   if (!slug) return undefined;
   const list = await getPosts();
-  const target = slug.normalize("NFC");
-  return list.find((p) => p.slug.normalize("NFC") === target);
+  const target = normalizePostSlug(slug);
+  return list.find((p) => normalizePostSlug(p.slug) === target);
 }
 
 export async function getPostsByCategory(category: string): Promise<Post[]> {

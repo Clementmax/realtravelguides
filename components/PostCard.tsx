@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Post } from "@/lib/types";
+import { normalizePostSlug } from "@/lib/slug";
 
 export default function PostCard({
   post,
@@ -12,13 +13,7 @@ export default function PostCard({
   const label = categoryLabel ?? post.categories[0];
 
   return (
-    // Same Unicode-normalization issue fixed in getPost() and
-    // generateStaticParams: the DB's raw slug and the pre-built static
-    // route may be in different Unicode forms (composed vs. decomposed
-    // accented characters) even though they look identical. Normalizing
-    // here ensures this link always points at the exact form Next.js
-    // actually built a page for.
-    <Link href={`/post/${post.slug.normalize("NFC")}`} className="group block">
+    <Link href={`/post/${normalizePostSlug(post.slug)}`} className="group block">
       <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md border border-border-line bg-paper-raised">
         <Image
           src={post.cover}
