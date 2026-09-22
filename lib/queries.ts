@@ -6,6 +6,7 @@ import { posts as seedPosts } from "@/lib/seed-data/posts";
 import { categories as seedCategories } from "@/lib/seed-data/categories";
 import { Author, Book, Post, CategoryRecord } from "@/lib/types";
 import { normalizePostSlug } from "@/lib/slug";
+import { stripMigratedPostChrome } from "@/lib/clean-post-body";
 
 // Matches the `revalidate = 60` already set on the pages that use these.
 // Without this cache, every statically generated post page independently
@@ -84,15 +85,23 @@ export async function getBooksByAuthor(authorSlug: string): Promise<Book[]> {
 
 const fetchPosts = unstable_cache(
   async () => {
-    if (!supabase) return seedPosts;
+    if (!supabase) {
+      return seedPosts.map((post) => ({
+        ...post,
+        body: stripMigratedPostChrome(post.body),
+      }));
+    }
     const { data, error } = await supabase
       .from("posts")
       .select("*")
       .order("published_at", { ascending: false });
     if (error || !data || data.length === 0) return seedPosts;
-    return data as Post[];
+    return (data as Post[]).map((post) => ({
+      ...post,
+      body: stripMigratedPostChrome(post.body),
+    }));
   },
-  ["posts"],
+  ["posts", "v2-strip-chrome"],
   { revalidate: 60, tags: ["posts"] }
 );
 
