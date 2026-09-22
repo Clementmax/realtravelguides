@@ -45,7 +45,7 @@ export default function Footer() {
             rigid schedules, just practical advice from local experts.
           </p>
         </div>
-        <div>
+        <div id="contact" className="scroll-mt-8">
           <h4 className="text-sm font-medium uppercase tracking-wide text-stone">
             Contact
           </h4>

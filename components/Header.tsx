@@ -2,10 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 const navLinks = [
+  { href: "/", label: "Home" },
   { href: "/journeysbyrail", label: "Journeys by rail" },
   { href: "/books", label: "Books" },
-  { href: "/elenarossetti", label: "Elena Rossetti" },
-  { href: "/sophiepicot", label: "Sophie Picot" },
+  { href: "#contact", label: "Contact" },
 ];
 
 export default function Header() {
@@ -24,7 +24,7 @@ export default function Header() {
             Real Travel Guides
           </span>
         </Link>
-        <nav className="hidden gap-6 text-sm text-stone md:flex">
+        <nav className="flex flex-wrap justify-end gap-x-6 gap-y-2 text-sm text-stone">
           {navLinks.map((link) => (
             <Link
               key={link.href}
