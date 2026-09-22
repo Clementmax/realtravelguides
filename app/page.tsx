@@ -344,7 +344,8 @@ export default async function HomePage() {
             Follow our journeys
           </p>
           <h2 className="mt-3 font-display text-3xl font-semibold text-paper">
-            Inspiration for exploring Europe differently
+            Inspiration for scenic routes, car-free escapes and remarkable
+            places across Europe — follow us on Instagram and Facebook.
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-paper/60">
             For weekly inspiration on rail journeys, car-free escapes and
