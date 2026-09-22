@@ -1,27 +1,5 @@
 import Image from "next/image";
 
-function InstagramIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.6" />
-      <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" />
-    </svg>
-  );
-}
-
-function FacebookIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
-      <path
-        d="M14 9.5h2.5V6.2h-2.5c-2.2 0-3.6 1.5-3.6 3.7v1.9H8v3.2h2.4V21h3.3v-6h2.4l.4-3.2h-2.8V10c0-.7.3-1.5 1.3-1.5Z"
-        fill="currentColor"
-      />
-      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
 export default function Footer() {
   return (
     <footer className="border-t border-border-line bg-paper-raised">
@@ -40,17 +18,20 @@ export default function Footer() {
             </h3>
           </div>
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-stone">
-            A small independent publisher dedicated to helping travelers explore
-            the world independently and responsibly — no organized tours, no
-            rigid schedules, just practical advice from local experts.
+            Real Travel Guides is an independent publisher helping travellers
+            explore Europe confidently and independently, through rail-led,
+            car-free journeys that make it easier to travel at your own pace and
+            experience more along the way.
           </p>
         </div>
         <div id="contact" className="scroll-mt-8">
           <h4 className="text-sm font-medium uppercase tracking-wide text-stone">
             Contact
           </h4>
-          <p className="mt-3 text-sm text-stone">
-            For general inquiries:{" "}
+          <p className="mt-3 text-sm leading-relaxed text-stone">
+            Have a question about Real Travel Guides?
+            <br />
+            Contact us at{" "}
             <a
               href="mailto:realtravelguides@gmail.com"
               className="text-moss underline underline-offset-2"
@@ -58,26 +39,6 @@ export default function Footer() {
               realtravelguides@gmail.com
             </a>
           </p>
-          <div className="mt-4 flex gap-3">
-            <a
-              href="https://www.instagram.com/real_travel_guides/"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Real Travel Guides on Instagram"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border-line text-stone transition-colors hover:border-moss hover:text-moss"
-            >
-              <InstagramIcon />
-            </a>
-            <a
-              href="https://www.facebook.com/profile.php?id=61577219447339"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Real Travel Guides on Facebook"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border-line text-stone transition-colors hover:border-moss hover:text-moss"
-            >
-              <FacebookIcon />
-            </a>
-          </div>
         </div>
       </div>
       <div className="border-t border-border-line px-6 py-5 text-center text-xs text-stone-light">
