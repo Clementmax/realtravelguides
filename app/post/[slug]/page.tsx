@@ -87,12 +87,17 @@ function figureHtml(image: ManagedPostImage) {
   `;
 }
 
+function evenFractions(count: number) {
+  if (count <= 0) return [];
+  return Array.from({ length: count }, (_, i) => (i + 1) / (count + 1));
+}
+
 function injectManagedImages(
   body: string,
   images: ManagedPostImage[] | null | undefined,
   cover: string
 ) {
-  const managed = managedImagesForBody(body, images, cover).slice(0, 3);
+  const managed = managedImagesForBody(body, images, cover);
   if (!managed.length || !/<[a-z][\s\S]*>/i.test(body)) return body;
 
   const positions: number[] = [];
@@ -101,7 +106,7 @@ function injectManagedImages(
   while ((match = paragraphEnd.exec(body)) !== null) positions.push(match.index + match[0].length);
   if (!positions.length) return body;
 
-  const targets = managed.length === 1 ? [0.5] : managed.length === 2 ? [0.38, 0.72] : [0.3, 0.56, 0.8];
+  const targets = evenFractions(managed.length);
   const insertions = managed.map((image, index) => ({
     position: positions[Math.min(positions.length - 1, Math.max(0, Math.round((positions.length - 1) * targets[index])))],
     figure: figureHtml(image),
@@ -120,8 +125,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!post) notFound();
 
   const categoryLabels = await getCategoryLabelMap();
-  const renderedBody = injectManagedImages(post.body, post.images, post.cover);
-  const managedForPlainText = managedImagesForBody(post.body, post.images, post.cover).slice(0, 3);
+  const renderedBody = injectManagedImages(post.body, post.images, post.video_url ? "" : post.cover);
+  const managedForPlainText = managedImagesForBody(post.body, post.images, post.video_url ? "" : post.cover);
 
   return (
     <article className="mx-auto max-w-2xl px-6 py-16">
@@ -154,9 +159,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <div dangerouslySetInnerHTML={{ __html: renderedBody }} />
         ) : (
           post.body.split("\n\n").map((para, i, paras) => {
-            const targets = managedForPlainText.length === 1 ? [Math.round(paras.length * 0.5)]
-              : managedForPlainText.length === 2 ? [Math.round(paras.length * 0.38), Math.round(paras.length * 0.72)]
-              : [Math.round(paras.length * 0.3), Math.round(paras.length * 0.56), Math.round(paras.length * 0.8)];
+            const fractions = evenFractions(managedForPlainText.length);
+            const targets = fractions.map((f) =>
+              Math.min(paras.length, Math.max(1, Math.round(paras.length * f)))
+            );
             const imageIndex = targets.indexOf(i + 1);
             const image = imageIndex >= 0 ? managedForPlainText[imageIndex] : undefined;
 
