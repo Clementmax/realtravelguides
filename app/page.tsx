@@ -269,7 +269,7 @@ export default async function HomePage() {
           <p className="eyebrow text-clay-dark">Scenic Rail Journeys</p>
           <div className="mt-3 flex items-baseline justify-between">
             <h2 className="font-display text-3xl font-semibold text-pine">Take the Scenic Route</h2>
-            <Link href="/category/scenicroutes" className="hidden text-sm text-moss hover:underline md:block">Explore Scenic Journeys</Link>
+            <Link href="/journeysbyrail/categories/scenicroutes" className="hidden text-sm text-moss hover:underline md:block">Explore Scenic Journeys</Link>
           </div>
           <p className="mt-2 max-w-2xl text-sm text-stone">
             Hand-picked scenic routes across Europe, carefully researched with practical advice to help you discover some of the continent&apos;s most memorable rail journeys.
@@ -286,7 +286,7 @@ export default async function HomePage() {
           <p className="eyebrow text-clay-dark">Culture &amp; Experiences</p>
           <div className="mt-3 flex items-baseline justify-between">
             <h2 className="font-display text-3xl font-semibold text-pine">Discover More by Rail</h2>
-            <Link href="/category/culture" className="hidden text-sm text-moss hover:underline md:block">Explore Culture &amp; Experiences</Link>
+            <Link href="/journeysbyrail/categories/culture" className="hidden text-sm text-moss hover:underline md:block">Explore Culture &amp; Experiences</Link>
           </div>
           <p className="mt-2 max-w-2xl text-sm text-stone">
             Explore historic cities, local traditions, food, festivals and unique experiences — with practical advice on getting there and exploring independently by train.
