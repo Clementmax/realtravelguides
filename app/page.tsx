@@ -340,17 +340,12 @@ export default async function HomePage() {
       {/* Newsletter CTA — dark section */}
       <section className="bg-ink-raised py-16 md:py-24">
         <div className="mx-auto max-w-2xl px-6 text-center">
-          <p className="eyebrow justify-center text-paper/50">
-            Follow our journeys
-          </p>
-          <h2 className="mt-3 font-display text-3xl font-semibold text-paper">
-            Inspiration for scenic routes, car-free escapes and remarkable
-            places across Europe — follow us on Instagram and Facebook.
-          </h2>
+          <h3 className="font-display text-2xl font-semibold text-paper">
+            Follow our Journeys
+          </h3>
           <p className="mt-3 text-sm leading-relaxed text-paper/60">
-            For weekly inspiration on rail journeys, car-free escapes and
-            remarkable places across Europe, follow Real Travel Guides on
-            Instagram and Facebook.
+            Inspiration for scenic rail routes, car-free escapes and remarkable
+            places across Europe — follow us on Instagram and Facebook.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <a
