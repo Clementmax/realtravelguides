@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function Newsletter({ variant = "light" }: { variant?: "light" | "dark" }) {
+export default function Newsletter({ variant = "light" }: { variant?: "light" | "dark" | "footer" }) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
     "idle"
@@ -29,6 +29,37 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
     } catch {
       setStatus("error");
     }
+  }
+
+  if (variant === "footer") {
+    return (
+      <div>
+        {status === "done" ? (
+          <p className="text-sm font-medium text-moss">Thanks for subscribing.</p>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
+            <input
+              type="email"
+              required
+              placeholder="you@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full min-w-0 rounded-md border border-border-line bg-paper px-3 py-2.5 text-sm text-pine placeholder:text-stone-light focus:outline-none focus:ring-2 focus:ring-moss sm:flex-1"
+            />
+            <button
+              type="submit"
+              disabled={status === "loading"}
+              className="whitespace-nowrap rounded-md bg-moss px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-moss-dark disabled:opacity-60"
+            >
+              {status === "loading" ? "Signing up…" : "Subscribe"}
+            </button>
+          </form>
+        )}
+        {status === "error" && (
+          <p className="mt-2 text-xs text-clay-dark">Enter a valid email first.</p>
+        )}
+      </div>
+    );
   }
 
   if (dark) {

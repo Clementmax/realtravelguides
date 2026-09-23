@@ -9,7 +9,6 @@ export const revalidate = 60;
 import BookCard from "@/components/BookCard";
 import DestinationCard from "@/components/DestinationCard";
 import JourneyCard from "@/components/JourneyCard";
-import Newsletter from "@/components/Newsletter";
 import HeroCarousel from "@/components/HeroCarousel";
 
 // The four countries the guides cover — shown as "Featured Destinations".
@@ -333,50 +332,6 @@ export default async function HomePage() {
                 </p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter CTA — dark section */}
-      <section className="bg-ink-raised py-16 md:py-24">
-        <div className="mx-auto max-w-2xl px-6 text-center">
-          <h3 className="font-display text-2xl font-semibold text-paper">
-            Follow our Journeys
-          </h3>
-          <p className="mt-3 text-sm leading-relaxed text-paper/60">
-            Inspiration for scenic rail routes, car-free escapes and remarkable
-            places across Europe — follow us on Instagram and Facebook.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="https://www.instagram.com/real_travel_guides/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-w-[8.5rem] items-center justify-center rounded-md border border-paper/25 bg-paper/10 px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-paper/15"
-            >
-              Instagram
-            </a>
-            <a
-              href="https://www.facebook.com/profile.php?id=61577219447339"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-w-[8.5rem] items-center justify-center rounded-md border border-paper/25 bg-paper/10 px-5 py-2.5 text-sm font-medium text-paper transition-colors hover:bg-paper/15"
-            >
-              Facebook
-            </a>
-          </div>
-
-          <div className="mt-14">
-            <h3 className="font-display text-2xl font-semibold text-paper">
-              Get the latest from Real Travel Guides
-            </h3>
-            <p className="mt-3 text-sm leading-relaxed text-paper/60">
-              New rail routes, independent travel ideas and special offers —
-              delivered straight to your inbox.
-            </p>
-            <div className="mt-8">
-              <Newsletter variant="dark" />
-            </div>
           </div>
         </div>
       </section>
