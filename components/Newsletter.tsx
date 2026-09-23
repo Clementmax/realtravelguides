@@ -37,7 +37,7 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
         {status === "done" ? (
           <p className="text-sm font-medium text-moss">Thanks for subscribing.</p>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-2 sm:flex-row">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <input
               type="email"
               required
