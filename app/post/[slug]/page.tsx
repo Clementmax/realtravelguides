@@ -3,7 +3,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPost, getPosts, getCategoryLabelMap } from "@/lib/queries";
-import Newsletter from "@/components/Newsletter";
 import { ManagedPostImage } from "@/lib/types";
 import { normalizePostSlug } from "@/lib/slug";
 
@@ -180,8 +179,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           })
         )}
       </div>
-
-      <div className="mt-16"><Newsletter /></div>
     </article>
   );
 }

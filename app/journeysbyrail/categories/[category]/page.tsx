@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getPostsByCategory, getCategories, getCategoryLabelMap } from "@/lib/queries";
 import PostCard from "@/components/PostCard";
-import Newsletter from "@/components/Newsletter";
 
 export const revalidate = 60;
 
@@ -66,10 +65,6 @@ export default async function CategoryPage({
           ))}
         </div>
       )}
-
-      <div className="mt-20">
-        <Newsletter />
-      </div>
     </div>
   );
 }

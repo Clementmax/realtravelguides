@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getAuthor, getBooksByAuthor, getAuthors } from "@/lib/queries";
 import BookCard from "@/components/BookCard";
-import Newsletter from "@/components/Newsletter";
 
 const VALID_SLUGS = ["elenarossetti", "sophiepicot"];
 
@@ -92,10 +91,6 @@ export default async function AuthorPage({
           </div>
         </div>
       )}
-
-      <div className="mt-16">
-        <Newsletter />
-      </div>
     </div>
   );
 }

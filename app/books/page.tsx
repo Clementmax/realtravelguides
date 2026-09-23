@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
 import { getBooks, getAuthors } from "@/lib/queries";
-import Newsletter from "@/components/Newsletter";
 
 export const revalidate = 60;
 
@@ -87,10 +86,6 @@ export default async function BooksPage() {
             </article>
           );
         })}
-      </div>
-
-      <div className="mt-20">
-        <Newsletter />
       </div>
     </div>
   );

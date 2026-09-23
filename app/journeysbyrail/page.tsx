@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import { getPosts, getCategories, getCategoryLabelMap } from "@/lib/queries";
 import JourneysByRailIndex from "@/components/JourneysByRailIndex";
-import Newsletter from "@/components/Newsletter";
 
 export const revalidate = 60;
 
@@ -43,10 +42,6 @@ export default async function JourneysByRailPage() {
         categories={categories}
         categoryLabels={categoryLabels}
       />
-
-      <div className="mt-20">
-        <Newsletter />
-      </div>
     </div>
   );
 }
