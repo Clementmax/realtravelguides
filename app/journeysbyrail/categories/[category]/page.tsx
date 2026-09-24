@@ -22,6 +22,7 @@ export async function generateMetadata({
   return {
     title: `${label} | Journeys by Rail`,
     description: `Rail travel guides, itineraries and insider tips for ${label}.`,
+    alternates: { canonical: `/journeysbyrail/categories/${category}` },
   };
 }
 

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getBooks, getPosts, getCategoryLabelMap } from "@/lib/queries";
 
@@ -5,6 +6,10 @@ import { getBooks, getPosts, getCategoryLabelMap } from "@/lib/queries";
 // at deploy time — otherwise edits made directly in Supabase (books,
 // posts, categories) wouldn't appear on the live site until the next push.
 export const revalidate = 60;
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 import BookCard from "@/components/BookCard";
 import DestinationCard from "@/components/DestinationCard";
 import JourneyCard from "@/components/JourneyCard";

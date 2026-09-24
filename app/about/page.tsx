@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   },
   description:
     "Meet the people behind Real Travel Guides and discover why we create practical, locally informed guides for independent rail travel across Europe.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

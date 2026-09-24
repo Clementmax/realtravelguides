@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Books",
   description:
     "Independent, self-guided rail travel guides for Italy, Switzerland, Spain and France — written by local experts, for sustainable and confident exploration.",
+  alternates: { canonical: "/books" },
 };
 
 export default async function BooksPage() {

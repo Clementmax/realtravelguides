@@ -24,6 +24,7 @@ export async function generateMetadata({
   return {
     title: author.name,
     description: author.short_bio,
+    alternates: { canonical: `/${author.slug}` },
   };
 }
 

@@ -22,7 +22,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) return {};
-  return { title: post.title, description: post.excerpt };
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: { canonical: `/post/${normalizePostSlug(post.slug)}` },
+  };
 }
 
 function normaliseImageRef(value: string) {

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Journeys by Rail",
   description:
     "Your go-to travel blog for exploring Italy, France, Switzerland and Spain through unforgettable train adventures — rail routes, real travel expectations, and insider tips on local food, culture, and history.",
+  alternates: { canonical: "/journeysbyrail" },
 };
 
 export default async function JourneysByRailPage() {
