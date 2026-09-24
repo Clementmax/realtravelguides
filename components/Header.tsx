@@ -5,7 +5,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/journeysbyrail", label: "Journeys by rail" },
   { href: "/books", label: "Books" },
-  { href: "#contact", label: "Contact" },
+  { href: "/about", label: "About" },
 ];
 
 export default function Header() {
