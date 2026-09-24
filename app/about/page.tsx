@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import TravelExperts from "@/components/TravelExperts";
 
 const ABOUT_TITLE = "About Real Travel Guides | Independent Rail Travel Experts";
@@ -30,7 +31,8 @@ export default function AboutPage() {
   return (
     <div>
       <section className="mx-auto max-w-5xl px-6 py-16 md:py-24">
-        <div className="max-w-2xl">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
+          <div>
           <p className="eyebrow text-clay-dark">The story behind the guides</p>
           <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-pine md:text-4xl">
             Why I Created Real Travel Guides
@@ -80,6 +82,18 @@ export default function AboutPage() {
             Carolyn Storme
           </p>
           <p className="mt-1 text-sm text-stone">Publisher, Real Travel Guides</p>
+          </div>
+          <figure className="group mt-12 lg:mt-1">
+            <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-md lg:max-w-none">
+              <Image
+                src="/images/authors/carolyn-storme.jpg"
+                alt="Carolyn Storme"
+                fill
+                sizes="(min-width: 1024px) 34vw, 384px"
+                className="object-cover object-[42%_center] grayscale transition-all duration-500 group-hover:grayscale-0"
+              />
+            </div>
+          </figure>
         </div>
       </section>
 
