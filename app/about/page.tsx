@@ -31,7 +31,7 @@ export default function AboutPage() {
   return (
     <div>
       <section className="mx-auto max-w-5xl px-6 py-16 md:py-24">
-        <div className="lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:grid-rows-[auto_auto] lg:gap-x-12">
+        <div className="lg:grid lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-x-12">
           <div className="lg:col-start-1 lg:row-start-1">
           <p className="eyebrow text-clay-dark">The story behind the guides</p>
           <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-pine md:text-4xl">
@@ -54,6 +54,10 @@ export default function AboutPage() {
               beyond the usual tourist trail — without the restrictions of a
               tour or the stress and expense of hiring a car.
             </p>
+          </div>
+          </div>
+          <div className="lg:col-start-1 lg:row-start-3">
+          <div className="mt-4 space-y-4 text-sm leading-relaxed text-stone">
             <p>
               That was the idea behind Real Travel Guides: to take the hard
               work out of planning while leaving travellers firmly in control.
@@ -85,7 +89,7 @@ export default function AboutPage() {
             </p>
             <p className="mt-1 text-sm text-stone">Publisher, Real Travel Guides</p>
           </div>
-          <figure className="group mt-12 lg:col-start-2 lg:row-start-2 lg:mt-0 lg:self-center">
+          <figure className="group mt-12 lg:col-start-2 lg:row-start-3 lg:mt-4 lg:self-start">
             <div className="relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-md lg:aspect-[4/3] lg:max-w-none">
               <Image
                 src="/images/authors/carolyn-storme.jpg"
