@@ -6,6 +6,19 @@ import { getPost, getPosts, getCategoryLabelMap } from "@/lib/queries";
 import { ManagedPostImage } from "@/lib/types";
 import { normalizePostSlug } from "@/lib/slug";
 
+function resolveSocialImage(src: string | null | undefined): string | undefined {
+  const value = src?.trim();
+  if (!value) return undefined;
+  if (/^https?:\/\//i.test(value)) return value;
+  return value.startsWith("/") ? value : `/${value}`;
+}
+
+function publishedTime(value: string | null | undefined): string | undefined {
+  const raw = value?.trim();
+  if (!raw || Number.isNaN(new Date(raw).getTime())) return undefined;
+  return raw;
+}
+
 export const revalidate = 60;
 export const dynamicParams = true;
 
@@ -22,10 +35,27 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await getPost(slug);
   if (!post) return {};
+  const canonical = `/post/${normalizePostSlug(post.slug)}`;
+  const image = resolveSocialImage(post.cover);
+  const published = publishedTime(post.published_at);
   return {
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: `/post/${normalizePostSlug(post.slug)}` },
+    alternates: { canonical },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: canonical,
+      type: "article",
+      ...(published ? { publishedTime: published } : {}),
+      ...(image ? { images: [{ url: image }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      ...(image ? { images: [image] } : {}),
+    },
   };
 }
 

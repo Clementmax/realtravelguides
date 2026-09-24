@@ -5,11 +5,27 @@ import { getBooks, getAuthors } from "@/lib/queries";
 
 export const revalidate = 60;
 
+const BOOKS_TITLE = "Books | Real Travel Guides";
+const BOOKS_DESCRIPTION =
+  "Independent, self-guided rail travel guides for Italy, Switzerland, Spain and France — written by local experts, for sustainable and confident exploration.";
+
 export const metadata: Metadata = {
   title: "Books",
-  description:
-    "Independent, self-guided rail travel guides for Italy, Switzerland, Spain and France — written by local experts, for sustainable and confident exploration.",
+  description: BOOKS_DESCRIPTION,
   alternates: { canonical: "/books" },
+  openGraph: {
+    title: BOOKS_TITLE,
+    description: BOOKS_DESCRIPTION,
+    url: "/books",
+    type: "website",
+    images: [{ url: "/images/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: BOOKS_TITLE,
+    description: BOOKS_DESCRIPTION,
+    images: ["/images/logo.png"],
+  },
 };
 
 export default async function BooksPage() {

@@ -4,11 +4,27 @@ import JourneysByRailIndex from "@/components/JourneysByRailIndex";
 
 export const revalidate = 60;
 
+const JOURNEYS_TITLE = "Journeys by Rail | Real Travel Guides";
+const JOURNEYS_DESCRIPTION =
+  "Your go-to travel blog for exploring Italy, France, Switzerland and Spain through unforgettable train adventures — rail routes, real travel expectations, and insider tips on local food, culture, and history.";
+
 export const metadata: Metadata = {
   title: "Journeys by Rail",
-  description:
-    "Your go-to travel blog for exploring Italy, France, Switzerland and Spain through unforgettable train adventures — rail routes, real travel expectations, and insider tips on local food, culture, and history.",
+  description: JOURNEYS_DESCRIPTION,
   alternates: { canonical: "/journeysbyrail" },
+  openGraph: {
+    title: JOURNEYS_TITLE,
+    description: JOURNEYS_DESCRIPTION,
+    url: "/journeysbyrail",
+    type: "website",
+    images: [{ url: "/images/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: JOURNEYS_TITLE,
+    description: JOURNEYS_DESCRIPTION,
+    images: ["/images/logo.png"],
+  },
 };
 
 export default async function JourneysByRailPage() {

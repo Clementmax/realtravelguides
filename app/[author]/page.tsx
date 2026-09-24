@@ -4,6 +4,13 @@ import { Metadata } from "next";
 import { getAuthor, getBooksByAuthor, getAuthors } from "@/lib/queries";
 import BookCard from "@/components/BookCard";
 
+function resolveSocialImage(src: string | null | undefined): string | undefined {
+  const value = src?.trim();
+  if (!value) return undefined;
+  if (/^https?:\/\//i.test(value)) return value;
+  return value.startsWith("/") ? value : `/${value}`;
+}
+
 const VALID_SLUGS = ["elenarossetti", "sophiepicot"];
 
 export const revalidate = 60;
@@ -21,10 +28,26 @@ export async function generateMetadata({
   const { author: slug } = await params;
   const author = await getAuthor(slug);
   if (!author) return {};
+  const title = `${author.name} | Real Travel Guides`;
+  const url = `/${author.slug}`;
+  const image = resolveSocialImage(author.photo);
   return {
     title: author.name,
     description: author.short_bio,
-    alternates: { canonical: `/${author.slug}` },
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description: author.short_bio,
+      url,
+      type: "website",
+      ...(image ? { images: [{ url: image }] } : {}),
+    },
+    twitter: {
+      card: image ? "summary_large_image" : "summary",
+      title,
+      description: author.short_bio,
+      ...(image ? { images: [image] } : {}),
+    },
   };
 }
 

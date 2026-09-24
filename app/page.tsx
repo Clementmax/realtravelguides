@@ -7,8 +7,25 @@ import { getBooks, getPosts, getCategoryLabelMap } from "@/lib/queries";
 // posts, categories) wouldn't appear on the live site until the next push.
 export const revalidate = 60;
 
+const HOME_TITLE = "Real Travel Guides";
+const HOME_DESCRIPTION =
+  "Real Travel Guides is a small independent publisher dedicated to helping travelers explore the world independently, sustainably, and with confidence — through rail-based, self-guided travel guides and local expertise.";
+
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
+  openGraph: {
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    url: "/",
+    type: "website",
+    images: [{ url: "/images/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: ["/images/logo.png"],
+  },
 };
 import BookCard from "@/components/BookCard";
 import DestinationCard from "@/components/DestinationCard";

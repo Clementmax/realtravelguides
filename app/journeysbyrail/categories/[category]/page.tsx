@@ -19,10 +19,24 @@ export async function generateMetadata({
   const labels = await getCategoryLabelMap();
   const label = labels[category];
   if (!label) return {};
+  const title = `${label} | Journeys by Rail | Real Travel Guides`;
+  const description = `Rail travel guides, itineraries and insider tips for ${label}.`;
+  const url = `/journeysbyrail/categories/${category}`;
   return {
     title: `${label} | Journeys by Rail`,
-    description: `Rail travel guides, itineraries and insider tips for ${label}.`,
-    alternates: { canonical: `/journeysbyrail/categories/${category}` },
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
   };
 }
 

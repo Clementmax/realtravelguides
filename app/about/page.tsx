@@ -1,13 +1,29 @@
 import type { Metadata } from "next";
 import TravelExperts from "@/components/TravelExperts";
 
+const ABOUT_TITLE = "About Real Travel Guides | Independent Rail Travel Experts";
+const ABOUT_DESCRIPTION =
+  "Meet the people behind Real Travel Guides and discover why we create practical, locally informed guides for independent rail travel across Europe.";
+
 export const metadata: Metadata = {
   title: {
-    absolute: "About Real Travel Guides | Independent Rail Travel Experts",
+    absolute: ABOUT_TITLE,
   },
-  description:
-    "Meet the people behind Real Travel Guides and discover why we create practical, locally informed guides for independent rail travel across Europe.",
+  description: ABOUT_DESCRIPTION,
   alternates: { canonical: "/about" },
+  openGraph: {
+    title: ABOUT_TITLE,
+    description: ABOUT_DESCRIPTION,
+    url: "/about",
+    type: "website",
+    images: [{ url: "/images/logo.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: ABOUT_TITLE,
+    description: ABOUT_DESCRIPTION,
+    images: ["/images/logo.png"],
+  },
 };
 
 export default function AboutPage() {
