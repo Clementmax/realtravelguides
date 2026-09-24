@@ -21,6 +21,26 @@ const nextConfig: NextConfig = {
         destination: "/journeysbyrail/categories/:slug",
         permanent: true,
       },
+      {
+        source: "/blog",
+        destination: "/journeysbyrail",
+        permanent: true,
+      },
+      {
+        source: "/journeysbyrail/categories/exhibitions",
+        destination: "/journeysbyrail/categories/culture",
+        permanent: true,
+      },
+      {
+        source: "/copy-of-books",
+        destination: "/sophiepicot",
+        permanent: true,
+      },
+      {
+        source: "/copy-of-sophie-picot",
+        destination: "/elenarossetti",
+        permanent: true,
+      },
     ];
   },
 };
