@@ -31,6 +31,7 @@ import BookCard from "@/components/BookCard";
 import DestinationCard from "@/components/DestinationCard";
 import JourneyCard from "@/components/JourneyCard";
 import HeroCarousel from "@/components/HeroCarousel";
+import ReaderReviews from "@/components/ReaderReviews";
 
 // The four countries the guides cover — shown as "Featured Destinations".
 // This is intentionally separate from the full (dynamic) category list,
@@ -163,6 +164,8 @@ export default async function HomePage() {
             ))}
           </div>
         </section>
+
+        <ReaderReviews />
       </div>
 
       {/* Expertise — dark section */}
