@@ -2,20 +2,30 @@
 
 import { useState } from "react";
 
+type Status = "idle" | "loading" | "subscribed" | "already" | "invalid" | "error";
+
+function confirmation(status: Status) {
+  if (status === "subscribed") return "Thanks for subscribing.";
+  if (status === "already") return "You're already subscribed.";
+  return null;
+}
+
+function problem(status: Status) {
+  if (status === "invalid") return "Please enter a valid email address.";
+  if (status === "error") return "We couldn't subscribe you just now. Please try again.";
+  return null;
+}
+
 export default function Newsletter({ variant = "light" }: { variant?: "light" | "dark" | "footer" }) {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
-    "idle"
-  );
+  const [status, setStatus] = useState<Status>("idle");
 
   const dark = variant === "dark";
+  const confirmed = confirmation(status);
+  const issue = problem(status);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email.includes("@")) {
-      setStatus("error");
-      return;
-    }
     setStatus("loading");
     try {
       const res = await fetch("/api/subscribe", {
@@ -23,9 +33,26 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
-      if (!res.ok) throw new Error("failed");
-      setStatus("done");
-      setEmail("");
+      const data = (await res.json().catch(() => null)) as { result?: string } | null;
+      if (res.status === 400) {
+        setStatus("invalid");
+        return;
+      }
+      if (!res.ok) {
+        setStatus("error");
+        return;
+      }
+      if (data?.result === "subscribed") {
+        setStatus("subscribed");
+        setEmail("");
+        return;
+      }
+      if (data?.result === "already_subscribed") {
+        setStatus("already");
+        setEmail("");
+        return;
+      }
+      setStatus("error");
     } catch {
       setStatus("error");
     }
@@ -34,8 +61,8 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
   if (variant === "footer") {
     return (
       <div>
-        {status === "done" ? (
-          <p className="text-sm font-medium text-moss">Thanks for subscribing.</p>
+        {confirmed ? (
+          <p className="text-sm font-medium text-moss">{confirmed}</p>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <input
@@ -55,8 +82,8 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
             </button>
           </form>
         )}
-        {status === "error" && (
-          <p className="mt-2 text-xs text-clay-dark">Enter a valid email first.</p>
+        {issue && (
+          <p className="mt-2 text-xs text-clay-dark">{issue}</p>
         )}
       </div>
     );
@@ -65,10 +92,8 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
   if (dark) {
     return (
       <div>
-        {status === "done" ? (
-          <p className="text-sm font-medium text-paper">
-            Thanks for subscribing.
-          </p>
+        {confirmed ? (
+          <p className="text-sm font-medium text-paper">{confirmed}</p>
         ) : (
           <form
             onSubmit={handleSubmit}
@@ -91,9 +116,7 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
             </button>
           </form>
         )}
-        {status === "error" && (
-          <p className="mt-2 text-xs text-clay">Enter a valid email first.</p>
-        )}
+        {issue && <p className="mt-2 text-xs text-clay">{issue}</p>}
       </div>
     );
   }
@@ -109,10 +132,8 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
           spam, unsubscribe whenever.
         </p>
       </div>
-      {status === "done" ? (
-        <p className="mt-4 text-sm font-medium text-moss md:mt-0">
-          Thanks for subscribing.
-        </p>
+      {confirmed ? (
+        <p className="mt-4 text-sm font-medium text-moss md:mt-0">{confirmed}</p>
       ) : (
         <form
           onSubmit={handleSubmit}
@@ -135,11 +156,7 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
           </button>
         </form>
       )}
-      {status === "error" && (
-        <p className="mt-2 text-xs text-clay-dark md:hidden">
-          Enter a valid email first.
-        </p>
-      )}
+      {issue && <p className="mt-2 text-xs text-clay-dark">{issue}</p>}
     </div>
   );
 }

@@ -1,32 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
-// Stores signups in Supabase's `subscribers` table for now. If/when you pick
-// a newsletter service (e.g. Buttondown), swap the body of this function for
-// a call to that service's API instead.
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MAX_EMAIL_LENGTH = 320;
+
+function invalidEmail() {
+  return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+}
+
+function saveFailed() {
+  return NextResponse.json({ error: "Could not subscribe" }, { status: 500 });
+}
+
+// Stores signups in Supabase's `subscribers` table. The insert does not read
+// the row back: RLS allows anonymous inserts and blocks selects.
 export async function POST(req: NextRequest) {
-  const { email } = await req.json();
-
-  if (!email || typeof email !== "string" || !email.includes("@")) {
-    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return invalidEmail();
   }
 
-  if (!supabase) {
-    // Supabase not configured yet — accept the request so the UI still
-    // works in early preview, but nothing is persisted.
-    return NextResponse.json({ ok: true, persisted: false });
+  const email =
+    typeof body === "object" && body !== null && "email" in body
+      ? body.email
+      : undefined;
+
+  if (typeof email !== "string") return invalidEmail();
+
+  const trimmed = email.trim();
+  if (
+    trimmed.length === 0 ||
+    trimmed.length > MAX_EMAIL_LENGTH ||
+    !EMAIL_PATTERN.test(trimmed)
+  ) {
+    return invalidEmail();
   }
 
-  const { error } = await supabase
-    .from("subscribers")
-    .insert({ email })
-    .select()
-    .single();
+  if (!supabase) return saveFailed();
 
-  // Ignore unique-constraint errors (already subscribed) — treat as success.
-  if (error && error.code !== "23505") {
-    return NextResponse.json({ error: "Could not subscribe" }, { status: 500 });
+  const { error } = await supabase.from("subscribers").insert({ email: trimmed });
+
+  if (error?.code === "23505") {
+    return NextResponse.json({ ok: true, result: "already_subscribed" });
   }
 
-  return NextResponse.json({ ok: true, persisted: true });
+  if (error) return saveFailed();
+
+  return NextResponse.json({ ok: true, result: "subscribed" });
 }
