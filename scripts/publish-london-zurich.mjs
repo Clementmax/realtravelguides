@@ -201,6 +201,34 @@ function inflateRaw(data) {
   return inflateRawSync(data);
 }
 
+const BOOKING_H2 = "How to Book the Journey Independently";
+
+/** Citation anchors appended at sentence ends — keep only inside the booking section. */
+function stripCitationAnchorsOutsideBooking(html) {
+  const h2 = `<h2>${BOOKING_H2}</h2>`;
+  const start = html.indexOf(h2);
+  if (start === -1) throw new Error(`Missing booking heading: ${BOOKING_H2}`);
+  const afterStart = start + h2.length;
+  const nextH2 = html.indexOf("<h2>", afterStart);
+  const end = nextH2 === -1 ? html.length : nextH2;
+  const before = html.slice(0, start);
+  const booking = html.slice(start, end);
+  const after = html.slice(end);
+
+  const patterns = [
+    /\s*<a[^>]*href="[^"]*eurostar\.com[^"]*"[^>]*>Eurostar<\/a>/gi,
+    /\s*<a[^>]*href="[^"]*sncf-connect\.com[^"]*"[^>]*>sncf-connect\.com<\/a>/gi,
+    /\s*<a[^>]*href="[^"]*bahn\.de[^"]*"[^>]*>Deutsche Bahn<\/a>/gi,
+    /\s*<a[^>]*href="[^"]*zuerich\.com[^"]*"[^>]*>Zuerich<\/a>/gi,
+  ];
+  const strip = (chunk) => {
+    let out = chunk;
+    for (const re of patterns) out = out.replace(re, "");
+    return out;
+  };
+  return strip(before) + booking + strip(after);
+}
+
 function buildBody(blocks) {
   const parts = [];
   let photo = 0;
@@ -259,10 +287,6 @@ function buildBody(blocks) {
       parts.push(
         `<p>${link("https://mybook.to/SwitzerlandByTrain", "Discover Touring Switzerland by Train")}</p>`
       );
-      parts.push("<p>Or explore the complete Real Travel Guides collection:</p>");
-      parts.push(
-        `<p>${link("https://mybook.to/RealTravelGuidesBooks", "Explore our Touring by Train guides")}</p>`
-      );
       continue;
     }
 
@@ -272,7 +296,7 @@ function buildBody(blocks) {
   if (photo !== PHOTOS.length) {
     throw new Error(`Expected ${PHOTOS.length} photographs, matched ${photo}`);
   }
-  return parts.join("\n");
+  return stripCitationAnchorsOutsideBooking(parts.join("\n"));
 }
 
 function estimateReadMinutes(html) {
