@@ -17,13 +17,29 @@ export const metadata: Metadata = {
     description: ABOUT_DESCRIPTION,
     url: "/about",
     type: "website",
-    images: [{ url: "/images/logo.png" }],
+    images: [
+      {
+        url: "/images/real-travel-guides-social.jpg",
+        width: 1024,
+        height: 537,
+        type: "image/jpeg",
+        alt: "Real Travel Guides – independent rail travel across Europe",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: ABOUT_TITLE,
     description: ABOUT_DESCRIPTION,
-    images: ["/images/logo.png"],
+    images: [
+      {
+        url: "/images/real-travel-guides-social.jpg",
+        width: 1024,
+        height: 537,
+        type: "image/jpeg",
+        alt: "Real Travel Guides – independent rail travel across Europe",
+      },
+    ],
   },
 };
 

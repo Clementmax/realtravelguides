@@ -18,13 +18,29 @@ export const metadata: Metadata = {
     description: HOME_DESCRIPTION,
     url: "/",
     type: "website",
-    images: [{ url: "/images/logo.png" }],
+    images: [
+      {
+        url: "/images/real-travel-guides-social.jpg",
+        width: 1024,
+        height: 537,
+        type: "image/jpeg",
+        alt: "Real Travel Guides – independent rail travel across Europe",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: HOME_TITLE,
     description: HOME_DESCRIPTION,
-    images: ["/images/logo.png"],
+    images: [
+      {
+        url: "/images/real-travel-guides-social.jpg",
+        width: 1024,
+        height: 537,
+        type: "image/jpeg",
+        alt: "Real Travel Guides – independent rail travel across Europe",
+      },
+    ],
   },
 };
 import BookCard from "@/components/BookCard";
