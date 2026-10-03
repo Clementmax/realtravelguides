@@ -1,0 +1,683 @@
+---RELS---
+rId8 media/image4.jpeg
+rId13 media/image8.jpg
+rId18 https://www.sncf-connect.com
+rId3 webSettings.xml
+rId21 https://mybook.to/TouringFranceByTrain
+rId7 media/image3.jpg
+rId12 media/image7.jpg
+rId17 https://www.trenitalia.com
+rId2 settings.xml
+rId16 https://www.eurostar.com
+rId20 https://www.eurostar.com
+rId1 styles.xml
+rId6 media/image2.jpg
+rId11 media/image6.jpg
+rId24 theme/theme1.xml
+rId5 https://www.sncf-connect.com
+rId15 media/image10.jpg
+rId23 fontTable.xml
+rId10 https://www.sncf-connect.com
+rId19 https://www.trenitalia.com
+rId4 media/image1.jpg
+rId9 media/image5.jpg
+rId14 media/image9.jpg
+rId22 https://mybook.to/TouringItalybyTrain
+---P1 style= imgs=0
+Paris to Turin by Train: Take the Long Way Through Chambéry
+  BOLD ["Paris to Turin by Train: Take the Long Way Through Chambéry"]
+---P2 style= imgs=1
+  IMG media/image1.jpg
+---P3 style= imgs=0
+Paris to Turin sounds like a journey between two great European cities.
+---P4 style= imgs=0
+But the place we’d add is the one most travellers pass straight through.
+---P5 style= imgs=0
+Chambéry sits at the foot of the French Alps, surrounded by the mountains of Savoie and just a few hours by train from both Paris and Turin. Once the capital of the Duchy of Savoy, its pastel-coloured old town is threaded with hidden passageways beneath a great ducal château.
+---P6 style= imgs=0
+Spend a night here and Paris to Turin becomes something much more interesting.
+---P7 style= imgs=0
+One morning you’re drinking coffee in Paris. That afternoon you’re wandering beneath the walls of the Château des Ducs de Savoie. The following day, the railway carries you through the Maurienne Valley and beneath the Alps into Italy.
+---P8 style= imgs=0
+Your destination is Turin — Baroque, elegant, gastronomic and still one of Italy’s most underrated cities.
+---P9 style= imgs=0
+And the two stops are connected by far more than a railway line.
+---P10 style= imgs=0
+The House of Savoy ruled first from Chambéry and later from Turin. Even the Shroud of Turin made the journey across the Alps before you.
+---P11 style= imgs=0
+Coming from London? You can join the same adventure by Eurostar, turning this into a completely flight-free journey from the UK too.
+---P12 style= imgs=0
+The Journey at a Glance
+  BOLD ["The Journey at a Glance"]
+---P13 style= imgs=0
+Day 1: Paris → Chambéry
+  BOLD ["Day 1: Paris → Chambéry"]
+---P14 style= imgs=0
+Take a morning TGV from Paris Gare de Lyon to Chambéry. The fastest direct services take under three hours.
+---P15 style= imgs=0
+Spend the afternoon and evening exploring Chambéry.
+---P16 style= imgs=0
+Stay one night.
+---P17 style= imgs=0
+Day 2: Chambéry → Turin
+  BOLD ["Day 2: Chambéry → Turin"]
+---P18 style= imgs=0
+Enjoy another morning in Chambéry before taking an afternoon TGV through the Alps to Torino Porta Susa.
+---P19 style= imgs=0
+Stay two nights.
+---P20 style= imgs=0
+Day 3: Turin
+  BOLD ["Day 3: Turin"]
+---P21 style= imgs=0
+A full day exploring the city.
+---P22 style= imgs=0
+Day 4: Turin
+  BOLD ["Day 4: Turin"]
+---P23 style= imgs=0
+Enjoy another morning or afternoon in Turin before finishing your journey — or continuing south through Italy.
+---P24 style= imgs=0
+Day 1: Paris to Chambéry
+  BOLD ["Day 1: Paris to Chambéry"]
+---P25 style= imgs=0
+Start at Paris Gare de Lyon.
+  BOLD ["Paris Gare de Lyon"]
+---P26 style= imgs=0
+Direct TGV INOUI services reach Chambéry-Challes-les-Eaux in as little as around 2 hours 50 minutes.
+  BOLD ["Chambéry-Challes-les-Eaux"]
+---P27 style= imgs=0
+Book through SNCF Connect:
+---P28 style= imgs=0
+https://www.sncf-connect.com
+  LINK "https://www.sncf-connect.com" https://www.sncf-connect.com
+---P29 style= imgs=0
+Choose a morning departure if you can.
+---P30 style= imgs=0
+Paris quickly disappears behind you and the journey becomes increasingly rural as the train heads southeast.
+---P31 style= imgs=0
+Then the landscape begins to change.
+---P32 style= imgs=0
+Mountains appear around the railway.
+---P33 style= imgs=0
+You’re in Savoie.
+---P34 style= imgs=0
+Why Stop in Chambéry?
+  BOLD ["Why Stop in Chambéry?"]
+---P35 style= imgs=0
+Most international travellers don’t.
+---P36 style= imgs=0
+That’s part of its appeal.
+---P37 style= imgs=0
+Chambéry was the political centre of the House of Savoy for centuries, long before Turin became the dynasty’s capital.
+---P38 style= imgs=0
+The Savoys controlled territories stretching across the Alps, and their story eventually became inseparable from that of Italy itself. The dynasty would go on to provide the kings of unified Italy.
+---P39 style= imgs=0
+So Chambéry isn’t simply a convenient place to break the railway journey.
+---P40 style= imgs=0
+It provides the missing chapter between France and Turin.
+---P41 style= imgs=0
+The historic centre is compact enough to explore on foot, but wonderfully atmospheric: narrow lanes, pastel façades, Italianate courtyards and mysterious passageways beneath the former castle of the Dukes of Savoy.
+---P42 style= imgs=0
+Leave your bags and start walking.
+---P43 style= imgs=0
+Begin with the Elephants
+  BOLD ["Begin with the Elephants"]
+---P44 style= imgs=0
+Chambéry’s most famous landmark is certainly one of France’s more unusual fountains.
+---P45 style= imgs=0
+The Fontaine des Éléphants consists of four elephant forequarters emerging from the base of a monumental column dedicated to General Benoît de Boigne.
+  BOLD ["Fontaine des Éléphants"]
+---P46 style= imgs=0
+Born in Chambéry, de Boigne made his fortune during an extraordinary military career in India before returning home and becoming an important benefactor of the city.
+---P47 style= imgs=0
+Chambéry’s inhabitants have given his grand monument a rather less dignified nickname: les quatre sans culs — the four without backsides.
+---P48 style= imgs=0
+From here, disappear into the old town.
+---P49 style= imgs=1
+  IMG media/image2.jpg
+---P50 style= imgs=0
+Find Chambéry’s Hidden Passages
+  BOLD ["Find Chambéry’s Hidden Passages"]
+---P51 style= imgs=0
+Don’t explore Chambéry by marching directly between monuments.
+---P52 style= imgs=0
+Get lost.
+---P53 style= imgs=0
+The medieval centre developed within a confined space and buildings were gradually squeezed together as the city grew.
+---P54 style= imgs=0
+The result is a network of narrow passageways known as allées, cutting beneath and between buildings to connect streets and hidden courtyards.
+  BOLD ["allées"]
+---P55 style= imgs=0
+Some are immediately obvious.
+---P56 style= imgs=0
+Others look like private entrances until you realise they lead somewhere.
+---P57 style= imgs=0
+Duck beneath the arches. Look upwards at painted façades and wrought-iron balconies. Follow whichever lane looks interesting.
+---P58 style= imgs=0
+This is a city where curiosity pays off.
+---P59 style= imgs=0
+Eventually, make your way towards the building that explains why this relatively small Alpine city was once so important.
+---P60 style= imgs=1
+  IMG media/image3.jpg
+---P61 style= imgs=0
+Château des Ducs de Savoie
+  BOLD ["Château des Ducs de Savoie"]
+---P62 style= imgs=0
+The Château des Ducs de Savoie dominates Chambéry’s historic centre.
+  BOLD ["Château des Ducs de Savoie"]
+---P63 style= imgs=0
+What began as a medieval fortress gradually developed into the seat of the Counts and later Dukes of Savoy.
+---P64 style= imgs=0
+Their territories stretched across the Alps.
+---P65 style= imgs=0
+That geography matters.
+---P66 style= imgs=0
+In the 16th century, the dynasty shifted its political centre from Chambéry to Turin.
+---P67 style= imgs=0
+Tomorrow’s train journey therefore follows, in a loose sense, the historic movement of Savoy power from one side of the Alps to the other.
+---P68 style= imgs=0
+Parts of the château are occupied by government offices today, but guided visits provide access to areas of the historic complex.
+---P69 style= imgs=0
+And inside is another fascinating connection with tomorrow’s destination.
+---P70 style= imgs=1
+  IMG media/image4.jpeg
+---P71 style= imgs=0
+Before Turin, the Shroud Was Here
+  BOLD ["Before Turin, the Shroud Was Here"]
+---P72 style= imgs=0
+The Sainte-Chapelle of Chambéry once housed the object now known throughout the world as the Shroud of Turin.
+  BOLD ["Shroud of Turin"]
+---P73 style= imgs=0
+The House of Savoy brought the Shroud to Chambéry during the 15th century, and it remained here for more than a century.
+---P74 style= imgs=0
+In 1578 it was transferred across the Alps to Turin.
+---P75 style= imgs=0
+Tomorrow, you’re following it.
+---P76 style= imgs=0
+Whatever your views about the Shroud itself, the historical connection gives the journey between these two cities an unexpected coherence.
+---P77 style= imgs=0
+Chambéry and Turin stop feeling like separate destinations.
+---P78 style= imgs=0
+They become chapters of the same story.
+---P79 style= imgs=0
+Where to Eat in Chambéry
+  BOLD ["Where to Eat in Chambéry"]
+---P80 style= imgs=0
+You’re in Savoie.
+---P81 style= imgs=0
+This is not the evening for restrained portions.
+---P82 style= imgs=0
+Look for tartiflette, made with potatoes, onions, lardons and Reblochon; Savoyard fondue; raclette; local charcuterie; and mountain cheeses including Beaufort and Tomme de Savoie.
+  BOLD ["tartiflette"]
+---P83 style= imgs=0
+For something contemporary, Le Café de Lyon @cafedelyonchambery works with seasonal ingredients and local producers, combining the feel of a French restaurant with a relaxed wine-bar atmosphere.
+  BOLD ["Le Café de Lyon @cafedelyonchambery"]
+---P84 style= imgs=0
+Another appealing option in the old town is La Maniguette @la.maniguette.epicurieux, where the menu changes with the seasons and draws on produce from local artisans and suppliers.
+  BOLD ["La Maniguette @la.maniguette.epicurieux"]
+---P85 style= imgs=0
+Or simply find a traditional Savoyard restaurant and order the cheese.
+---P86 style= imgs=0
+Tomorrow you’re going to Piedmont.
+---P87 style= imgs=0
+Things aren’t about to get lighter.
+---P88 style= imgs=0
+Where to Stay in Chambéry
+  BOLD ["Where to Stay in Chambéry"]
+---P89 style= imgs=0
+For a special overnight stop, our choice would be Petit Hôtel Confidentiel @phc_chambery
+  BOLD ["Petit Hôtel Confidentiel","@","p","hc_chambery"]
+---P90 style= imgs=0
+Hidden behind a discreet entrance on Rue de la Trésorerie, immediately below the Château des Ducs de Savoie, this small boutique hotel occupies a historic building in the pedestrianised old town.
+---P91 style= imgs=0
+Inside, the style is contemporary rather than traditionally Alpine, with individually designed rooms and suites and a spa with pool, sauna and hammam.
+---P92 style= imgs=0
+It suits Chambéry perfectly: intimate, slightly hidden and much more interesting than you might expect from the outside.
+---P93 style= imgs=0
+Most importantly for this itinerary, you wake up right in the historic centre.
+---P94 style= imgs=0
+Day 2: Don’t Rush to Turin
+  BOLD ["Day 2: Don’t Rush to Turin"]
+---P95 style= imgs=0
+Don’t take the first train out.
+---P96 style= imgs=0
+Give Chambéry another morning.
+---P97 style= imgs=0
+One of the most interesting places to visit before crossing into Italy is the Musée des Beaux-Arts, housed in the city’s former grain hall.
+  BOLD ["Musée des Beaux-Arts"]
+---P98 style= imgs=0
+Its collection is particularly strong in Italian painting from the late Middle Ages onwards.
+---P99 style= imgs=0
+There is something wonderfully appropriate about spending the morning looking at Italian art before boarding a train across the Alps.
+---P100 style= imgs=0
+Alternatively, simply enjoy Chambéry at a slower pace.
+---P101 style= imgs=0
+Browse the food shops around Les Halles, pick up some local cheese and wander through the allées you missed yesterday.
+---P102 style= imgs=0
+If you have more time, head slightly beyond the centre to Les Charmettes.
+  BOLD ["Les Charmettes"]
+---P103 style= imgs=1
+  IMG media/image5.jpg
+---P104 style= imgs=0
+Rousseau at Les Charmettes
+  BOLD ["Rousseau at Les Charmettes"]
+---P105 style= imgs=0
+The philosopher Jean-Jacques Rousseau lived at Les Charmettes with Madame de Warens during the 1730s and later remembered this period as one of the happiest of his life.
+  BOLD ["Jean-Jacques Rousseau"]
+---P106 style= imgs=0
+The house sits in a green valley above Chambéry, surrounded by gardens and woodland.
+---P107 style= imgs=0
+Here Rousseau read, studied music, explored botany and developed ideas that would later influence his writing.
+---P108 style= imgs=0
+It feels remarkably rural considering how close you are to the city.
+---P109 style= imgs=0
+Check opening times before setting out, particularly outside the main visitor season.
+---P110 style= imgs=0
+Then collect your luggage.
+---P111 style= imgs=0
+It’s time to cross the Alps.
+---P112 style= imgs=0
+Chambéry to Turin: The Journey Through the Mountains
+  BOLD ["Chambéry to Turin: The Journey Through the Mountains"]
+---P113 style= imgs=0
+This is the train ride that makes the entire itinerary worthwhile.
+---P114 style= imgs=0
+Direct international TGV services connect Chambéry-Challes-les-Eaux with Torino Porta Susa, with the fastest journeys taking around 2 hours 40 minutes.
+  BOLD ["Chambéry-Challes-les-Eaux","Torino Porta Susa"]
+---P115 style= imgs=0
+There are far fewer international trains than domestic French services, so check the timetable for your particular date before booking your hotels.
+---P116 style= imgs=0
+Book through SNCF Connect:
+---P117 style= imgs=0
+https://www.sncf-connect.com
+  LINK "https://www.sncf-connect.com" https://www.sncf-connect.com
+---P118 style= imgs=0
+And if you have a choice, travel during daylight.
+---P119 style= imgs=0
+From Chambéry, the railway enters the Maurienne Valley, following one of the great historic corridors across the Western Alps.
+  BOLD ["Maurienne Valley"]
+---P120 style= imgs=0
+Villages appear beneath steep mountain slopes as the valley narrows towards Modane.
+---P121 style= imgs=0
+Then the train disappears beneath the mountains through the Fréjus rail tunnel.
+---P122 style= imgs=0
+You emerge in Italy.
+---P123 style= imgs=0
+From Oulx, the railway descends through Piedmont towards Turin.
+---P124 style= imgs=0
+France hasn’t abruptly become Italy.
+---P125 style= imgs=0
+You’ve watched one become the other.
+---P126 style= imgs=0
+Arriving in Turin
+  BOLD ["Arriving in Turin"]
+---P127 style= imgs=0
+Turin appears gradually.
+---P128 style= imgs=0
+The mountains begin to recede, the landscape opens and then the city takes over.
+---P129 style= imgs=0
+Arrive at Torino Porta Susa and you’re in a place that many international travellers still bypass on their way to Milan, Florence or Venice.
+  BOLD ["Torino Porta Susa"]
+---P130 style= imgs=0
+Don’t.
+---P131 style= imgs=0
+Turin deserves time.
+---P132 style= imgs=0
+It was the first capital of unified Italy, the historic home of the House of Savoy and later the powerhouse of Italy’s industrial revolution.
+---P133 style= imgs=0
+But those descriptions don’t really capture how enjoyable it is.
+---P134 style= imgs=0
+Turin is elegant without being showy.
+---P135 style= imgs=0
+Baroque palaces frame enormous squares. Kilometres of covered arcades shelter cafés, bookshops and chocolate shops. The River Po curves along the eastern side of the centre and, on clear days, the Alps form an extraordinary backdrop.
+---P136 style= imgs=0
+And then there’s the food.
+---P137 style= imgs=0
+Two nights won’t feel excessive.
+---P138 style= imgs=0
+Where to Stay in Turin
+  BOLD ["Where to Stay in Turin"]
+---P139 style= imgs=0
+For somewhere creative, sociable and completely different from a conventional city hotel, try Combo Torino @thisiscombo.
+  BOLD ["Combo Torino @thisiscombo"]
+---P140 style= imgs=0
+Combo occupies a converted historic fire station beside Porta Palazzo, one of Turin’s most fascinating neighbourhoods and home to its huge food market.
+---P141 style= imgs=0
+Part hotel and hostel, part restaurant, bar and cultural space, it has a distinctly contemporary feel, with private rooms alongside shared accommodation and a programme that can include DJ sets, live music, exhibitions and other events.
+---P142 style= imgs=0
+It’s the sort of place where you can come back from sightseeing, order a drink and actually want to stay downstairs for the evening.
+---P143 style= imgs=0
+For something quieter and more grown-up without losing the independent feel, Opera35 Boutique Hotel @opera35_torino occupies a restored 19th-century neoclassical palazzo close to Piazza Vittorio Veneto.
+  BOLD ["Opera35 Boutique Hotel @opera35_torino"]
+---P144 style= imgs=0
+Original frescoes, stucco and historic architectural details have been retained alongside contemporary interiors, with a peaceful internal courtyard at the heart of the property.
+---P145 style= imgs=0
+Its location is particularly good for this itinerary: the River Po, Piazza Vittorio Veneto, Piazza Castello and much of central Turin can all be reached on foot.
+---P146 style= imgs=0
+Two very different stays — but both feel far more connected to Turin than an anonymous international hotel.
+---P147 style= imgs=1
+  IMG media/image6.jpg
+---P148 style= imgs=0
+Your First Evening: Learn the Art of Aperitivo
+  BOLD ["Your First Evening: Learn the Art of Aperitivo"]
+---P149 style= imgs=0
+Don’t rush immediately into dinner.
+---P150 style= imgs=0
+Turin has an important place in the history of the Italian aperitivo.
+---P151 style= imgs=0
+Vermouth became commercially established here during the 18th century, and the ritual of meeting for a drink accompanied by something to eat remains part of city life.
+---P152 style= imgs=0
+Walk towards Piazza Vittorio Veneto, one of Europe’s great open urban spaces, then continue towards the River Po.
+  BOLD ["Piazza Vittorio Veneto"]
+---P153 style= imgs=0
+The domed Gran Madre di Dio rises on the opposite bank.
+---P154 style= imgs=0
+Find a table.
+---P155 style= imgs=0
+Order a vermouth, local wine or cocktail.
+---P156 style= imgs=0
+Sit.
+---P157 style= imgs=0
+Watch Turin go by.
+---P158 style= imgs=0
+You’ve arrived in Piedmont.
+---P159 style= imgs=1
+  IMG media/image7.jpg
+---P160 style= imgs=0
+Day 3: Begin with Royal Turin
+  BOLD ["Day 3: Begin with Royal Turin"]
+---P161 style= imgs=0
+Start in Piazza Castello.
+  BOLD ["Piazza Castello"]
+---P162 style= imgs=0
+Few places explain Turin better.
+---P163 style= imgs=0
+Around you are buildings associated with the House of Savoy, whose story you first encountered yesterday in Chambéry.
+---P164 style= imgs=0
+Visit the Musei Reali, the Royal Museums complex centred on the former Royal Palace.
+  BOLD ["Musei Reali"]
+---P165 style= imgs=0
+The rooms are suitably grand, but after visiting Chambéry the history feels much more connected.
+---P166 style= imgs=0
+The dynasty you encountered in a relatively small Alpine capital is now surrounded by the architecture of royal power.
+---P167 style= imgs=0
+And the Chambéry connection continues next door.
+---P168 style= imgs=0
+The Shroud’s Journey Ends Here
+  BOLD ["The Shroud’s Journey Ends Here"]
+---P169 style= imgs=0
+Turin Cathedral houses the Shroud of Turin, although the cloth itself is carefully preserved and isn’t normally on public display.
+  BOLD ["Shroud of Turin"]
+---P170 style= imgs=0
+Its presence completes another strand of your journey.
+---P171 style= imgs=0
+The Savoy family kept the Shroud in Chambéry’s Sainte-Chapelle before transferring it to Turin in 1578.
+---P172 style= imgs=0
+Yesterday you stood beside the chapel where it was once kept.
+---P173 style= imgs=0
+Today you’re in the city that gave it the name by which the world knows it.
+---P174 style= imgs=1
+  IMG media/image8.jpg
+---P175 style= imgs=0
+Coffee in a Historic Café
+  BOLD ["Coffee in a Historic Café"]
+---P176 style= imgs=0
+Turin takes cafés seriously.
+---P177 style= imgs=0
+Historic establishments became meeting places for politicians, writers, aristocrats and revolutionaries during the 19th century, and several still retain their extraordinary interiors.
+---P178 style= imgs=0
+One of the loveliest is Caffè Mulassano @caffemulassano, a tiny jewel-box café beneath the arcades of Piazza Castello.
+  BOLD ["Caffè Mulassano @caffemulassano"]
+---P179 style= imgs=0
+It is also associated with the invention of the tramezzino, Italy’s soft triangular sandwich.
+  BOLD ["tramezzino"]
+---P180 style= imgs=0
+Order one.
+---P181 style= imgs=0
+And sometime during your stay, try a bicerin too.
+  BOLD ["bicerin"]
+---P182 style= imgs=0
+This traditional Turin drink combines coffee, chocolate and cream into something sitting somewhere between breakfast and dessert.
+---P183 style= imgs=0
+Choose Your Museum
+  BOLD ["Choose Your Museum"]
+---P184 style= imgs=0
+Turin has two museums that could easily occupy half a day each.
+---P185 style= imgs=0
+Unless you particularly love museums, choose one rather than rushing through both.
+---P186 style= imgs=0
+The Museo Egizio is the world’s oldest museum devoted to Egyptian civilisation and holds one of the most important Egyptological collections anywhere.
+  BOLD ["Museo Egizio"]
+---P187 style= imgs=0
+Book ahead, particularly at weekends and during busy periods.
+---P188 style= imgs=0
+Alternatively, head for Turin’s unmistakable skyline landmark: the Mole Antonelliana.
+  BOLD ["Mole Antonelliana"]
+---P189 style= imgs=0
+Inside is the Museo Nazionale del Cinema, an imaginative museum devoted to the history and experience of cinema.
+  BOLD ["Museo Nazionale del Cinema"]
+---P190 style= imgs=0
+Then take the panoramic lift upwards.
+---P191 style= imgs=0
+On a clear day, Turin spreads beneath you with the Alps forming a vast wall beyond the rooftops.
+---P192 style= imgs=0
+Suddenly yesterday’s train journey has a geography.
+---P193 style= imgs=1
+  IMG media/image9.jpg
+---P194 style= imgs=0
+Walk Beneath Turin’s Arcades
+  BOLD ["Walk Beneath Turin’s Arcades"]
+---P195 style= imgs=0
+Then put the map away.
+---P196 style= imgs=0
+Walk along Via Po.
+---P197 style= imgs=0
+Cross Piazza San Carlo.
+---P198 style= imgs=0
+Look inside Galleria Subalpina, Galleria San Federico and Galleria Umberto I.
+  BOLD ["Galleria Subalpina","Galleria San Federico","Galleria Umberto I"]
+---P199 style= imgs=0
+Turin has kilometres of covered arcades, giving the city a distinctive rhythm and making it particularly enjoyable to explore on foot.
+---P200 style= imgs=0
+Cafés, bookshops, boutiques and chocolate shops appear beneath them.
+---P201 style= imgs=0
+Take your time.
+---P202 style= imgs=0
+Turin rewards wandering.
+---P203 style= imgs=0
+What to Eat in Turin
+  BOLD ["What to Eat in Turin"]
+---P204 style= imgs=0
+Piedmontese cooking is one of Italy’s great regional cuisines.
+---P205 style= imgs=0
+Look for vitello tonnato, thin slices of veal with a tuna and caper sauce; agnolotti del plin, tiny stuffed pasta parcels pinched closed by hand; tajarin, exceptionally fine egg pasta; and bagna càuda, the warm anchovy and garlic dip that tastes considerably better than its description might suggest.
+  BOLD ["vitello tonnato","agnolotti del plin","tajarin","bagna càuda"]
+---P206 style= imgs=0
+For classic fresh pasta in the centre, Pastificio Defilippis @pastificiodefilippis has roots stretching back to the 19th century and is an excellent place to try Piedmontese favourites.
+  BOLD ["Pastificio Defilippis @pastificiodefilippis"]
+---P207 style= imgs=0
+For a longer meal, Scannabue @scannabuecaffe in San Salvario is known for traditional Piedmontese cooking in a lively neighbourhood setting.
+  BOLD ["Scannabue @scannabuecaffe"]
+---P208 style= imgs=0
+And don’t leave Turin without trying gianduja.
+  BOLD ["gianduja"]
+---P209 style= imgs=0
+The combination of chocolate and Piedmont hazelnuts is one of Turin’s great gifts to the world.
+---P210 style= imgs=0
+Finish Above the River Po
+  BOLD ["Finish Above the River Po"]
+---P211 style= imgs=0
+Towards evening, head back towards Piazza Vittorio Veneto and cross the River Po towards the Gran Madre di Dio.
+  BOLD ["Gran Madre di Dio"]
+---P212 style= imgs=0
+If you still have energy, continue uphill towards Monte dei Cappuccini.
+  BOLD ["Monte dei Cappuccini"]
+---P213 style= imgs=0
+Then turn around.
+---P214 style= imgs=0
+Below you, the Po curves past the city.
+---P215 style= imgs=0
+The Mole Antonelliana rises above the rooftops.
+---P216 style= imgs=0
+And on a clear day, the Alps form an enormous wall across the horizon.
+---P217 style= imgs=0
+Those are the mountains you crossed yesterday.
+---P218 style= imgs=0
+It’s difficult to imagine a better place to finish the journey.
+---P219 style= imgs=1
+  IMG media/image10.jpg
+---P220 style= imgs=0
+Day 4: One Last Morning in Turin
+  BOLD ["Day 4: One Last Morning in Turin"]
+---P221 style= imgs=0
+Don’t book the earliest onward train.
+---P222 style= imgs=0
+Spend your final morning somewhere that reveals another side of the city.
+---P223 style= imgs=0
+Head towards Porta Palazzo, home to one of Europe’s great food markets, and wander through the surrounding streets of the Quadrilatero Romano.
+  BOLD ["Porta Palazzo"]
+---P224 style= imgs=0
+Explore the stalls and antique shops around Balon in Borgo Dora if your visit coincides with the market.
+  BOLD ["Balon"]
+---P225 style= imgs=0
+Or head towards the river and walk through Parco del Valentino.
+  BOLD ["Parco del Valentino"]
+---P226 style= imgs=0
+You could also simply return to a historic café, order another bicerin and admit that two nights in Turin probably wasn’t enough.
+---P227 style= imgs=0
+Starting in London?
+  BOLD ["Starting in London?"]
+---P228 style= imgs=0
+This journey works beautifully from the UK too.
+---P229 style= imgs=0
+Take Eurostar from London St Pancras to Paris Gare du Nord, then cross Paris to Gare de Lyon for the TGV towards Chambéry.
+  BOLD ["London St Pancras","Paris Gare du Nord"]
+---P230 style= imgs=0
+Book Eurostar:
+---P231 style= imgs=0
+https://www.eurostar.com
+  LINK "https://www.eurostar.com" https://www.eurostar.com
+---P232 style= imgs=0
+Don’t underestimate the Paris transfer.
+---P233 style= imgs=0
+You’re changing stations, not simply trains, so allow a generous connection rather than building the journey around the minimum possible transfer time.
+---P234 style= imgs=0
+If the timings aren’t comfortable, there is an even better solution.
+---P235 style= imgs=0
+Arrive in Paris the previous afternoon and stay overnight.
+---P236 style= imgs=0
+Have dinner. Go for a walk. Start the next morning with coffee and a direct train towards the Alps.
+---P237 style= imgs=0
+Then Paris becomes part of the holiday rather than a connection you’re trying to survive.
+---P238 style= imgs=0
+Not Ready to Stop? Continue to Rome
+  BOLD ["Not Ready to Stop? Continue to Rome"]
+---P239 style= imgs=0
+Turin doesn’t have to be the end of the journey.
+---P240 style= imgs=0
+Italy’s high-speed rail network makes continuing south remarkably easy.
+---P241 style= imgs=0
+Fast trains connect Turin with Milan, Bologna, Florence, Rome and Naples.
+---P242 style= imgs=0
+If you have another three or four days, Rome makes a particularly easy extension.
+---P243 style= imgs=0
+Board a high-speed train in Turin and a few hours later you can be walking through the streets of the Italian capital.
+---P244 style= imgs=0
+Book Italian trains through Trenitalia:
+---P245 style= imgs=0
+https://www.trenitalia.com
+  LINK "https://www.trenitalia.com" https://www.trenitalia.com
+---P246 style= imgs=0
+You could therefore turn this into a wonderfully simple European journey:
+---P247 style= imgs=0
+Paris → Chambéry → Turin → Rome
+  BOLD ["Paris → Chambéry → Turin → Rome"]
+---P248 style= imgs=0
+Or continue even further:
+---P249 style= imgs=0
+Paris → Chambéry → Turin → Rome → Naples
+  BOLD ["Paris → Chambéry → Turin → Rome → Naples"]
+---P250 style= imgs=0
+The point isn’t to squeeze all of them into one holiday.
+---P251 style= imgs=0
+It’s to realise how easily you can keep going.
+---P252 style= imgs=0
+Booking the Journey
+  BOLD ["Booking the Journey"]
+---P253 style= imgs=0
+For the core itinerary, there are two principal rail journeys to arrange:
+---P254 style= imgs=0
+Paris Gare de Lyon → Chambéry-Challes-les-Eaux
+  BOLD ["Paris Gare de Lyon → Chambéry-Challes-les-Eaux"]
+---P255 style= imgs=0
+Chambéry-Challes-les-Eaux → Torino Porta Susa
+  BOLD ["Chambéry-Challes-les-Eaux → Torino Porta Susa"]
+---P256 style= imgs=0
+Book through SNCF Connect:
+---P257 style= imgs=0
+https://www.sncf-connect.com
+  LINK "https://www.sncf-connect.com" https://www.sncf-connect.com
+---P258 style= imgs=0
+Direct Paris–Chambéry services can take under three hours.
+---P259 style= imgs=0
+Direct Chambéry–Turin international TGVs take around two and a half hours on the fastest services.
+---P260 style= imgs=0
+Schedules vary by date and the international service is much less frequent, so we’d choose the Chambéry–Turin train first and then build the overnight stay around it.
+---P261 style= imgs=0
+For onward Italian journeys, use Trenitalia:
+---P262 style= imgs=0
+https://www.trenitalia.com
+  LINK "https://www.trenitalia.com" https://www.trenitalia.com
+---P263 style= imgs=0
+If you’re beginning in London, book Eurostar separately:
+---P264 style= imgs=0
+https://www.eurostar.com
+  LINK "https://www.eurostar.com" https://www.eurostar.com
+---P265 style= imgs=0
+TGV and Eurostar trains require reservations and fares generally rise as the cheapest allocations sell out, so this is a journey worth booking ahead.
+---P266 style= imgs=0
+Why Take the Long Way?
+  BOLD ["Why Take the Long Way?"]
+---P267 style= imgs=0
+You could treat Paris and Turin as two points on a map.
+---P268 style= imgs=0
+But stop in Chambéry and the journey acquires a story.
+---P269 style= imgs=0
+You discover the city from which the Dukes of Savoy once ruled their territories.
+---P270 style= imgs=0
+You see the chapel where the Shroud of Turin was kept before it crossed the Alps.
+---P271 style= imgs=0
+You eat Savoyard food beneath the mountains.
+---P272 style= imgs=0
+Then you board a train through the Maurienne Valley, disappear beneath the Alps and emerge in Piedmont.
+---P273 style= imgs=0
+In Turin, the same Savoy dynasty reappears in palaces, squares and churches.
+---P274 style= imgs=0
+Even the Shroud has completed the journey before you.
+---P275 style= imgs=0
+France hasn’t abruptly become Italy.
+---P276 style= imgs=0
+You’ve watched one become the other.
+---P277 style= imgs=0
+And that’s exactly why we love travelling across Europe by train.
+---P278 style= imgs=0
+Explore France and Italy by Train
+  BOLD ["Explore France and Italy by Train"]
+---P279 style= imgs=0
+This journey brings together two of our favourite things about European rail travel: discovering places you might otherwise pass straight through, and crossing a border slowly enough to notice the landscape, architecture and food changing around you.
+---P280 style= imgs=0
+Our Touring France by Train and Touring Italy by Train guides are designed to help you do exactly that, with easy self-guided rail itineraries, practical planning advice and inspiration for exploring independently.
+  BOLD ["Touring France by Train","Touring Italy by Train"]
+---P281 style= imgs=0
+Touring France by Train
+  BOLD ["Touring France by Train"]
+---P282 style= imgs=0
+https://mybook.to/TouringFranceByTrain
+  LINK "https://mybook.to/TouringFranceByTrain" https://mybook.to/TouringFranceByTrain
+---P283 style= imgs=0
+Touring Italy by Train
+  BOLD ["Touring Italy by Train"]
+---P284 style= imgs=0
+https://mybook.to/TouringItalybyTrain
+  LINK "https://mybook.to/TouringItalybyTrain" https://mybook.to/TouringItalybyTrain
+---P285 style= imgs=0
+Because Europe doesn’t have to be explored one country at a time.
