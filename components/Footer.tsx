@@ -1,4 +1,6 @@
+import Link from "next/link";
 import Newsletter from "@/components/Newsletter";
+import CookieSettingsLink from "@/components/analytics/CookieSettingsLink";
 
 function InstagramIcon() {
   return (
@@ -94,7 +96,22 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-border-line px-6 py-5 text-center text-xs text-stone-light">
-        © {new Date().getFullYear()} Real Travel Guides
+        <p>
+          © {new Date().getFullYear()} Real Travel Guides
+          <span className="px-2" aria-hidden="true">
+            ·
+          </span>
+          <Link
+            href="/privacy"
+            className="underline underline-offset-2 transition-colors hover:text-moss"
+          >
+            Privacy & Cookies
+          </Link>
+          <span className="px-2" aria-hidden="true">
+            ·
+          </span>
+          <CookieSettingsLink />
+        </p>
       </div>
     </footer>
   );

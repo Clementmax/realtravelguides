@@ -21,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/about` },
     { url: `${BASE}/books` },
     { url: `${BASE}/journeysbyrail` },
+    { url: `${BASE}/privacy` },
   ];
 
   try {

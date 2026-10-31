@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { trackNewsletterSignup } from "@/components/analytics/ga";
 
 type Status = "idle" | "loading" | "subscribed" | "already" | "invalid" | "error";
 
@@ -42,14 +43,11 @@ export default function Newsletter({ variant = "light" }: { variant?: "light" | 
         setStatus("error");
         return;
       }
-      if (data?.result === "subscribed") {
-        setStatus("subscribed");
+      const result = data?.result;
+      if (result === "subscribed" || result === "already_subscribed") {
+        setStatus(result === "subscribed" ? "subscribed" : "already");
         setEmail("");
-        return;
-      }
-      if (data?.result === "already_subscribed") {
-        setStatus("already");
-        setEmail("");
+        trackNewsletterSignup(result);
         return;
       }
       setStatus("error");
