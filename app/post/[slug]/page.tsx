@@ -6,6 +6,8 @@ import { getPost, getPosts, getCategoryLabelMap } from "@/lib/queries";
 import { ManagedPostImage } from "@/lib/types";
 import { normalizePostSlug } from "@/lib/slug";
 
+const SITE_ORIGIN = "https://www.realtravelguides.com";
+
 function resolveSocialImage(src: string | null | undefined): string | undefined {
   const value = src?.trim();
   if (!value) return undefined;
@@ -13,10 +15,56 @@ function resolveSocialImage(src: string | null | undefined): string | undefined 
   return value.startsWith("/") ? value : `/${value}`;
 }
 
+function absoluteArticleImage(src: string | null | undefined): string | undefined {
+  if (typeof src !== "string") return undefined;
+  const resolved = resolveSocialImage(src);
+  if (!resolved) return undefined;
+  if (/^https?:\/\//i.test(resolved)) return resolved;
+  return `${SITE_ORIGIN}${resolved.startsWith("/") ? resolved : `/${resolved}`}`;
+}
+
 function publishedTime(value: string | null | undefined): string | undefined {
   const raw = value?.trim();
   if (!raw || Number.isNaN(new Date(raw).getTime())) return undefined;
   return raw;
+}
+
+function buildBlogPostingJsonLd(post: {
+  slug?: string | null;
+  title?: string | null;
+  excerpt?: string | null;
+  cover?: string | null;
+  published_at?: string | null;
+}) {
+  const headline = typeof post.title === "string" ? post.title : undefined;
+  const description = typeof post.excerpt === "string" ? post.excerpt.trim() : "";
+  const image = absoluteArticleImage(post.cover);
+  const datePublished =
+    typeof post.published_at === "string" ? publishedTime(post.published_at) : undefined;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    ...(headline !== undefined ? { headline } : {}),
+    ...(description ? { description } : {}),
+    ...(image ? { image } : {}),
+    ...(datePublished ? { datePublished } : {}),
+    author: {
+      "@type": "Organization",
+      name: "Real Travel Guides",
+      url: SITE_ORIGIN,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "Real Travel Guides",
+      url: SITE_ORIGIN,
+    },
+    mainEntityOfPage: `${SITE_ORIGIN}/post/${normalizePostSlug(typeof post.slug === "string" ? post.slug : "")}`,
+  };
+}
+
+function serializeJsonLd(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
 export const revalidate = 60;
@@ -161,8 +209,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const renderedBody = injectManagedImages(post.body, post.images, post.video_url ? "" : post.cover);
   const managedForPlainText = managedImagesForBody(post.body, post.images, post.video_url ? "" : post.cover);
 
+  const jsonLd = serializeJsonLd(buildBlogPostingJsonLd(post));
+
   return (
     <article className="mx-auto max-w-2xl px-6 py-16">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <div className="flex flex-wrap gap-3">
         {post.categories.map((c) => (
           <Link key={c} href={`/journeysbyrail/categories/${c}`} className="route-line text-xs font-medium uppercase tracking-wide text-clay-dark hover:underline">
@@ -172,7 +223,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       </div>
 
       <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-pine md:text-4xl">{post.title}</h1>
-      <p className="mt-3 text-sm text-stone-light">{post.read_minutes} min read</p>
+      <p className="mt-3 text-sm text-stone-light">
+        By <Link href="/about" className="hover:underline">Real Travel Guides</Link>
+        {" · "}
+        {post.read_minutes} min read
+      </p>
 
       {post.video_url ? (
         <div className="mt-8 overflow-hidden rounded-md border border-border-line bg-ink">
