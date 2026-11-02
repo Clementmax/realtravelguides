@@ -15,6 +15,12 @@ const RETIRED_CATEGORY_SLUGS = new Set([
 
 const INDEXABLE_AUTHORS = new Set(["elenarossetti", "sophiepicot"]);
 
+// Duplicate of the Porto Ercole weekend article. The -1 URL redirects to the
+// original; keep the row, but do not list it beside the canonical post.
+const EXCLUDED_POST_SLUGS = new Set([
+  "porto-ercole-weekend-getaway-beaches-forts-from-rome-by-train-1",
+]);
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [
     { url: `${BASE}/` },
@@ -51,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const seen = new Set<string>();
     for (const post of posts) {
       const slug = normalizePostSlug(post.slug);
-      if (!slug || seen.has(slug)) continue;
+      if (!slug || seen.has(slug) || EXCLUDED_POST_SLUGS.has(slug)) continue;
       seen.add(slug);
 
       const entry: MetadataRoute.Sitemap[number] = {

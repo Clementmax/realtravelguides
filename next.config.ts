@@ -41,6 +41,13 @@ const nextConfig: NextConfig = {
         destination: "/elenarossetti",
         permanent: true,
       },
+      {
+        source:
+          "/post/porto-ercole-weekend-getaway-beaches-forts-from-rome-by-train-1",
+        destination:
+          "/post/porto-ercole-weekend-getaway-beaches-forts-from-rome-by-train",
+        permanent: true,
+      },
     ];
   },
 };
