@@ -30,6 +30,8 @@ export type Post = {
   excerpt: string;
   cover: string;
   categories: string[];
+  /** Saved place tags, such as a town, a broad region, or a railway route. */
+  places?: string[] | null;
   read_minutes: number;
   published_at: string;
   body: string;

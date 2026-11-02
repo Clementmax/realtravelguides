@@ -2,7 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import PostCard from "@/components/PostCard";
 import { getPost, getPosts, getCategoryLabelMap } from "@/lib/queries";
+import { selectRelatedPosts } from "@/lib/related-posts";
 import { ManagedPostImage } from "@/lib/types";
 import { normalizePostSlug } from "@/lib/slug";
 
@@ -205,13 +207,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await getPost(slug);
   if (!post) notFound();
 
-  const categoryLabels = await getCategoryLabelMap();
+  const [categoryLabels, allPosts] = await Promise.all([getCategoryLabelMap(), getPosts()]);
+  const related = selectRelatedPosts(post, allPosts);
   const renderedBody = injectManagedImages(post.body, post.images, post.video_url ? "" : post.cover);
   const managedForPlainText = managedImagesForBody(post.body, post.images, post.video_url ? "" : post.cover);
 
   const jsonLd = serializeJsonLd(buildBlogPostingJsonLd(post));
 
   return (
+    <>
     <article className="mx-auto max-w-2xl px-6 py-16">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd }} />
       <div className="flex flex-wrap gap-3">
@@ -269,5 +273,28 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         )}
       </div>
     </article>
+    {related.length > 0 ? (
+      <section className="mx-auto max-w-5xl px-6 pb-20" aria-labelledby="continue-exploring">
+        <div className="border-t border-border-line pt-12">
+          <h2
+            id="continue-exploring"
+            className="font-display text-xl font-semibold uppercase tracking-[0.14em] text-pine"
+          >
+            Continue exploring
+          </h2>
+          <p className="mt-2 text-sm text-stone">More journeys and places worth discovering</p>
+          <div className="mt-10 grid gap-10 sm:grid-cols-2 md:grid-cols-3">
+            {related.map((item) => (
+              <PostCard
+                key={item.slug}
+                post={item}
+                categoryLabel={categoryLabels[item.categories[0]]}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    ) : null}
+    </>
   );
 }

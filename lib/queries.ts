@@ -88,20 +88,24 @@ const fetchPosts = unstable_cache(
     if (!supabase) {
       return seedPosts.map((post) => ({
         ...post,
+        places: Array.isArray(post.places) ? post.places : [],
         body: stripMigratedPostChrome(post.body),
       }));
     }
     const { data, error } = await supabase
       .from("posts")
-      .select("*")
+      .select(
+        "slug, title, excerpt, cover, categories, places, read_minutes, published_at, body, video_url, images"
+      )
       .order("published_at", { ascending: false });
     if (error || !data || data.length === 0) return seedPosts;
     return (data as Post[]).map((post) => ({
       ...post,
+      places: Array.isArray(post.places) ? post.places : [],
       body: stripMigratedPostChrome(post.body),
     }));
   },
-  ["posts", "v2-strip-chrome"],
+  ["posts", "v3-places"],
   { revalidate: 60, tags: ["posts"] }
 );
 
