@@ -18,7 +18,9 @@
  * sizes can be measured, then deleted. Originals are never uploaded.
  *
  * Before any apply, a JSON backup of `{ slug, body }` is written outside the
- * repo (also written on a dry run, as a read-only copy):
+ * repo when that file is missing (also written on a dry run, as a read-only
+ * copy). An existing backup is left untouched so a later apply cannot replace
+ * the original body with the migrated HTML:
  *
  *   C:\Users\carol\OneDrive\Documents\rtg-image-migration-backup\<slug>.json
  *
@@ -47,7 +49,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -313,13 +315,21 @@ function localFilePath(src) {
   return path.join(projectRoot, "public", ...rel.split("/"));
 }
 
+const DOWNLOAD_ATTEMPTS = 5;
+const DOWNLOAD_TIMEOUT_MS = 60_000;
+
+function downloadRetryDelayMs(failedAttempt) {
+  // 2s, 4s, 8s, 16s before attempts 2–5. No delay before the first attempt.
+  return 2000 * 2 ** (failedAttempt - 1);
+}
+
 async function downloadUrl(url) {
   let lastError;
-  for (let attempt = 1; attempt <= 2; attempt++) {
+  for (let attempt = 1; attempt <= DOWNLOAD_ATTEMPTS; attempt++) {
     try {
       const response = await fetch(url, {
         headers: { "User-Agent": "RealTravelGuides-image-migration/1.0" },
-        signal: AbortSignal.timeout(120000),
+        signal: AbortSignal.timeout(DOWNLOAD_TIMEOUT_MS),
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const buffer = Buffer.from(await response.arrayBuffer());
@@ -327,12 +337,23 @@ async function downloadUrl(url) {
       return buffer;
     } catch (error) {
       lastError = error;
-      const code = error.cause?.code || error.cause?.message || "";
-      console.warn(`  download attempt ${attempt} failed: ${error.message}${code ? ` (${code})` : ""}`);
-      if (attempt === 1) await new Promise((resolve) => setTimeout(resolve, 1500));
+      const code = error.cause?.code || error.cause?.message || error.name || "";
+      console.warn(
+        `  download attempt ${attempt}/${DOWNLOAD_ATTEMPTS} failed: ${error.message}${code ? ` (${code})` : ""}`
+      );
+      if (attempt < DOWNLOAD_ATTEMPTS) {
+        const delayMs = downloadRetryDelayMs(attempt);
+        console.warn(`  waiting ${delayMs}ms before the next attempt`);
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+      }
     }
   }
-  throw lastError;
+  const code = lastError?.cause?.code || lastError?.cause?.message || lastError?.name || "";
+  const wrapped = new Error(
+    `download failed after ${DOWNLOAD_ATTEMPTS} attempts: ${lastError?.message || lastError}${code ? ` (${code})` : ""}`
+  );
+  wrapped.cause = lastError;
+  throw wrapped;
 }
 
 async function readSource(img) {
@@ -465,6 +486,13 @@ function corpusEstimate(posts) {
 async function writeBackup(slug, body, mode) {
   await mkdir(BACKUP_DIR, { recursive: true });
   const filePath = path.join(BACKUP_DIR, `${slug}.json`);
+  try {
+    await access(filePath);
+    console.log(`Backup already exists; leaving the pre-migration file untouched: ${filePath}`);
+    return filePath;
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
   const payload = {
     slug,
     column: "posts.body",
