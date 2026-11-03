@@ -1,17 +1,64 @@
 import { normalizePostSlug } from "@/lib/slug";
 
 /**
- * Broad regions. They break ties between candidates that already share a
- * specific destination or railway route. They match on their own only when
- * the current article has no specific destination and no railway route.
+ * Regions and railway routes used by Continue Exploring.
+ * Add new regions and routes here. A town is never inferred to belong to a
+ * region: articles match a region only when they share that region tag.
+ * Different railway routes never match each other.
+ *
+ * Towns, lakes, and smaller areas stay destinations. That includes
+ * valtellina, chianti, crete-senesi, val-di-chiana, langhe, amalfi-coast,
+ * cinque-terre, aeolian-islands, and every lake-* tag.
  */
-const BROAD_REGIONS = new Set(["tuscany", "umbria"]);
+const REGIONS = new Set([
+  "alsace",
+  "asturias",
+  "beaujolais",
+  "brittany",
+  "burgundy",
+  "cote-d-azur",
+  "lavaux",
+  "le-marche",
+  "loire-valley",
+  "normandy",
+  "piedmont",
+  "pyrenees",
+  "ticino",
+  "tuscany",
+  "umbria",
+  "veneto",
+  // Not on a published article yet.
+  "puglia",
+  "galicia",
+  "andalusia",
+  "emilia-romagna",
+]);
+
+const RAILWAY_ROUTES = new Set([
+  "bernina",
+  "black-forest-railway",
+  "cevennes-line",
+  "circumetnea",
+  "glacier-express",
+  "goldenpass",
+  "gotthard",
+  "nice-menton-railway",
+  "train-des-pignes",
+  "train-jaune",
+  "voralpen-express",
+]);
 
 /**
- * Railway routes, same rank as a town, city, or lake.
- * `bernina` is the saved route tag. Add future route tags here; do not infer them from titles.
+ * Either direction counts. A pair is a sibling match only when the articles
+ * do not already share either tag. Sharing lucerne exactly is an exact
+ * destination match, not an extra sibling boost.
  */
-const RAILWAY_ROUTES = new Set(["bernina"]);
+const SIBLING_DESTINATIONS: readonly (readonly [string, string])[] = [
+  ["lucerne", "lake-lucerne"],
+  ["como", "lake-como"],
+  ["geneva", "lake-geneva"],
+  ["amalfi", "amalfi-coast"],
+];
 
 /** Country and theme categories are not place matches, even if they appear in `places`. */
 const NON_PLACE_TAGS = new Set([
@@ -70,41 +117,52 @@ function publishedTime(value: string | null | undefined): number {
   return Number.isNaN(time) ? Number.NEGATIVE_INFINITY : time;
 }
 
-/** Specific destinations, railway routes, and broad regions, in that order of closeness. */
-function placeTiers(places: readonly string[]): {
-  specific: string[];
+/** Destinations are every place tag that is not a region and not a route. */
+function splitPlaces(places: readonly string[]): {
+  destinations: string[];
   routes: string[];
-  broad: string[];
+  regions: string[];
 } {
-  const specific: string[] = [];
+  const destinations: string[] = [];
   const routes: string[] = [];
-  const broad: string[] = [];
+  const regions: string[] = [];
   for (const place of places) {
     if (RAILWAY_ROUTES.has(place)) routes.push(place);
-    else if (BROAD_REGIONS.has(place)) broad.push(place);
-    else specific.push(place);
+    else if (REGIONS.has(place)) regions.push(place);
+    else destinations.push(place);
   }
-  return { specific, routes, broad };
+  return { destinations, routes, regions };
+}
+
+function sharedCount(left: readonly string[], right: ReadonlySet<string>): number {
+  let count = 0;
+  for (const tag of left) if (right.has(tag)) count += 1;
+  return count;
+}
+
+/** 1 when any sibling pair crosses, otherwise 0. Exact overlap of that pair is not a sibling. */
+function siblingScore(current: ReadonlySet<string>, candidate: ReadonlySet<string>): number {
+  for (const [a, b] of SIBLING_DESTINATIONS) {
+    if ((current.has(a) && candidate.has(a)) || (current.has(b) && candidate.has(b))) continue;
+    if ((current.has(a) && candidate.has(b)) || (current.has(b) && candidate.has(a))) return 1;
+  }
+  return 0;
 }
 
 /**
- * Up to three other published posts related by saved place tags.
+ * Up to three other published posts for Continue Exploring.
  *
- * A current article with a specific destination (town, city, lake, or any
- * other place that is not a broad region or railway route) only recommends
- * posts that share at least one of those destinations. A shared region does
- * not fill a remaining slot.
+ * A candidate qualifies when it shares at least one exact destination, the
+ * same named railway route, a sibling destination, or a geographical region.
+ * Sharing a route is enough on its own. A shared region is enough when the
+ * towns differ. Different routes never match each other, and unrelated posts
+ * are not added to fill the three slots.
  *
- * A current article with a railway route such as `bernina` only recommends
- * posts that share that route. Region-only matches do not fill remaining slots.
- *
- * A current article with only broad region tags (`tuscany` or `umbria`) may
- * recommend any published post that includes that region, including articles
- * about towns inside it.
- *
- * More shared destinations or routes rank first. A shared region then breaks
- * ties, then newer `published_at`, then slug A–Z. Country categories are not
- * used. Fewer than three matches returns a shorter list.
+ * Rank: count of shared exact destinations, then shared railway routes, then
+ * a sibling destination (0 or 1), then shared regions, then newer
+ * `published_at`, then slug A–Z. The current slug, unpublished or future
+ * posts, and the duplicate Porto Ercole slug are left out. Country and theme
+ * tags are not places.
  */
 export function selectRelatedPosts<T extends RelatedPostSource>(
   current: T,
@@ -117,18 +175,19 @@ export function selectRelatedPosts<T extends RelatedPostSource>(
 
   const currentSlug = normalizePostSlug(current.slug);
   const excludedSlug = normalizePostSlug(EXCLUDED_SLUG);
-  const currentPlaces = new Set(placeList(current));
-  if (currentPlaces.size === 0) return [];
+  const currentPlaces = placeList(current);
+  if (currentPlaces.length === 0) return [];
 
-  const currentTiers = placeTiers([...currentPlaces]);
-  const requiresSpecific = currentTiers.specific.length > 0;
-  const requiresRoute = currentTiers.routes.length > 0;
+  const currentTiers = splitPlaces(currentPlaces);
+  const currentSet = new Set(currentPlaces);
 
   const ranked: {
     post: T;
     slug: string;
-    high: number;
-    broad: number;
+    exact: number;
+    routes: number;
+    sibling: number;
+    regions: number;
     published: number;
   }[] = [];
 
@@ -137,28 +196,30 @@ export function selectRelatedPosts<T extends RelatedPostSource>(
     if (!slug || slug === currentSlug || slug === excludedSlug) continue;
     if (!isPublished(post.published_at, now)) continue;
 
-    const shared = placeList(post).filter((place) => currentPlaces.has(place));
-    if (shared.length === 0) continue;
-
-    const sharedTiers = placeTiers(shared);
-    // Region overlap never qualifies a candidate on its own once the current
-    // article has a specific destination or a railway route.
-    if (requiresSpecific && sharedTiers.specific.length === 0) continue;
-    if (requiresRoute && sharedTiers.routes.length === 0) continue;
-    if (!requiresSpecific && !requiresRoute && sharedTiers.broad.length === 0) continue;
+    const candidatePlaces = placeList(post);
+    const candidateSet = new Set(candidatePlaces);
+    const exact = sharedCount(currentTiers.destinations, candidateSet);
+    const routes = sharedCount(currentTiers.routes, candidateSet);
+    const regions = sharedCount(currentTiers.regions, candidateSet);
+    const sibling = siblingScore(currentSet, candidateSet);
+    if (exact === 0 && routes === 0 && sibling === 0 && regions === 0) continue;
 
     ranked.push({
       post,
       slug,
-      high: sharedTiers.specific.length + sharedTiers.routes.length,
-      broad: sharedTiers.broad.length,
+      exact,
+      routes,
+      sibling,
+      regions,
       published: publishedTime(post.published_at),
     });
   }
 
   ranked.sort((a, b) => {
-    if (b.high !== a.high) return b.high - a.high;
-    if (b.broad !== a.broad) return b.broad - a.broad;
+    if (b.exact !== a.exact) return b.exact - a.exact;
+    if (b.routes !== a.routes) return b.routes - a.routes;
+    if (b.sibling !== a.sibling) return b.sibling - a.sibling;
+    if (b.regions !== a.regions) return b.regions - a.regions;
     if (b.published !== a.published) return b.published - a.published;
     if (a.slug < b.slug) return -1;
     if (a.slug > b.slug) return 1;
