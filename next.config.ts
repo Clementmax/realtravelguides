@@ -17,6 +17,26 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
+        source: "/category/fooddrink",
+        destination: "/journeysbyrail",
+        permanent: true,
+      },
+      {
+        source: "/category/hiddenplaces",
+        destination: "/journeysbyrail",
+        permanent: true,
+      },
+      {
+        source: "/journeysbyrail/categories/fooddrink",
+        destination: "/journeysbyrail",
+        permanent: true,
+      },
+      {
+        source: "/journeysbyrail/categories/hiddenplaces",
+        destination: "/journeysbyrail",
+        permanent: true,
+      },
+      {
         source: "/category/:slug",
         destination: "/journeysbyrail/categories/:slug",
         permanent: true,

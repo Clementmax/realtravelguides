@@ -22,6 +22,7 @@ export default function JourneyCard({
           src={post.cover}
           alt={post.title}
           fill
+          sizes="(min-width: 768px) 18rem, 16rem"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
       </div>

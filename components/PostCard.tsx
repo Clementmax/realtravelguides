@@ -19,6 +19,7 @@ export default function PostCard({
           src={post.cover}
           alt={post.title}
           fill
+          sizes="(max-width: 639px) calc(100vw - 3rem), (max-width: 767px) calc((100vw - 5.5rem) / 2), (max-width: 64rem) calc((100vw - 8rem) / 3), 18.667rem"
           className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>

@@ -109,13 +109,21 @@ const fetchPosts = unstable_cache(
   { revalidate: 60, tags: ["posts"] }
 );
 
+// Duplicate of the canonical Porto Ercole article. The row stays in the
+// database and getPost() can still fetch it; the -1 URL redirects. Every
+// listing goes through getPosts(), so this is the only filter they need.
+const UNLISTED_POST_SLUGS = new Set([
+  "porto-ercole-weekend-getaway-beaches-forts-from-rome-by-train-1",
+]);
+
 export async function getPosts(): Promise<Post[]> {
-  return fetchPosts();
+  const posts = await fetchPosts();
+  return posts.filter((post) => !UNLISTED_POST_SLUGS.has(normalizePostSlug(post.slug)));
 }
 
 export async function getPost(slug: string): Promise<Post | undefined> {
   if (!slug) return undefined;
-  const list = await getPosts();
+  const list = await fetchPosts();
   const target = normalizePostSlug(slug);
   return list.find((p) => normalizePostSlug(p.slug) === target);
 }

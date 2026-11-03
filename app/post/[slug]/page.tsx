@@ -242,7 +242,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
       ) : (
         <div className="relative mt-8 aspect-[16/10] w-full overflow-hidden rounded-md border border-border-line">
-          <Image src={post.cover} alt={post.title} fill className="object-cover" />
+          <Image
+            src={post.cover}
+            alt={post.title}
+            fill
+            preload
+            sizes="(max-width: 42rem) calc(100vw - 3rem), 39rem"
+            className="object-cover"
+          />
         </div>
       )}
 

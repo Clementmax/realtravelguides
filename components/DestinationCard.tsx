@@ -19,6 +19,7 @@ export default function DestinationCard({
         src={image}
         alt={label}
         fill
+        sizes="(max-width: 767px) calc((100vw - 4rem) / 2), (max-width: 64rem) calc((100vw - 6rem) / 4), 14.5rem"
         className="object-cover transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/0 to-ink/0" />
