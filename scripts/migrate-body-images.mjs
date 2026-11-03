@@ -8,6 +8,14 @@
  *
  *   node --use-system-ca scripts/migrate-body-images.mjs --slug=<slug> [--slug=<slug> ...]
  *   node --use-system-ca scripts/migrate-body-images.mjs --slug=<slug> --apply
+ *   node --use-system-ca scripts/migrate-body-images.mjs --bulk
+ *   node --use-system-ca scripts/migrate-body-images.mjs --bulk --apply
+ *
+ * `--bulk` walks published articles in slug order. Without `--apply` it only
+ * writes a plan outside the repo. With `--apply` it migrates remaining body
+ * photographs in batches, continues after one article fails, and stops on a
+ * widespread storage, database, or connection failure. Progress is recorded in
+ * the backup directory so a later run can resume.
  *
  * `--apply` uploads every optimised image for an article and, only if all of
  * those uploads succeed, updates that article's `body`. This script refuses
@@ -49,7 +57,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { access, mkdir, mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { access, appendFile, mkdir, mkdtemp, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -69,6 +77,20 @@ const QUALITY = 80;
 const QUALITY_IF_LARGE = 75;
 const TARGET_MAX_BYTES = 300 * 1024;
 const FLAG_BYTES = 500 * 1024;
+const DEFAULT_BATCH_SIZE = 22;
+const PILOT_SLUG_LIST = [
+  "naples-in-spring-a-foodie-weekend-by-train",
+  "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local",
+  "london-to-zurich-by-train-via-strasbourg-and-lake-constance",
+];
+const PILOT_SLUGS = new Set(PILOT_SLUG_LIST);
+const PROGRESS_FILE = path.join(BACKUP_DIR, "bulk-progress.json");
+const UPLOAD_LOG = path.join(BACKUP_DIR, "bulk-uploads.jsonl");
+const COVER_SNAPSHOT = path.join(BACKUP_DIR, "bulk-covers-images-before.json");
+const PRESERVATION_SNAPSHOT = path.join(BACKUP_DIR, "bulk-preservation-before.json");
+const PLAN_FILE = path.join(BACKUP_DIR, "bulk-plan.json");
+const FINAL_SUMMARY = path.join(BACKUP_DIR, "bulk-final-summary.json");
+const PIPELINE_ERROR_CLASSES = new Set(["connection", "storage", "database", "backup"]);
 
 // Repeated decorative asset. Alt text is an image-generation prompt and the
 // <img> sits outside <figure>. Identified from post HTML, not guessed.
@@ -89,11 +111,14 @@ const BOOK_WIX_IDS = [
 ];
 
 function parseArgs(argv) {
-  const args = { slugs: [], apply: false, dryRun: false };
+  const args = { slugs: [], apply: false, dryRun: false, bulk: false, batchSize: DEFAULT_BATCH_SIZE };
   for (const arg of argv) {
     if (arg === "--apply") args.apply = true;
     else if (arg === "--dry-run") args.dryRun = true;
+    else if (arg === "--bulk") args.bulk = true;
     else if (arg.startsWith("--slug=")) args.slugs.push(arg.slice("--slug=".length));
+    else if (arg.startsWith("--batch-size=")) args.batchSize = Number(arg.slice("--batch-size=".length));
+    else throw new Error(`Unknown argument: ${arg}`);
   }
   return args;
 }
@@ -307,12 +332,22 @@ function selfCheck() {
   if (!out.includes("<figcaption>Hello cap</figcaption>")) throw new Error("Self-check: figcaption changed.");
   if (!out.includes("https://example.com/keep")) throw new Error("Self-check: link changed.");
   if ((out.match(/loading="lazy"/g) || []).length !== 3) throw new Error("Self-check: loading count.");
+  const already = extractImages(
+    '<img src="https://example.supabase.co/storage/v1/object/public/post-images/content/x/a.webp" alt="Hi">'
+  )[0];
+  if (already.skip || already.wix || already.local) {
+    throw new Error("Self-check: an existing storage URL looked migratable.");
+  }
 }
 
 function localFilePath(src) {
   const rel = safeDecode(src).replace(/^\/+/, "");
-  if (!rel.startsWith("images/")) return null;
-  return path.join(projectRoot, "public", ...rel.split("/"));
+  if (!rel.startsWith("images/") || rel.includes("..")) return null;
+  const filePath = path.join(projectRoot, "public", ...rel.split("/"));
+  const publicRoot = path.join(projectRoot, "public");
+  const relToPublic = path.relative(publicRoot, filePath);
+  if (relToPublic.startsWith("..") || path.isAbsolute(relToPublic)) return null;
+  return filePath;
 }
 
 const DOWNLOAD_ATTEMPTS = 5;
@@ -407,7 +442,8 @@ function reduction(original, optimised) {
 }
 
 function publicObjectUrl(supabaseUrl, storagePath) {
-  return `${supabaseUrl.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/${storagePath}`;
+  const encoded = storagePath.split("/").map((part) => encodeURIComponent(part)).join("/");
+  return `${supabaseUrl.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/${encoded}`;
 }
 
 function isDecorativeSkip(img) {
@@ -507,6 +543,1140 @@ async function writeBackup(slug, body, mode) {
   return filePath;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function mediaType(header) {
+  return String(header || "").split(";")[0].trim().toLowerCase();
+}
+
+function sameJson(a, b) {
+  return JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
+}
+
+function digest(value) {
+  return createHash("sha256").update(JSON.stringify(value ?? null)).digest("hex").slice(0, 16);
+}
+
+class FatalStop extends Error {
+  constructor(message, resumeFromSlug) {
+    super(message);
+    this.name = "FatalStop";
+    this.resumeFromSlug = resumeFromSlug || null;
+  }
+}
+
+function calendarDay(now) {
+  const year = now.getUTCFullYear();
+  const month = String(now.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(now.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+function publishedState(value, now) {
+  if (value == null) return "missing";
+  if (typeof value !== "string") return "unparseable";
+  const raw = value.trim();
+  if (!raw) return "missing";
+  const day = raw.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}$/.test(day)) return day <= calendarDay(now) ? "published" : "future";
+  const time = new Date(raw).getTime();
+  if (Number.isNaN(time)) return "unparseable";
+  return time <= now.getTime() ? "published" : "future";
+}
+
+function storageFolder(slug) {
+  // Supabase rejects object keys that contain non-ASCII characters, so a slug
+  // such as "córdoba-..." cannot be used as a folder name. ASCII slugs stay
+  // unchanged. Other slugs use the same transliteration as image filenames,
+  // plus a short hash of the original slug so two articles cannot share a folder.
+  if (/^[\x20-\x7e]+$/.test(slug)) return slug;
+  return `${slugify(slug)}-${shortHash(slug)}`;
+}
+
+function assertPlainSlug(slug) {
+  const unsafe = typeof slug !== "string" || slug.length < 1 || slug.length > 180
+    || slug === "." || slug === ".." || slug.includes("..") || slug.includes("/") || slug.includes("\\")
+    || /[<>:"|?*\u0000-\u001f]/.test(slug);
+  if (unsafe) {
+    const error = new Error(`Refusing slug that is not a plain filename: ${slug}`);
+    error.code = "other";
+    throw error;
+  }
+}
+
+function backupPathFor(slug) {
+  assertPlainSlug(slug);
+  const filePath = path.resolve(BACKUP_DIR, `${slug}.json`);
+  const rel = path.relative(path.resolve(BACKUP_DIR), filePath);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+    const error = new Error(`Backup path escaped the backup directory for ${slug}.`);
+    error.code = "backup";
+    throw error;
+  }
+  return filePath;
+}
+
+function migratablePhotographs(html) {
+  const found = [];
+  const seen = new Set();
+  for (const img of extractImages(html || "")) {
+    if (!img.src || img.skip || seen.has(img.src)) continue;
+    if (!img.wix && !img.local) continue;
+    seen.add(img.src);
+    found.push(img);
+  }
+  return found;
+}
+
+function wixPhotoPlacements(html) {
+  return extractImages(html || "").filter((img) => img.src && img.wix && !img.skip);
+}
+
+function localPhotoPlacements(html) {
+  return extractImages(html || "").filter((img) => img.src && img.local && !img.skip);
+}
+
+function bodyLooksPreMigration(html) {
+  return migratablePhotographs(html).length > 0;
+}
+
+function countedSrcs(posts, kind) {
+  const counts = new Map();
+  for (const post of posts) {
+    for (const img of extractImages(post.body || "")) {
+      if (!img.src) continue;
+      const decorative = img.src.includes(DECORATIVE_WIX_ID) || (img.skip && String(img.skip).startsWith("decorative"));
+      const book = Boolean(img.skip && String(img.skip).startsWith("book-cover"));
+      const match = kind === "decorative" ? decorative : book;
+      if (!match) continue;
+      counts.set(img.src, (counts.get(img.src) || 0) + 1);
+    }
+  }
+  return Object.fromEntries([...counts.entries()].sort(([a], [b]) => a.localeCompare(b)));
+}
+
+function classifyError(error) {
+  const coded = error?.code;
+  if (coded === "auth" || coded === "backup" || coded === "download" || coded === "encode" || PIPELINE_ERROR_CLASSES.has(coded)) {
+    return coded;
+  }
+  const msg = String(error?.message || error);
+  if (/^download failed/i.test(msg) || msg.includes("download failed after")) {
+    if (/HTTP 429|HTTP 5\d\d|fetch failed|timeout|ECONN|ENOTFOUND|EAI_AGAIN|aborted|network/i.test(msg)) return "connection";
+    return "download";
+  }
+  if (/unauthorized|invalid api key|jwt|permission denied|row-level security|not authorized/i.test(msg)) return "auth";
+  if (/429|too many requests|rate limit/i.test(msg)) return "connection";
+  if (/ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|fetch failed|network|socket|aborted|timeout|ECONNREFUSED|UND_ERR/i.test(msg)) {
+    return "connection";
+  }
+  if (/HTTP 5\d\d/.test(msg)) return "connection";
+  if (/sharp|encoded width|Input buffer|unsupported image/i.test(msg)) return "encode";
+  if (/ENOENT|no such file/i.test(msg)) return "download";
+  if (/backup/i.test(msg)) return "backup";
+  if (/database update|matched no row|PGRST/i.test(msg)) return "database";
+  if (/storage|upload|overwrite|HEAD /i.test(msg)) return "storage";
+  return "other";
+}
+
+function assertBodyOnly(payload) {
+  const keys = Object.keys(payload);
+  if (keys.length !== 1 || keys[0] !== "body") {
+    throw new Error("Refusing to write columns other than posts.body.");
+  }
+}
+
+function resolveBatchSize(value) {
+  if (!Number.isInteger(value) || value < 20 || value > 25) {
+    throw new Error("Batch size must be an integer from 20 to 25.");
+  }
+  return value;
+}
+
+function chunk(items, size) {
+  const groups = [];
+  for (let index = 0; index < items.length; index += size) groups.push(items.slice(index, index + size));
+  return groups;
+}
+
+async function atomicWriteJson(filePath, value) {
+  await mkdir(path.dirname(filePath), { recursive: true });
+  const json = JSON.stringify(value, null, 2);
+  const tmp = `${filePath}.${process.pid}.tmp`;
+  let lastError;
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    try {
+      await writeFile(tmp, json);
+      await rm(filePath, { force: true });
+      await rename(tmp, filePath);
+      return;
+    } catch (error) {
+      lastError = error;
+      await sleep(400 * attempt);
+    }
+  }
+  await writeFile(filePath, json);
+  await rm(tmp, { force: true }).catch(() => {});
+  if (lastError) console.warn(`Atomic replace fell back to a direct write: ${lastError.message}`);
+}
+
+async function ensureSnapshot(filePath, value) {
+  try {
+    await access(filePath);
+    console.log(`Keeping existing snapshot: ${filePath}`);
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+    await atomicWriteJson(filePath, value);
+    console.log(`Wrote snapshot: ${filePath}`);
+  }
+}
+
+function emptyProgress() {
+  return {
+    startedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    status: "running",
+    stopReason: null,
+    resumeFromSlug: null,
+    pilots: PILOT_SLUG_LIST,
+    articles: {},
+    batches: [],
+    totals: {
+      articlesMigrated: 0,
+      photographsMigrated: 0,
+      bytesUploaded: 0,
+      nothingToDo: 0,
+      failed: 0,
+    },
+    filesOver500KB: [],
+    runs: [],
+    unpublished: { missing: 0, unparseable: 0, future: [] },
+  };
+}
+
+async function loadProgress() {
+  try {
+    const parsed = JSON.parse(await readFile(PROGRESS_FILE, "utf8"));
+    if (!parsed || typeof parsed !== "object" || !parsed.articles || typeof parsed.articles !== "object") {
+      throw new FatalStop("Progress log is missing article records. Stopping so resume is not guessed.", null);
+    }
+    if (!Array.isArray(parsed.batches)) parsed.batches = [];
+    if (!Array.isArray(parsed.runs)) parsed.runs = [];
+    if (!parsed.totals || typeof parsed.totals !== "object") parsed.totals = {};
+    return parsed;
+  } catch (error) {
+    if (error instanceof FatalStop) throw error;
+    if (error?.code === "ENOENT") return emptyProgress();
+    throw new FatalStop(`Progress log is unreadable (${error.message}). Stopping so resume is not guessed.`, null);
+  }
+}
+
+async function sumUploads() {
+  let raw = "";
+  try {
+    raw = await readFile(UPLOAD_LOG, "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") return { bytes: 0, files: [] };
+    throw error;
+  }
+  const seen = new Map();
+  for (const line of raw.split(/\n+/)) {
+    if (!line.trim()) continue;
+    const item = JSON.parse(line);
+    const key = `${item.slug}/${item.filename}`;
+    if (!seen.has(key)) seen.set(key, item);
+  }
+  let bytes = 0;
+  const files = [];
+  for (const item of seen.values()) {
+    bytes += Number(item.bytes) || 0;
+    files.push(item);
+  }
+  return { bytes, files };
+}
+
+function recomputeCounts(progress) {
+  let articlesMigrated = 0;
+  let photographsMigrated = 0;
+  let nothingToDo = 0;
+  let failed = 0;
+  const over = [];
+  for (const article of Object.values(progress.articles)) {
+    if (article.status === "migrated") {
+      articlesMigrated += 1;
+      photographsMigrated += article.photographCount || 0;
+    } else if (article.status === "nothing-to-do") nothingToDo += 1;
+    else if (article.status === "failed") failed += 1;
+    for (const file of article.filesOver500KB || []) {
+      over.push({ slug: article.slug, filename: file.filename, bytes: file.bytes, status: article.status });
+    }
+  }
+  progress.totals.articlesMigrated = articlesMigrated;
+  progress.totals.photographsMigrated = photographsMigrated;
+  progress.totals.nothingToDo = nothingToDo;
+  progress.totals.failed = failed;
+  progress.filesOver500KB = over;
+}
+
+async function saveProgress(progress) {
+  progress.updatedAt = new Date().toISOString();
+  recomputeCounts(progress);
+  progress.totals.bytesUploaded = (await sumUploads()).bytes;
+  await atomicWriteJson(PROGRESS_FILE, progress);
+}
+
+async function rememberUpload(slug, filename, bytes) {
+  const line = JSON.stringify({ slug, filename, bytes, at: new Date().toISOString() });
+  await mkdir(BACKUP_DIR, { recursive: true });
+  await appendFile(UPLOAD_LOG, `${line}\n`, "utf8");
+}
+
+function bytesForSlug(files, slug) {
+  return files.filter((item) => item.slug === slug).reduce((sum, item) => sum + (Number(item.bytes) || 0), 0);
+}
+
+async function headWebp(url) {
+  let lastError;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const response = await fetch(url, {
+        method: "HEAD",
+        redirect: "follow",
+        headers: { "User-Agent": "RealTravelGuides-image-migration/1.0" },
+        signal: AbortSignal.timeout(30_000),
+      });
+      const contentType = mediaType(response.headers.get("content-type"));
+      return {
+        status: response.status,
+        contentType,
+        ok: response.status === 200 && contentType === "image/webp",
+      };
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await sleep(1000 * 2 ** (attempt - 1));
+    }
+  }
+  const wrapped = new Error(`HEAD failed after 3 attempts: ${lastError?.message || lastError}`);
+  wrapped.code = "connection";
+  throw wrapped;
+}
+
+async function fetchAllPosts(reader) {
+  const pageSize = 100;
+  const posts = [];
+  for (let from = 0; ; from += pageSize) {
+    const { data, error } = await reader
+      .from("posts")
+      .select("slug,body,published_at,cover,images")
+      .order("slug", { ascending: true })
+      .range(from, from + pageSize - 1);
+    if (error) {
+      const wrapped = new Error(error.message);
+      if (/jwt|api key|unauthorized|permission|row-level security/i.test(error.message)) wrapped.code = "auth";
+      else wrapped.code = "database";
+      throw wrapped;
+    }
+    if (!data?.length) break;
+    posts.push(...data);
+    if (data.length < pageSize) break;
+  }
+  const seen = new Set();
+  const unique = [];
+  for (const post of posts.sort((a, b) => String(a.slug).localeCompare(String(b.slug)))) {
+    if (!post?.slug || seen.has(post.slug)) continue;
+    seen.add(post.slug);
+    unique.push(post);
+  }
+  return unique;
+}
+
+async function ensureOriginalBackup(slug, body) {
+  if (typeof body !== "string" || body.length === 0) {
+    const error = new Error(`Refusing to back up an empty body for ${slug}.`);
+    error.code = "backup";
+    throw error;
+  }
+  if (!bodyLooksPreMigration(body)) {
+    const error = new Error(`Refusing to back up ${slug}: the current body has no migratable photographs.`);
+    error.code = "backup";
+    throw error;
+  }
+  await mkdir(BACKUP_DIR, { recursive: true });
+  const filePath = backupPathFor(slug);
+  let existing = null;
+  try {
+    existing = JSON.parse(await readFile(filePath, "utf8"));
+  } catch (error) {
+    if (error?.code !== "ENOENT") {
+      const aside = `${filePath}.unreadable-${Date.now()}`;
+      await rename(filePath, aside);
+      console.log(`Moved an unreadable backup aside: ${aside}`);
+    }
+  }
+  if (existing && typeof existing.body === "string") {
+    const backupIsOriginal = bodyLooksPreMigration(existing.body) || existing.body === body;
+    if (backupIsOriginal || !bodyLooksPreMigration(body)) {
+      console.log(`Backup already exists; leaving the pre-migration file untouched: ${filePath}`);
+      return filePath;
+    }
+    const aside = `${filePath}.not-original-${Date.now()}`;
+    await rename(filePath, aside);
+    console.log(`Existing backup was not a pre-migration body. Moved it aside: ${aside}`);
+  }
+  const payload = {
+    slug,
+    column: "posts.body",
+    savedAt: new Date().toISOString(),
+    mode: "apply",
+    preMigration: true,
+    note:
+      "Original posts.body before bulk image migration. To roll back, write this body back to posts.body for this slug. Do not delete original Wix objects or files in public/images.",
+    body,
+  };
+  await writeFile(filePath, JSON.stringify(payload, null, 2));
+  console.log(`Wrote pre-migration backup: ${filePath}`);
+  return filePath;
+}
+
+async function updateBodyOnly(writer, slug, body) {
+  const payload = { body };
+  assertBodyOnly(payload);
+  const { data, error } = await writer.from("posts").update(payload).eq("slug", slug).select("slug");
+  if (error) {
+    const wrapped = new Error(error.message);
+    if (/jwt|api key|unauthorized|permission|row-level security|not authorized/i.test(error.message)) wrapped.code = "auth";
+    else wrapped.code = "database";
+    throw wrapped;
+  }
+  if (!data || data.length !== 1 || data[0]?.slug !== slug) {
+    const wrapped = new Error("database update matched no row");
+    wrapped.code = "database";
+    throw wrapped;
+  }
+}
+
+async function restoreBodyFromBackup(writer, reader, slug) {
+  const parsed = JSON.parse(await readFile(backupPathFor(slug), "utf8"));
+  if (typeof parsed.body !== "string" || parsed.body.length === 0) {
+    const error = new Error(`Backup for ${slug} has no body to restore.`);
+    error.code = "backup";
+    throw error;
+  }
+  await updateBodyOnly(writer, slug, parsed.body);
+  const { data, error } = await reader.from("posts").select("body").eq("slug", slug).maybeSingle();
+  if (error || data?.body !== parsed.body) {
+    const wrapped = new Error(error?.message || `Restore of ${slug} did not match the backup.`);
+    wrapped.code = "database";
+    throw wrapped;
+  }
+}
+
+async function putWebp(writer, storagePath, publicUrl, buffer) {
+  const before = await headWebp(publicUrl);
+  if (before.ok) return { uploaded: false };
+  if (before.status === 200 && String(before.contentType).startsWith("image/")) {
+    const error = new Error(`Refusing to overwrite ${storagePath}: Content-Type is ${before.contentType || "missing"}`);
+    error.code = "storage";
+    throw error;
+  }
+  const { error } = await writer.storage.from(BUCKET).upload(storagePath, buffer, {
+    contentType: "image/webp",
+    upsert: false,
+  });
+  if (!error) return { uploaded: true };
+  const msg = error.message || String(error);
+  if (/already exists|duplicate|resource exists/i.test(msg)) {
+    const again = await headWebp(publicUrl);
+    if (again.ok) return { uploaded: false };
+    const wrapped = new Error(`Object exists but HEAD is HTTP ${again.status} ${again.contentType || "missing"}`);
+    wrapped.code = "storage";
+    throw wrapped;
+  }
+  const wrapped = new Error(msg);
+  const status = Number(error.statusCode || error.status || 0);
+  if (status === 401 || status === 403 || /unauthorized|jwt|invalid api key|permission|row-level security/i.test(msg)) {
+    wrapped.code = "auth";
+  } else if (status === 429 || status >= 500 || /fetch failed|network|timeout/i.test(msg)) {
+    wrapped.code = "connection";
+  } else {
+    wrapped.code = "storage";
+  }
+  throw wrapped;
+}
+
+function articleFailure(slug, error, extras = {}) {
+  const errorClass = extras.errorClass || classifyError(error);
+  const fatal = errorClass === "auth" || extras.fatal === true;
+  return {
+    slug,
+    status: "failed",
+    photographCount: extras.photographCount || 0,
+    bytesUploaded: 0,
+    filesOver500KB: extras.filesOver500KB || [],
+    error: extras.error || error?.message || String(error),
+    imageErrors: extras.imageErrors || [],
+    errorClass,
+    fatal,
+    fatalMessage: fatal ? extras.fatalMessage || error?.message || String(error) : null,
+  };
+}
+
+async function migrateArticle(reader, writer, supabaseUrl, slug, tmpRoot) {
+  const articleTmp = path.join(tmpRoot, slug);
+  try {
+    const { data: post, error } = await reader
+      .from("posts")
+      .select("slug,body,published_at,cover,images")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (error) return articleFailure(slug, error);
+    if (!post) return articleFailure(slug, new Error("post not found"));
+    if (publishedState(post.published_at, new Date()) !== "published") {
+      return articleFailure(slug, new Error(`published_at is not currently published (${post.published_at})`));
+    }
+
+    const photos = migratablePhotographs(post.body || "");
+    if (!photos.length) {
+      return {
+        slug,
+        status: "nothing-to-do",
+        photographCount: 0,
+        bytesUploaded: 0,
+        filesOver500KB: [],
+        error: null,
+        imageErrors: [],
+        errorClass: null,
+        fatal: false,
+      };
+    }
+
+    await ensureOriginalBackup(slug, post.body || "");
+    await mkdir(articleTmp, { recursive: true });
+
+    const plansBySrc = new Map();
+    const processed = [];
+    const imageErrors = [];
+    for (const img of photos) {
+      const filename = outputFilename(img.alt, img.src);
+      const folder = storageFolder(slug);
+      const storagePath = `content/${folder}/${filename}`;
+      const publicUrl = publicObjectUrl(supabaseUrl, storagePath);
+      try {
+        if (!storagePath.startsWith(`content/${folder}/`) || !filename.endsWith(".webp") || !publicUrl.endsWith(".webp")) {
+          throw new Error("Refusing a public URL that is not a direct WebP object URL.");
+        }
+        if (publicUrl.includes("/_next/image") || !publicUrl.includes(`/storage/v1/object/public/${BUCKET}/`)) {
+          throw new Error("Refusing to route a body image through next/image.");
+        }
+        console.log(`Encoding ${filename}`);
+        const original = await readSource(img);
+        const webp = await encodeWebp(original);
+        const outPath = path.join(articleTmp, filename);
+        await writeFile(outPath, webp.buffer);
+        const written = await stat(outPath);
+        processed.push({
+          src: img.src,
+          filename,
+          storagePath,
+          publicUrl,
+          bytes: written.size,
+          overFlag: written.size > FLAG_BYTES,
+          alt: img.alt,
+        });
+        plansBySrc.set(img.src, { publicUrl });
+        console.log(`  ${original.length} -> ${written.size} bytes, q${webp.quality}, ${webp.width}x${webp.height}`);
+      } catch (imageError) {
+        imageErrors.push({ src: img.src, message: imageError.message });
+        console.log(`FAILED ${filename}: ${imageError.message}`);
+        if (classifyError(imageError) === "connection") break;
+      }
+    }
+
+    const filesOver500KB = processed.filter((item) => item.overFlag).map((item) => ({
+      filename: item.filename,
+      bytes: item.bytes,
+    }));
+    if (imageErrors.length || processed.length !== photos.length) {
+      return articleFailure(slug, new Error(imageErrors.map((item) => `${item.src} — ${item.message}`).join(" | ")), {
+        photographCount: 0,
+        filesOver500KB,
+        imageErrors,
+        errorClass: classifyError({ message: imageErrors[0]?.message || "image failed" }),
+      });
+    }
+
+    const paths = new Set();
+    for (const item of processed) {
+      if (paths.has(item.storagePath)) {
+        return articleFailure(slug, new Error(`filename collision for ${item.storagePath}`), { filesOver500KB });
+      }
+      paths.add(item.storagePath);
+    }
+
+    const newBody = rewriteBody(post.body || "", plansBySrc);
+    assertRewrite(post.body || "", newBody, plansBySrc);
+
+    for (const item of processed) {
+      const webp = await readFile(path.join(articleTmp, item.filename));
+      const put = await putWebp(writer, item.storagePath, item.publicUrl, webp);
+      if (put.uploaded) await rememberUpload(slug, item.filename, webp.length);
+      else console.log(`Reusing existing object: ${item.storagePath}`);
+    }
+
+    for (const item of processed) {
+      const head = await headWebp(item.publicUrl);
+      if (!head.ok) {
+        const message = `${item.src} -> ${item.publicUrl} — HEAD returned HTTP ${head.status} content-type ${head.contentType || "missing"}`;
+        return articleFailure(slug, new Error(message), {
+          filesOver500KB,
+          imageErrors: [{ src: item.src, message }],
+          errorClass: head.status >= 500 || head.status === 429 ? "connection" : "storage",
+        });
+      }
+    }
+
+    const beforeCover = post.cover ?? null;
+    const beforeImages = post.images ?? null;
+    await updateBodyOnly(writer, slug, newBody);
+
+    try {
+      for (const item of processed) {
+        const head = await headWebp(item.publicUrl);
+        if (!head.ok) {
+          throw Object.assign(
+            new Error(`${item.src} -> ${item.publicUrl} — HEAD returned HTTP ${head.status} content-type ${head.contentType || "missing"}`),
+            { code: head.status >= 500 || head.status === 429 ? "connection" : "storage", src: item.src }
+          );
+        }
+      }
+      const { data: after, error: readError } = await reader
+        .from("posts")
+        .select("body,cover,images")
+        .eq("slug", slug)
+        .maybeSingle();
+      if (readError) throw Object.assign(new Error(readError.message), { code: "database" });
+      if (!sameJson(after?.cover ?? null, beforeCover) || !sameJson(after?.images ?? null, beforeImages)) {
+        throw Object.assign(new Error("cover or images column changed during the body update"), { code: "database" });
+      }
+      if (migratablePhotographs(after?.body || "").length) {
+        throw Object.assign(new Error("body still has migratable photographs after the update"), { code: "database" });
+      }
+      assertRewrite(post.body || "", after?.body || "", plansBySrc);
+    } catch (verifyError) {
+      try {
+        await restoreBodyFromBackup(writer, reader, slug);
+        console.log(`Restored original body for ${slug}.`);
+        return articleFailure(slug, verifyError, {
+          filesOver500KB,
+          imageErrors: [{ src: verifyError.src || processed[0]?.src || "", message: verifyError.message }],
+          error: `${verifyError.message}. Body restored from backup.`,
+        });
+      } catch (restoreError) {
+        return articleFailure(slug, restoreError, {
+          filesOver500KB,
+          fatal: true,
+          fatalMessage: `Restore failed for ${slug} after ${verifyError.message}: ${restoreError.message}`,
+          error: `${verifyError.message}. RESTORE FAILED: ${restoreError.message}`,
+          errorClass: "database",
+        });
+      }
+    }
+
+    return {
+      slug,
+      status: "migrated",
+      photographCount: processed.length,
+      bytesUploaded: 0,
+      filesOver500KB,
+      error: null,
+      imageErrors: [],
+      errorClass: null,
+      fatal: false,
+    };
+  } catch (error) {
+    if (error instanceof FatalStop) throw error;
+    return articleFailure(slug, error);
+  } finally {
+    await rm(articleTmp, { recursive: true, force: true });
+  }
+}
+
+function toRecord(result, bytesUploaded) {
+  return {
+    slug: result.slug,
+    status: result.status,
+    photographCount: result.photographCount || 0,
+    bytesUploaded,
+    filesOver500KB: result.filesOver500KB || [],
+    error: result.error || null,
+    imageErrors: result.imageErrors || [],
+    errorClass: result.errorClass || null,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+function earliestRemaining(queue, progress) {
+  for (const post of queue) {
+    if (progress.articles[post.slug]?.status !== "migrated") return post.slug;
+  }
+  return null;
+}
+
+function contentWebpCount(slug, html) {
+  const folder = storageFolder(slug);
+  const encodedFolder = encodeURIComponent(folder);
+  const seen = new Set();
+  for (const img of extractImages(html || "")) {
+    const src = img.src || "";
+    const inFolder = src.includes(`/storage/v1/object/public/${BUCKET}/content/${folder}/`)
+      || src.includes(`/storage/v1/object/public/${BUCKET}/content/${encodedFolder}/`);
+    if (inFolder && /\.webp(?:$|\?)/i.test(src)) seen.add(src);
+  }
+  return seen.size;
+}
+
+async function recoverMigratedArticle(slug, body, uploadFiles) {
+  if (migratablePhotographs(body).length) return null;
+  const photographCount = contentWebpCount(slug, body);
+  if (!photographCount) return null;
+  try {
+    const parsed = JSON.parse(await readFile(backupPathFor(slug), "utf8"));
+    if (typeof parsed.body !== "string" || !bodyLooksPreMigration(parsed.body)) return null;
+  } catch {
+    return null;
+  }
+  return {
+    slug,
+    status: "migrated",
+    photographCount,
+    bytesUploaded: bytesForSlug(uploadFiles, slug),
+    filesOver500KB: uploadFiles
+      .filter((item) => item.slug === slug && item.bytes > FLAG_BYTES)
+      .map((item) => ({ filename: item.filename, bytes: item.bytes })),
+    error: null,
+    imageErrors: [],
+    recoveredFromBody: true,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+async function probeMissingObject(supabaseUrl) {
+  const url = `${supabaseUrl.replace(/\/$/, "")}/storage/v1/object/public/${BUCKET}/content/__migration-probe__/missing-${shortHash(String(Date.now()))}.webp`;
+  try {
+    const head = await headWebp(url);
+    return { status: head.status, contentType: head.contentType, ok: head.ok };
+  } catch (error) {
+    return { status: 0, contentType: "", ok: false, error: error.message };
+  }
+}
+
+async function probeExistingWebp(posts) {
+  for (const slug of PILOT_SLUG_LIST) {
+    const post = posts.find((item) => item.slug === slug);
+    if (!post) continue;
+    const img = extractImages(post.body || "").find((item) => item.src.includes("/storage/v1/object/public/post-images/"));
+    if (!img) continue;
+    try {
+      const head = await headWebp(img.src);
+      return { slug, status: head.status, contentType: head.contentType, ok: head.ok };
+    } catch (error) {
+      return { slug, status: 0, contentType: "", ok: false, error: error.message };
+    }
+  }
+  return { slug: null, status: 0, contentType: "", ok: false, error: "no pilot storage URL found" };
+}
+
+async function writeFinalSummary(reader, progress) {
+  const coverBefore = JSON.parse(await readFile(COVER_SNAPSHOT, "utf8"));
+  const preservationBefore = JSON.parse(await readFile(PRESERVATION_SNAPSHOT, "utf8"));
+  const posts = await fetchAllPosts(reader);
+  const bySlug = new Map(posts.map((post) => [post.slug, post]));
+  const preservedPosts = (preservationBefore.slugs || []).map((slug) => bySlug.get(slug)).filter(Boolean);
+  const decorativeAfter = countedSrcs(preservedPosts, "decorative");
+  const booksAfter = countedSrcs(preservedPosts, "book");
+  const published = posts.filter((post) => publishedState(post.published_at, new Date()) === "published");
+  const remainingWix = [];
+  const remainingLocal = [];
+  for (const post of published) {
+    if (PILOT_SLUGS.has(post.slug)) continue;
+    const wix = wixPhotoPlacements(post.body || "").length;
+    const local = localPhotoPlacements(post.body || "").length;
+    if (wix) remainingWix.push({ slug: post.slug, wixPhotoUrls: wix });
+    if (local) remainingLocal.push({ slug: post.slug, localPhotoUrls: local });
+  }
+  const mismatches = [];
+  for (const before of coverBefore.rows || []) {
+    const after = bySlug.get(before.slug);
+    const coverSame = Boolean(after) && sameJson(after.cover ?? null, before.cover ?? null);
+    const imagesSame = Boolean(after) && sameJson(after.images ?? null, before.images ?? null);
+    if (!after || !coverSame || !imagesSame) {
+      mismatches.push({ slug: before.slug, missing: !after, coverSame, imagesSame });
+    }
+  }
+  const sample = [];
+  for (const before of (coverBefore.rows || []).slice(0, 5)) {
+    const after = bySlug.get(before.slug);
+    sample.push({
+      slug: before.slug,
+      coverUnchanged: Boolean(after) && sameJson(after?.cover ?? null, before.cover ?? null),
+      imagesUnchanged: Boolean(after) && sameJson(after?.images ?? null, before.images ?? null),
+      coverHash: digest(before.cover ?? null),
+      imagesHash: digest(before.images ?? null),
+    });
+  }
+  const migrated = Object.values(progress.articles).find((article) => article.status === "migrated");
+  if (migrated && !sample.some((item) => item.slug === migrated.slug)) {
+    const before = (coverBefore.rows || []).find((row) => row.slug === migrated.slug);
+    const after = bySlug.get(migrated.slug);
+    if (before) {
+      sample.push({
+        slug: migrated.slug,
+        coverUnchanged: Boolean(after) && sameJson(after?.cover ?? null, before.cover ?? null),
+        imagesUnchanged: Boolean(after) && sameJson(after?.images ?? null, before.images ?? null),
+        coverHash: digest(before.cover ?? null),
+        imagesHash: digest(before.images ?? null),
+      });
+    }
+  }
+  const failed = Object.values(progress.articles)
+    .filter((article) => article.status === "failed")
+    .map((article) => ({
+      slug: article.slug,
+      error: article.error,
+      imageErrors: article.imageErrors || [],
+      errorClass: article.errorClass || null,
+    }));
+  const summary = {
+    finished: progress.status === "finished",
+    stopped: progress.status === "stopped",
+    stopReason: progress.stopReason,
+    resumeFromSlug: progress.resumeFromSlug,
+    articlesMigrated: progress.totals.articlesMigrated,
+    photographsMigrated: progress.totals.photographsMigrated,
+    bytesUploaded: progress.totals.bytesUploaded,
+    nothingToDo: progress.totals.nothingToDo,
+    failed,
+    filesOver500KB: progress.filesOver500KB || [],
+    remainingWixPhotographs: remainingWix,
+    remainingLocalPhotographs: remainingLocal,
+    decorativeUnchanged: sameJson(preservationBefore.decorative, decorativeAfter),
+    bookGraphicsUnchanged: sameJson(preservationBefore.books, booksAfter),
+    coversAndImagesUnchanged: mismatches.length === 0,
+    coverOrImagesMismatches: mismatches,
+    sampleColumnCheck: sample,
+    updatesOnlyPostsBody: true,
+    pilotsSkipped: PILOT_SLUG_LIST,
+    pilotWarnings: PILOT_SLUG_LIST.map((slug) => ({
+      slug,
+      remainingMigratable: progress.articles[slug]?.remainingMigratable ?? null,
+    })),
+    updatedAt: new Date().toISOString(),
+  };
+  await atomicWriteJson(FINAL_SUMMARY, summary);
+  return summary;
+}
+
+async function runBulk(args) {
+  const apply = args.apply && !args.dryRun;
+  const batchSize = resolveBatchSize(args.batchSize);
+  sharp.cache(false);
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const readKey = serviceKey || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !readKey) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or a Supabase key in .env.local.");
+  if (apply && !serviceKey) throw new Error("Refusing to apply without SUPABASE_SERVICE_ROLE_KEY.");
+
+  console.log(apply ? "Mode: BULK APPLY" : "Mode: BULK PLAN. No upload and no database write.");
+  console.log(`Backups and progress: ${BACKUP_DIR}`);
+  console.log("Database writes are limited to posts.body. Cover and images are never included in an update.");
+  console.log(`Pilot slugs skipped: ${PILOT_SLUG_LIST.join(", ")}`);
+
+  const clientOptions = { auth: { persistSession: false, autoRefreshToken: false } };
+  const reader = createClient(supabaseUrl, readKey, clientOptions);
+  const writer = apply ? createClient(supabaseUrl, serviceKey, clientOptions) : null;
+
+  console.log("Reading posts...");
+  const posts = await fetchAllPosts(reader);
+  console.log(`Posts read: ${posts.length}`);
+  const now = new Date();
+  const published = [];
+  const unpublished = { missing: 0, unparseable: 0, future: [] };
+  for (const post of posts) {
+    const state = publishedState(post.published_at, now);
+    if (state === "published") published.push(post);
+    else if (state === "future") unpublished.future.push(post.slug);
+    else unpublished[state] += 1;
+  }
+
+  const coverSnapshot = {
+    savedAt: new Date().toISOString(),
+    note: "cover and images columns before bulk body migration. The migration must not change these.",
+    rows: posts.map((post) => ({ slug: post.slug, cover: post.cover ?? null, images: post.images ?? null })),
+  };
+  const preservationSnapshot = {
+    savedAt: new Date().toISOString(),
+    slugs: published.map((post) => post.slug),
+    decorative: countedSrcs(published, "decorative"),
+    books: countedSrcs(published, "book"),
+  };
+  await ensureSnapshot(COVER_SNAPSHOT, coverSnapshot);
+  await ensureSnapshot(PRESERVATION_SNAPSHOT, preservationSnapshot);
+
+  const probe = await probeExistingWebp(posts);
+  const missingProbe = await probeMissingObject(supabaseUrl);
+  console.log(
+    `HEAD probe: ${probe.ok ? "ok" : "FAILED"} status=${probe.status} content-type=${probe.contentType || probe.error || "missing"} slug=${probe.slug || "none"}`
+  );
+  console.log(
+    `HEAD missing-object probe: status=${missingProbe.status} content-type=${missingProbe.contentType || missingProbe.error || "missing"} ok=${missingProbe.ok}`
+  );
+
+  if (!apply) {
+    const queue = [];
+    const nothingToDo = [];
+    for (const post of published) {
+      if (PILOT_SLUGS.has(post.slug)) continue;
+      const photos = migratablePhotographs(post.body || "");
+      if (!photos.length) nothingToDo.push(post.slug);
+      else queue.push({ slug: post.slug, photographs: photos.length, local: photos.filter((img) => img.local).length, wix: photos.filter((img) => img.wix).length });
+    }
+    const plan = {
+      published: published.length,
+      unpublished,
+      pilots: PILOT_SLUG_LIST,
+      nothingToDo,
+      queue,
+      photographCount: queue.reduce((sum, item) => sum + item.photographs, 0),
+      probe,
+      missingProbe,
+      portoSlug: "porto-ercole-weekend-getaway-beaches-forts-from-rome-by-train-1",
+      portoInQueue: queue.some((item) => item.slug === "porto-ercole-weekend-getaway-beaches-forts-from-rome-by-train-1"),
+      batchSize,
+      uploads: 0,
+      databaseWrites: 0,
+    };
+    await atomicWriteJson(PLAN_FILE, plan);
+    console.log(`Plan: ${queue.length} articles, ${plan.photographCount} photographs, ${nothingToDo.length} nothing-to-do.`);
+    console.log(`Porto Ercole duplicate in queue: ${plan.portoInQueue}`);
+    console.log(`Plan file: ${PLAN_FILE}`);
+    console.log("Confirmation: plan mode uploaded nothing and wrote no post row.");
+    return;
+  }
+
+  if (!probe.ok) {
+    throw new FatalStop(
+      `HEAD probe of an existing pilot WebP failed (status ${probe.status}, content-type ${probe.contentType || probe.error || "missing"}). Stopping before any upload.`,
+      null
+    );
+  }
+  if (missingProbe.ok || (missingProbe.status === 200 && String(missingProbe.contentType).startsWith("image/"))) {
+    throw new FatalStop(
+      `HEAD of a missing object looked like a real image (status ${missingProbe.status}, content-type ${missingProbe.contentType || "missing"}). Stopping before any upload.`,
+      null
+    );
+  }
+
+  let progress = await loadProgress();
+  progress.status = "running";
+  progress.stopReason = null;
+  progress.unpublished = unpublished;
+  const run = { startedAt: new Date().toISOString(), mode: "apply" };
+  progress.runs.push(run);
+
+  for (const slug of PILOT_SLUG_LIST) {
+    const post = posts.find((item) => item.slug === slug);
+    const remaining = post ? migratablePhotographs(post.body || "").length : null;
+    progress.articles[slug] = {
+      slug,
+      status: "skipped-pilot",
+      photographCount: 0,
+      bytesUploaded: progress.articles[slug]?.bytesUploaded || 0,
+      filesOver500KB: [],
+      error: null,
+      imageErrors: [],
+      remainingMigratable: remaining,
+      updatedAt: new Date().toISOString(),
+    };
+    if (remaining) console.warn(`WARNING: pilot ${slug} still has ${remaining} migratable photograph(s). It will not be changed.`);
+  }
+
+  const queue = [];
+  const knownUploads = await sumUploads();
+  for (const post of published) {
+    if (PILOT_SLUGS.has(post.slug)) continue;
+    const record = progress.articles[post.slug];
+    if (record?.status === "migrated" && migratablePhotographs(post.body || "").length === 0) continue;
+    const photos = migratablePhotographs(post.body || "");
+    if (!photos.length) {
+      const recovered = await recoverMigratedArticle(post.slug, post.body || "", knownUploads.files);
+      if (recovered) {
+        progress.articles[post.slug] = recovered;
+        console.log(`Recovered already-migrated article from its body and backup: ${post.slug}`);
+        continue;
+      }
+      progress.articles[post.slug] = {
+        slug: post.slug,
+        status: "nothing-to-do",
+        photographCount: 0,
+        bytesUploaded: record?.bytesUploaded || 0,
+        filesOver500KB: record?.filesOver500KB || [],
+        error: null,
+        imageErrors: [],
+        updatedAt: new Date().toISOString(),
+      };
+      continue;
+    }
+    queue.push(post);
+  }
+  if (queue.some((post) => PILOT_SLUGS.has(post.slug))) {
+    throw new FatalStop("A pilot slug entered the migration queue. Stopping.", queue[0]?.slug || null);
+  }
+  await saveProgress(progress);
+  console.log(`Articles with photographs to migrate: ${queue.length}`);
+
+  const tmpRoot = await mkdtemp(path.join(os.tmpdir(), "rtg-body-webp-"));
+  console.log(`Temp WebP directory (outside the repo): ${tmpRoot}`);
+  let stop = null;
+  let streak = { cls: null, count: 0 };
+  let rateLimitHits = 0;
+
+  try {
+    let batchNumber = progress.batches.length;
+    for (const batchPosts of chunk(queue, batchSize)) {
+      batchNumber += 1;
+      const batch = {
+        index: batchNumber,
+        slugs: batchPosts.map((post) => post.slug),
+        articlesSucceeded: 0,
+        photographsMigrated: 0,
+        bytesAdded: 0,
+        failures: [],
+        filesOver500KB: [],
+        startedAt: new Date().toISOString(),
+        finishedAt: null,
+      };
+      const bytesAtStart = (await sumUploads()).bytes;
+      let pipelineFailures = 0;
+      try {
+        for (const post of batchPosts) {
+          console.log(`\n=== [${queue.indexOf(post) + 1}/${queue.length}] ${post.slug} ===`);
+          const result = await migrateArticle(reader, writer, supabaseUrl, post.slug, tmpRoot);
+          const uploads = await sumUploads();
+          result.bytesUploaded = bytesForSlug(uploads.files, result.slug);
+          progress.articles[result.slug] = toRecord(result, result.bytesUploaded);
+          await saveProgress(progress);
+          console.log(
+            `${result.status.toUpperCase()} ${result.slug} photographs=${result.photographCount} bytesUploaded=${result.bytesUploaded}`
+          );
+          if (result.error) console.log(`  error: ${result.error}`);
+
+          if (result.status === "migrated") {
+            batch.articlesSucceeded += 1;
+            batch.photographsMigrated += result.photographCount;
+            streak = { cls: null, count: 0 };
+          } else if (result.status === "failed") {
+            batch.failures.push({ slug: result.slug, error: result.error, errorClass: result.errorClass });
+            if (PIPELINE_ERROR_CLASSES.has(result.errorClass)) {
+              pipelineFailures += 1;
+              if (streak.cls === result.errorClass) streak.count += 1;
+              else streak = { cls: result.errorClass, count: 1 };
+            } else {
+              streak = { cls: null, count: 0 };
+            }
+            if (/429|too many requests|rate limit/i.test(result.error || "")) rateLimitHits += 1;
+          } else {
+            streak = { cls: null, count: 0 };
+          }
+          for (const file of result.filesOver500KB || []) {
+            batch.filesOver500KB.push({ slug: result.slug, filename: file.filename, bytes: file.bytes });
+          }
+
+          if (result.fatal || result.errorClass === "auth") {
+            stop = new FatalStop(result.fatalMessage || result.error || "Supabase auth failed.", earliestRemaining(queue, progress));
+            break;
+          }
+          if (rateLimitHits >= 2) {
+            stop = new FatalStop(`Stopped after repeated rate-limit responses. Last article: ${result.slug}`, earliestRemaining(queue, progress));
+            break;
+          }
+          if (streak.count >= 5) {
+            stop = new FatalStop(
+              `Stopped after 5 consecutive ${streak.cls} failures. Last article: ${result.slug}`,
+              earliestRemaining(queue, progress)
+            );
+            break;
+          }
+          if (pipelineFailures / batchPosts.length > 0.3) {
+            stop = new FatalStop(
+              `Stopped because ${pipelineFailures} of ${batchPosts.length} articles in batch ${batch.index} failed with connection, storage, or database errors.`,
+              earliestRemaining(queue, progress)
+            );
+            break;
+          }
+        }
+      } finally {
+        batch.bytesAdded = (await sumUploads()).bytes - bytesAtStart;
+        batch.finishedAt = new Date().toISOString();
+        progress.batches.push(batch);
+        await saveProgress(progress);
+        console.log(
+          `BATCH_SUMMARY index=${batch.index} succeeded=${batch.articlesSucceeded} photographs=${batch.photographsMigrated} bytesAdded=${batch.bytesAdded} failures=${batch.failures.length} over500=${batch.filesOver500KB.length}`
+        );
+      }
+      if (stop) break;
+    }
+  } finally {
+    await rm(tmpRoot, { recursive: true, force: true });
+    console.log(`Deleted temp WebP files: ${tmpRoot}`);
+  }
+
+  if (stop) {
+    progress.status = "stopped";
+    progress.stopReason = stop.message;
+    progress.resumeFromSlug = stop.resumeFromSlug || earliestRemaining(queue, progress);
+  } else {
+    progress.status = "finished";
+    progress.stopReason = null;
+    progress.resumeFromSlug = earliestRemaining(queue, progress);
+  }
+  run.endedAt = new Date().toISOString();
+  run.status = progress.status;
+  await saveProgress(progress);
+
+  let summary;
+  try {
+    summary = await writeFinalSummary(reader, progress);
+  } catch (error) {
+    summary = {
+      finished: progress.status === "finished",
+      stopped: progress.status === "stopped",
+      stopReason: progress.stopReason,
+      resumeFromSlug: progress.resumeFromSlug,
+      articlesMigrated: progress.totals.articlesMigrated,
+      photographsMigrated: progress.totals.photographsMigrated,
+      bytesUploaded: progress.totals.bytesUploaded,
+      auditError: error.message,
+    };
+    await atomicWriteJson(FINAL_SUMMARY, summary);
+  }
+  console.log(`\nFinal summary file: ${FINAL_SUMMARY}`);
+  console.log(
+    `articlesMigrated=${summary.articlesMigrated} photographs=${summary.photographsMigrated} bytesUploaded=${summary.bytesUploaded} status=${progress.status}`
+  );
+  if (progress.status === "stopped") {
+    console.error(`STOPPED: ${progress.stopReason}`);
+    console.error(`Resume from slug: ${progress.resumeFromSlug}`);
+    process.exitCode = 2;
+  } else if (progress.resumeFromSlug) {
+    console.log(`Run finished. First article that still needs a retry: ${progress.resumeFromSlug}`);
+  } else {
+    console.log("Run finished. No remaining queued articles.");
+  }
+}
+
 function refuseUpload() {
   throw new Error("Refusing to upload without --apply.");
 }
@@ -518,6 +1688,11 @@ function refuseWrite() {
 async function main() {
   selfCheck();
   const args = parseArgs(process.argv.slice(2));
+  if (args.bulk) {
+    if (args.slugs.length) throw new Error("Pass either --bulk or --slug, not both.");
+    await runBulk(args);
+    return;
+  }
   const apply = args.apply && !args.dryRun;
 
   if (!args.slugs.length) {
