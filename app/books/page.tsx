@@ -44,6 +44,25 @@ export const metadata: Metadata = {
   },
 };
 
+const COUNTRY_JOURNEYS: Record<string, { href: string; label: string }> = {
+  "touring-italy-by-train": {
+    href: "/journeysbyrail/categories/italy",
+    label: "Read the Italy journeys",
+  },
+  "touring-france-by-train": {
+    href: "/journeysbyrail/categories/france",
+    label: "Read the France journeys",
+  },
+  "touring-switzerland-by-train": {
+    href: "/journeysbyrail/categories/switzerland",
+    label: "Read the Switzerland journeys",
+  },
+  "touring-spain-by-train": {
+    href: "/journeysbyrail/categories/spain",
+    label: "Read the Spain journeys",
+  },
+};
+
 export default async function BooksPage() {
   const [books, authors] = await Promise.all([getBooks(), getAuthors()]);
 
@@ -63,6 +82,7 @@ export default async function BooksPage() {
           const author = authors.find((a) => a.slug === book.author_slug);
           return (
             <article
+              id={book.slug}
               key={book.slug}
               className="grid gap-8 border-t border-border-line pt-12 md:grid-cols-[280px_1fr]"
             >
@@ -107,6 +127,16 @@ export default async function BooksPage() {
                     </li>
                   ))}
                 </ul>
+                {COUNTRY_JOURNEYS[book.slug] ? (
+                  <p className="mt-4">
+                    <Link
+                      href={COUNTRY_JOURNEYS[book.slug].href}
+                      className="text-sm text-moss hover:underline"
+                    >
+                      {COUNTRY_JOURNEYS[book.slug].label}
+                    </Link>
+                  </p>
+                ) : null}
                 <a
                   href={book.amazon_url}
                   target="_blank"
