@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAuthors, getCategories, getPosts } from "@/lib/queries";
 import { normalizePostSlug } from "@/lib/slug";
 
-export const revalidate = 60;
+export const revalidate = 1800;
 
 const BASE = "https://www.realtravelguides.com";
 

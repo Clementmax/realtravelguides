@@ -32,7 +32,7 @@ const COUNTRY_GUIDES: Record<string, { before: string; title: string; after: str
   },
 };
 
-export const revalidate = 60;
+export const revalidate = 1800;
 
 export async function generateStaticParams() {
   const categories = await getCategories();

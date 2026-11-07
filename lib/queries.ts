@@ -4,17 +4,24 @@ import { authors as seedAuthors } from "@/lib/seed-data/authors";
 import { books as seedBooks } from "@/lib/seed-data/books";
 import { posts as seedPosts } from "@/lib/seed-data/posts";
 import { categories as seedCategories } from "@/lib/seed-data/categories";
-import { Author, Book, Post, CategoryRecord } from "@/lib/types";
+import { Author, Book, Post, PostListing, CategoryRecord } from "@/lib/types";
 import { normalizePostSlug } from "@/lib/slug";
 import { stripMigratedPostChrome } from "@/lib/clean-post-body";
 
-// Matches the `revalidate = 60` already set on the pages that use these.
-// Without this cache, every statically generated post page independently
-// re-fetches the *entire* posts/categories table during build (and during
-// each revalidation), since generateMetadata and the page component each
-// call getPost()/getCategoryLabelMap() separately. unstable_cache makes
-// each table fetch happen once per 60s window and reuses it across every
-// page, instead of once per page.
+// Categories, authors, and books stay on a 60-second cache. They are small,
+// and the books and author pages still revalidate every minute.
+//
+// Article listings share one 30-minute cache. That select is the card,
+// search, sitemap, and Continue Exploring fields only. It does not include
+// body, images, or video_url. getPost() loads one full row, including the body, on the
+// same interval. unstable_cache keeps generateMetadata and the page from
+// repeating either fetch on every render.
+const POST_REVALIDATE_SECONDS = 1800;
+
+const POST_LISTING_COLUMNS =
+  "slug, title, excerpt, cover, categories, places, read_minutes, published_at";
+const POST_FULL_COLUMNS = `${POST_LISTING_COLUMNS}, body, video_url, images`;
+
 const fetchCategories = unstable_cache(
   async () => {
     if (!supabase) return seedCategories;
@@ -83,30 +90,71 @@ export async function getBooksByAuthor(authorSlug: string): Promise<Book[]> {
   return list.filter((b) => b.author_slug === authorSlug);
 }
 
-const fetchPosts = unstable_cache(
-  async () => {
+function toPostListing(post: {
+  slug: string;
+  title: string;
+  excerpt?: string | null;
+  cover: string;
+  categories?: string[] | null;
+  places?: string[] | null;
+  read_minutes: number;
+  published_at: string;
+}): PostListing {
+  return {
+    slug: post.slug,
+    title: post.title,
+    excerpt: post.excerpt ?? "",
+    cover: post.cover,
+    categories: Array.isArray(post.categories) ? post.categories : [],
+    places: Array.isArray(post.places) ? post.places : [],
+    read_minutes: post.read_minutes,
+    published_at: post.published_at,
+  };
+}
+
+function toFullPost(post: Post): Post {
+  return {
+    ...post,
+    ...toPostListing(post),
+    body: stripMigratedPostChrome(post.body ?? ""),
+  };
+}
+
+const fetchPostListings = unstable_cache(
+  async (): Promise<PostListing[]> => {
+    if (!supabase) return seedPosts.map((post) => toPostListing(post));
+    const { data, error } = await supabase
+      .from("posts")
+      .select(POST_LISTING_COLUMNS)
+      .order("published_at", { ascending: false });
+    if (error || !data || data.length === 0) return seedPosts.map((post) => toPostListing(post));
+    return (data as PostListing[]).map((post) => toPostListing(post));
+  },
+  ["posts", "listing-v1"],
+  { revalidate: POST_REVALIDATE_SECONDS, tags: ["posts"] }
+);
+
+const fetchFullPost = unstable_cache(
+  async (slug: string): Promise<Post | null> => {
+    if (!slug) return null;
     if (!supabase) {
-      return seedPosts.map((post) => ({
-        ...post,
-        places: Array.isArray(post.places) ? post.places : [],
-        body: stripMigratedPostChrome(post.body),
-      }));
+      const seed = seedPosts.find((post) => post.slug === slug);
+      return seed ? toFullPost(seed) : null;
     }
     const { data, error } = await supabase
       .from("posts")
-      .select(
-        "slug, title, excerpt, cover, categories, places, read_minutes, published_at, body, video_url, images"
-      )
-      .order("published_at", { ascending: false });
-    if (error || !data || data.length === 0) return seedPosts;
-    return (data as Post[]).map((post) => ({
-      ...post,
-      places: Array.isArray(post.places) ? post.places : [],
-      body: stripMigratedPostChrome(post.body),
-    }));
+      .select(POST_FULL_COLUMNS)
+      .eq("slug", slug)
+      .maybeSingle();
+    if (error) {
+      const seed = seedPosts.find((post) => post.slug === slug);
+      return seed ? toFullPost(seed) : null;
+    }
+    if (!data) return null;
+    return toFullPost(data as Post);
   },
-  ["posts", "v3-places"],
-  { revalidate: 60, tags: ["posts"] }
+  ["post", "full-v1"],
+  { revalidate: POST_REVALIDATE_SECONDS, tags: ["posts"] }
 );
 
 // Duplicate of the canonical Porto Ercole article. The row stays in the
@@ -116,19 +164,23 @@ const UNLISTED_POST_SLUGS = new Set([
   "porto-ercole-weekend-getaway-beaches-forts-from-rome-by-train-1",
 ]);
 
-export async function getPosts(): Promise<Post[]> {
-  const posts = await fetchPosts();
+export async function getPosts(): Promise<PostListing[]> {
+  const posts = await fetchPostListings();
   return posts.filter((post) => !UNLISTED_POST_SLUGS.has(normalizePostSlug(post.slug)));
 }
 
 export async function getPost(slug: string): Promise<Post | undefined> {
   if (!slug) return undefined;
-  const list = await fetchPosts();
   const target = normalizePostSlug(slug);
-  return list.find((p) => normalizePostSlug(p.slug) === target);
+  if (!target) return undefined;
+  const listings = await fetchPostListings();
+  const match = listings.find((post) => normalizePostSlug(post.slug) === target);
+  if (!match) return undefined;
+  const post = await fetchFullPost(match.slug);
+  return post ?? undefined;
 }
 
-export async function getPostsByCategory(category: string): Promise<Post[]> {
+export async function getPostsByCategory(category: string): Promise<PostListing[]> {
   const list = await getPosts();
   return list.filter((p) => p.categories.includes(category));
 }

@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Post } from "@/lib/types";
+import { PostListing } from "@/lib/types";
 import { normalizePostSlug } from "@/lib/slug";
 
 export default function JourneyCard({
   post,
   categoryLabel,
 }: {
-  post: Post;
+  post: PostListing;
   categoryLabel?: string;
 }) {
   const label = categoryLabel ?? post.categories[0];

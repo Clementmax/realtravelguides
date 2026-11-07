@@ -165,7 +165,7 @@ function siblingScore(current: ReadonlySet<string>, candidate: ReadonlySet<strin
  * tags are not places.
  */
 export function selectRelatedPosts<T extends RelatedPostSource>(
-  current: T,
+  current: RelatedPostSource,
   posts: readonly T[],
   limit = 3,
   now = new Date()

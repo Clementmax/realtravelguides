@@ -24,7 +24,8 @@ export type Book = {
   amazon_url: string;
 };
 
-export type Post = {
+/** Card, search, sitemap, and Continue Exploring fields. No article body. */
+export type PostListing = {
   slug: string;
   title: string;
   excerpt: string;
@@ -34,6 +35,9 @@ export type Post = {
   places?: string[] | null;
   read_minutes: number;
   published_at: string;
+};
+
+export type Post = PostListing & {
   body: string;
   video_url?: string | null;
   images?: ManagedPostImage[] | null;

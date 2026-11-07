@@ -69,7 +69,9 @@ function serializeJsonLd(value: unknown): string {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
-export const revalidate = 60;
+// The open article and the related-post list both refresh every 30 minutes.
+// getPost still loads this article's body, images, and video.
+export const revalidate = 1800;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {

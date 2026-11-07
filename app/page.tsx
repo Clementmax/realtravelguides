@@ -2,10 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getBooks, getPosts, getCategoryLabelMap } from "@/lib/queries";
 
-// Re-checks Supabase for fresh content every 60 seconds, rather than only
-// at deploy time — otherwise edits made directly in Supabase (books,
-// posts, categories) wouldn't appear on the live site until the next push.
-export const revalidate = 60;
+// Journey cards come from the article listing, which refreshes every 30
+// minutes. An edit in Supabase can take that long to show here.
+export const revalidate = 1800;
 
 const HOME_TITLE = "Real Travel Guides";
 const HOME_DESCRIPTION =

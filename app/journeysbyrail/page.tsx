@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getPosts, getCategories, getCategoryLabelMap } from "@/lib/queries";
 import JourneysByRailIndex from "@/components/JourneysByRailIndex";
 
-export const revalidate = 60;
+export const revalidate = 1800;
 
 const JOURNEYS_TITLE = "Journeys by Rail | Real Travel Guides";
 const JOURNEYS_DESCRIPTION =
