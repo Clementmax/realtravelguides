@@ -16,6 +16,12 @@ import { stripMigratedPostChrome } from "@/lib/clean-post-body";
 // body, images, or video_url. getPost() loads one full row, including the body, on the
 // same interval. unstable_cache keeps generateMetadata and the page from
 // repeating either fetch on every render.
+//
+// A Supabase error is thrown from inside the cached function. unstable_cache
+// stores a resolved return value only, so the failure is not saved as an empty
+// list or as the sample articles. Sample posts are returned only in local
+// development when the Supabase URL and anon key are absent, and that branch
+// stays outside the cache. Production throws if those credentials are missing.
 const POST_REVALIDATE_SECONDS = 1800;
 
 const POST_LISTING_COLUMNS =
@@ -120,14 +126,27 @@ function toFullPost(post: Post): Post {
   };
 }
 
+function devPostsWithoutSupabase(): boolean {
+  return process.env.NODE_ENV !== "production" && !supabase;
+}
+
+function postQueryError(scope: string, error: { message?: string } | null): Error {
+  const detail = error?.message?.trim();
+  return new Error(detail ? `Supabase ${scope} failed: ${detail}` : `Supabase ${scope} failed`);
+}
+
 const fetchPostListings = unstable_cache(
   async (): Promise<PostListing[]> => {
-    if (!supabase) return seedPosts.map((post) => toPostListing(post));
+    if (!supabase) {
+      throw new Error("Supabase is not configured");
+    }
     const { data, error } = await supabase
       .from("posts")
       .select(POST_LISTING_COLUMNS)
       .order("published_at", { ascending: false });
-    if (error || !data || data.length === 0) return seedPosts.map((post) => toPostListing(post));
+    if (error || data == null) {
+      throw postQueryError("post listing", error);
+    }
     return (data as PostListing[]).map((post) => toPostListing(post));
   },
   ["posts", "listing-v1"],
@@ -138,8 +157,7 @@ const fetchFullPost = unstable_cache(
   async (slug: string): Promise<Post | null> => {
     if (!slug) return null;
     if (!supabase) {
-      const seed = seedPosts.find((post) => post.slug === slug);
-      return seed ? toFullPost(seed) : null;
+      throw new Error("Supabase is not configured");
     }
     const { data, error } = await supabase
       .from("posts")
@@ -147,8 +165,7 @@ const fetchFullPost = unstable_cache(
       .eq("slug", slug)
       .maybeSingle();
     if (error) {
-      const seed = seedPosts.find((post) => post.slug === slug);
-      return seed ? toFullPost(seed) : null;
+      throw postQueryError("post", error);
     }
     if (!data) return null;
     return toFullPost(data as Post);
@@ -165,7 +182,9 @@ const UNLISTED_POST_SLUGS = new Set([
 ]);
 
 export async function getPosts(): Promise<PostListing[]> {
-  const posts = await fetchPostListings();
+  const posts = devPostsWithoutSupabase()
+    ? seedPosts.map((post) => toPostListing(post))
+    : await fetchPostListings();
   return posts.filter((post) => !UNLISTED_POST_SLUGS.has(normalizePostSlug(post.slug)));
 }
 
@@ -173,6 +192,10 @@ export async function getPost(slug: string): Promise<Post | undefined> {
   if (!slug) return undefined;
   const target = normalizePostSlug(slug);
   if (!target) return undefined;
+  if (devPostsWithoutSupabase()) {
+    const seed = seedPosts.find((post) => normalizePostSlug(post.slug) === target);
+    return seed ? toFullPost(seed) : undefined;
+  }
   const listings = await fetchPostListings();
   const match = listings.find((post) => normalizePostSlug(post.slug) === target);
   if (!match) return undefined;

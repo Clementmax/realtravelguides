@@ -9,6 +9,19 @@ import { ManagedPostImage } from "@/lib/types";
 import { normalizePostSlug } from "@/lib/slug";
 
 const SITE_ORIGIN = "https://www.realtravelguides.com";
+const META_DESCRIPTION_LIMIT = 155;
+
+function metaDescription(text: string): string {
+  if (text.length <= META_DESCRIPTION_LIMIT) return text;
+
+  const head = text.slice(0, META_DESCRIPTION_LIMIT);
+  const breakAt = head.search(/\s\S*$/u);
+  if (breakAt <= 0) return `${head}…`;
+
+  const trimmed = head.slice(0, breakAt).replace(/[\s\p{P}]+$/u, "");
+  if (!trimmed) return `${head}…`;
+  return `${trimmed}…`;
+}
 
 function resolveSocialImage(src: string | null | undefined): string | undefined {
   const value = src?.trim();
@@ -39,7 +52,7 @@ function buildBlogPostingJsonLd(post: {
   published_at?: string | null;
 }) {
   const headline = typeof post.title === "string" ? post.title : undefined;
-  const description = typeof post.excerpt === "string" ? post.excerpt.trim() : "";
+  const description = metaDescription(typeof post.excerpt === "string" ? post.excerpt : "");
   const image = absoluteArticleImage(post.cover);
   const datePublished =
     typeof post.published_at === "string" ? publishedTime(post.published_at) : undefined;
@@ -90,13 +103,14 @@ export async function generateMetadata({
   const canonical = `/post/${normalizePostSlug(post.slug)}`;
   const image = resolveSocialImage(post.cover);
   const published = publishedTime(post.published_at);
+  const description = metaDescription(post.excerpt);
   return {
     title: post.title,
-    description: post.excerpt,
+    description,
     alternates: { canonical },
     openGraph: {
       title: post.title,
-      description: post.excerpt,
+      description,
       url: canonical,
       type: "article",
       ...(published ? { publishedTime: published } : {}),
@@ -105,7 +119,7 @@ export async function generateMetadata({
     twitter: {
       card: "summary_large_image",
       title: post.title,
-      description: post.excerpt,
+      description,
       ...(image ? { images: [image] } : {}),
     },
   };

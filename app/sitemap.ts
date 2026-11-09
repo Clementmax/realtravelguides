@@ -52,25 +52,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Static pages remain if author data is unavailable.
   }
 
-  try {
-    const posts = await getPosts();
-    const seen = new Set<string>();
-    for (const post of posts) {
-      const slug = normalizePostSlug(post.slug);
-      if (!slug || seen.has(slug) || EXCLUDED_POST_SLUGS.has(slug)) continue;
-      seen.add(slug);
+  const posts = await getPosts();
+  const seen = new Set<string>();
+  for (const post of posts) {
+    const slug = normalizePostSlug(post.slug);
+    if (!slug || seen.has(slug) || EXCLUDED_POST_SLUGS.has(slug)) continue;
+    seen.add(slug);
 
-      const entry: MetadataRoute.Sitemap[number] = {
-        url: `${BASE}/post/${encodeURI(slug)}`,
-      };
-      if (post.published_at) {
-        const published = new Date(post.published_at);
-        if (!Number.isNaN(published.getTime())) entry.lastModified = published;
-      }
-      entries.push(entry);
+    const entry: MetadataRoute.Sitemap[number] = {
+      url: `${BASE}/post/${encodeURI(slug)}`,
+    };
+    if (post.published_at) {
+      const published = new Date(post.published_at);
+      if (!Number.isNaN(published.getTime())) entry.lastModified = published;
     }
-  } catch {
-    // Static pages remain if posts are unavailable.
+    entries.push(entry);
   }
 
   return entries;
