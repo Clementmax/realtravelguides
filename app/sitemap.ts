@@ -30,26 +30,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/privacy` },
   ];
 
-  try {
-    const categories = await getCategories();
-    for (const category of categories) {
-      if (!category.slug || RETIRED_CATEGORY_SLUGS.has(category.slug)) continue;
-      entries.push({
-        url: `${BASE}/journeysbyrail/categories/${category.slug}`,
-      });
-    }
-  } catch {
-    // Static pages remain if category data is unavailable.
+  // A category or author failure must reject this function. Catching it would
+  // publish a 200 sitemap that omits those URLs; leaving it uncaught keeps the
+  // last good ISR sitemap.
+  const categories = await getCategories();
+  for (const category of categories) {
+    if (!category.slug || RETIRED_CATEGORY_SLUGS.has(category.slug)) continue;
+    entries.push({
+      url: `${BASE}/journeysbyrail/categories/${category.slug}`,
+    });
   }
 
-  try {
-    const authors = await getAuthors();
-    for (const author of authors) {
-      if (!INDEXABLE_AUTHORS.has(author.slug)) continue;
-      entries.push({ url: `${BASE}/${author.slug}` });
-    }
-  } catch {
-    // Static pages remain if author data is unavailable.
+  const authors = await getAuthors();
+  for (const author of authors) {
+    if (!INDEXABLE_AUTHORS.has(author.slug)) continue;
+    entries.push({ url: `${BASE}/${author.slug}` });
   }
 
   const posts = await getPosts();

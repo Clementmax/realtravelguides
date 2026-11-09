@@ -19,23 +19,39 @@ import { stripMigratedPostChrome } from "@/lib/clean-post-body";
 //
 // A Supabase error is thrown from inside the cached function. unstable_cache
 // stores a resolved return value only, so the failure is not saved as an empty
-// list or as the sample articles. Sample posts are returned only in local
-// development when the Supabase URL and anon key are absent, and that branch
-// stays outside the cache. Production throws if those credentials are missing.
+// list or as sample data. Sample categories, authors, books, and posts are
+// returned only in local development when the Supabase URL and anon key are
+// absent, and that branch stays outside the cache. Production throws if those
+// credentials are missing. A successful empty collection stays empty. A
+// successful single lookup with no row returns undefined so the page can call
+// notFound().
 const POST_REVALIDATE_SECONDS = 1800;
 
 const POST_LISTING_COLUMNS =
   "slug, title, excerpt, cover, categories, places, read_minutes, published_at";
 const POST_FULL_COLUMNS = `${POST_LISTING_COLUMNS}, body, video_url, images`;
 
+function devWithoutSupabase(): boolean {
+  return process.env.NODE_ENV !== "production" && !supabase;
+}
+
+function supabaseQueryError(scope: string, error: { message?: string } | null): Error {
+  const detail = error?.message?.trim();
+  return new Error(detail ? `Supabase ${scope} failed: ${detail}` : `Supabase ${scope} failed`);
+}
+
 const fetchCategories = unstable_cache(
-  async () => {
-    if (!supabase) return seedCategories;
+  async (): Promise<CategoryRecord[]> => {
+    if (!supabase) {
+      throw new Error("Supabase is not configured");
+    }
     const { data, error } = await supabase
       .from("categories")
       .select("*")
       .order("label");
-    if (error || !data || data.length === 0) return seedCategories;
+    if (error || data == null) {
+      throw supabaseQueryError("categories", error);
+    }
     return data as CategoryRecord[];
   },
   ["categories"],
@@ -43,6 +59,7 @@ const fetchCategories = unstable_cache(
 );
 
 export async function getCategories(): Promise<CategoryRecord[]> {
+  if (devWithoutSupabase()) return seedCategories;
   return fetchCategories();
 }
 
@@ -52,10 +69,14 @@ export async function getCategoryLabelMap(): Promise<Record<string, string>> {
 }
 
 const fetchAuthors = unstable_cache(
-  async () => {
-    if (!supabase) return seedAuthors;
+  async (): Promise<Author[]> => {
+    if (!supabase) {
+      throw new Error("Supabase is not configured");
+    }
     const { data, error } = await supabase.from("authors").select("*");
-    if (error || !data || data.length === 0) return seedAuthors;
+    if (error || data == null) {
+      throw supabaseQueryError("authors", error);
+    }
     return data as Author[];
   },
   ["authors"],
@@ -63,6 +84,7 @@ const fetchAuthors = unstable_cache(
 );
 
 export async function getAuthors(): Promise<Author[]> {
+  if (devWithoutSupabase()) return seedAuthors;
   return fetchAuthors();
 }
 
@@ -72,10 +94,14 @@ export async function getAuthor(slug: string): Promise<Author | undefined> {
 }
 
 const fetchBooks = unstable_cache(
-  async () => {
-    if (!supabase) return seedBooks;
+  async (): Promise<Book[]> => {
+    if (!supabase) {
+      throw new Error("Supabase is not configured");
+    }
     const { data, error } = await supabase.from("books").select("*");
-    if (error || !data || data.length === 0) return seedBooks;
+    if (error || data == null) {
+      throw supabaseQueryError("books", error);
+    }
     return data as Book[];
   },
   ["books"],
@@ -83,6 +109,7 @@ const fetchBooks = unstable_cache(
 );
 
 export async function getBooks(): Promise<Book[]> {
+  if (devWithoutSupabase()) return seedBooks;
   return fetchBooks();
 }
 
@@ -126,15 +153,6 @@ function toFullPost(post: Post): Post {
   };
 }
 
-function devPostsWithoutSupabase(): boolean {
-  return process.env.NODE_ENV !== "production" && !supabase;
-}
-
-function postQueryError(scope: string, error: { message?: string } | null): Error {
-  const detail = error?.message?.trim();
-  return new Error(detail ? `Supabase ${scope} failed: ${detail}` : `Supabase ${scope} failed`);
-}
-
 const fetchPostListings = unstable_cache(
   async (): Promise<PostListing[]> => {
     if (!supabase) {
@@ -145,7 +163,7 @@ const fetchPostListings = unstable_cache(
       .select(POST_LISTING_COLUMNS)
       .order("published_at", { ascending: false });
     if (error || data == null) {
-      throw postQueryError("post listing", error);
+      throw supabaseQueryError("post listing", error);
     }
     return (data as PostListing[]).map((post) => toPostListing(post));
   },
@@ -165,7 +183,7 @@ const fetchFullPost = unstable_cache(
       .eq("slug", slug)
       .maybeSingle();
     if (error) {
-      throw postQueryError("post", error);
+      throw supabaseQueryError("post", error);
     }
     if (!data) return null;
     return toFullPost(data as Post);
@@ -182,7 +200,7 @@ const UNLISTED_POST_SLUGS = new Set([
 ]);
 
 export async function getPosts(): Promise<PostListing[]> {
-  const posts = devPostsWithoutSupabase()
+  const posts = devWithoutSupabase()
     ? seedPosts.map((post) => toPostListing(post))
     : await fetchPostListings();
   return posts.filter((post) => !UNLISTED_POST_SLUGS.has(normalizePostSlug(post.slug)));
@@ -192,7 +210,7 @@ export async function getPost(slug: string): Promise<Post | undefined> {
   if (!slug) return undefined;
   const target = normalizePostSlug(slug);
   if (!target) return undefined;
-  if (devPostsWithoutSupabase()) {
+  if (devWithoutSupabase()) {
     const seed = seedPosts.find((post) => normalizePostSlug(post.slug) === target);
     return seed ? toFullPost(seed) : undefined;
   }
