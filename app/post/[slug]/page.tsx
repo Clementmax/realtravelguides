@@ -225,8 +225,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   const [categoryLabels, allPosts] = await Promise.all([getCategoryLabelMap(), getPosts()]);
   const related = selectRelatedPosts(post, allPosts);
-  const renderedBody = injectManagedImages(post.body, post.images, post.video_url ? "" : post.cover);
-  const managedForPlainText = managedImagesForBody(post.body, post.images, post.video_url ? "" : post.cover);
+  const renderedBody = injectManagedImages(post.body, post.images, post.cover);
+  const managedForPlainText = managedImagesForBody(post.body, post.images, post.cover);
 
   const jsonLd = serializeJsonLd(buildBlogPostingJsonLd(post));
 
@@ -249,25 +249,16 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         {post.read_minutes} min read
       </p>
 
-      {post.video_url ? (
-        <div className="mt-8 overflow-hidden rounded-md border border-border-line bg-ink">
-          <video controls playsInline preload="metadata" className="aspect-video w-full bg-black">
-            <source src={post.video_url} type="video/mp4" />
-            Your browser does not support HTML5 video.
-          </video>
-        </div>
-      ) : (
-        <div className="relative mt-8 aspect-[16/10] w-full overflow-hidden rounded-md border border-border-line">
-          <Image
-            src={post.cover}
-            alt={post.title}
-            fill
-            preload
-            sizes="(max-width: 42rem) calc(100vw - 3rem), 39rem"
-            className="object-cover"
-          />
-        </div>
-      )}
+      <div className="relative mt-8 aspect-[16/10] w-full overflow-hidden rounded-md border border-border-line">
+        <Image
+          src={post.cover}
+          alt={post.title}
+          fill
+          preload
+          sizes="(max-width: 42rem) calc(100vw - 3rem), 39rem"
+          className="object-cover"
+        />
+      </div>
 
       <div className="post-content mt-10">
         {/<[a-z][\s\S]*>/i.test(post.body) ? (

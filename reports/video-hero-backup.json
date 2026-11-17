@@ -1,0 +1,376 @@
+{
+  "exported_at": "2026-11-17T16:34:52.118Z",
+  "note": "Exact live values before video_url was set to null. Storage objects were not deleted. images and cover were not modified.",
+  "count": 19,
+  "cover_also_in_images_slugs": [
+    "escape-the-carnival-crowds-a-quiet-morning-at-san-nicolò-dei-mendicoli-dorsoduro",
+    "hospices-de-beaune-burgundy-s-most-remarkable-building-and-the-perfect-rail-day-trip",
+    "is-this-the-world-s-most-beautiful-cathedral-discovering-monreale-cathedral-above-palermo",
+    "locarno-by-train-switzerland-s-most-atmospheric-lakeside-town",
+    "palazzo-butera-palermo-s-most-surprising-museum-where-baroque-meets-the-unexpected",
+    "palermo-beyond-the-obvious-part-2-a-palace-of-power-silence-and-stories-that-haven-t-faded",
+    "san-vito-lo-capo-sicily-s-most-beautiful-coastline-without-hiring-a-car",
+    "sorrento-weekend-spring-2026-how-to-plan-the-perfect-coastal-escape-by-train",
+    "spring-walking-escape-on-the-massa-lubrense-peninsula",
+    "the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior"
+  ],
+  "posts": [
+    {
+      "slug": "a-perfect-day-trip-from-venice-to-padova-padua-by-train",
+      "title": "The Perfect Day Trip to Padova (Padua) by Train: Giotto, Grand Basilicas, Riverside strolls & some of the Veneto's best food",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/giotto-church.mp4",
+      "cover": "/images/posts/a-perfect-day-trip-from-venice-to-padova-padua-by-train.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    },
+    {
+      "slug": "castello-di-montecchio-vesponi-the-forgotten-fortress-above-tuscany-s-lost-lake",
+      "title": "Castello di Montecchio Vesponi: The Forgotten Fortress Above Tuscany's Lost Lake",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/castello-montecchio.mp4",
+      "cover": "/images/posts/castello-di-montecchio-vesponi-the-forgotten-fortress-above-tuscany-s-lost-lake.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    },
+    {
+      "slug": "discovering-cádiz-by-train-spain-s-ancient-atlantic-city",
+      "title": "Discovering Cádiz by Train: Spain's Ancient Atlantic City",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/cadiz.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/discovering-cadiz-by-train-spain-s-ancient-atlantic-city.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    },
+    {
+      "slug": "erice-by-train-and-cable-car-sicily-s-most-magical-hilltop-town",
+      "title": "Erice by Train and Cable Car: Sicily's Most Magical Hilltop Town",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/erice.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/erice-by-train-and-cable-car-sicily-s-most-magical-hilltop-town.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    },
+    {
+      "slug": "escape-the-carnival-crowds-a-quiet-morning-at-san-nicolò-dei-mendicoli-dorsoduro",
+      "title": "Escape the Venice Carnival Crowds: A Quiet Morning at San Nicolò dei Mendicoli",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/chiesa-di-san-nicolo.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/escape-the-carnival-crowds-a-quiet-morning-at-san-nicolo-dei-mendicoli-dorsoduro-9b0a16b9.jpg",
+      "images": [
+        {
+          "alt": "Escape the Carnival Crowds: A Quiet Morning at San Nicolò dei Mendicoli, Dorsoduro",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/escape-the-carnival-crowds-a-quiet-morning-at-san-nicolo-dei-mendicoli-dorsoduro-9b0a16b9.jpg",
+          "caption": ""
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "feria-del-caballo-in-jerez-horses-sherry-and-andalucía-at-its-most-spectacular",
+      "title": "Feria del Caballo in Jerez: Horses, Sherry and Andalucía at Its Most Spectacular",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/jerez.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/feria-del-caballo-in-jerez-horses-sherry-and-andalucia-at-its-most-spectacular.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    },
+    {
+      "slug": "hospices-de-beaune-burgundy-s-most-remarkable-building-and-the-perfect-rail-day-trip",
+      "title": "Hospices de Beaune: Burgundy's Most Remarkable Building and the Perfect Rail Day Trip",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/beaune-hospices.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/hospices-de-beaune-burgundy-s-most-remarkable-building-and-the-perfect-rail-day-trip-05e4a30a.jpg",
+      "images": [
+        {
+          "alt": "Hospices de Beaune: Burgundy's Most Remarkable Building and the Perfect Rail Day Trip",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/hospices-de-beaune-burgundy-s-most-remarkable-building-and-the-perfect-rail-day-trip-05e4a30a.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "Hospices de Beaune: Burgundy's Most Remarkable Building and the Perfect Rail Day Trip — Hospices de Beaune art and beds",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/hospices-de-beaune-burgundy-s-most-remarkable-building-and-the-perfect-rail-day-trip-8a60d495.jpg",
+          "caption": "Hospices de Beaune art and beds"
+        },
+        {
+          "alt": "Hospices de Beaune: Burgundy's Most Remarkable Building and the Perfect Rail Day Trip — Hospices de Beaune Artwork",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/hospices-de-beaune-burgundy-s-most-remarkable-building-and-the-perfect-rail-day-trip-8562341d.jpg",
+          "caption": "Hospices de Beaune Artwork"
+        },
+        {
+          "alt": "Hospices de Beaune: Burgundy's Most Remarkable Building and the Perfect Rail Day Trip — Hospices de Beaune sickbeds",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/hospices-de-beaune-burgundy-s-most-remarkable-building-and-the-perfect-rail-day-trip-ab6743f7.jpg",
+          "caption": "Hospices de Beaune sickbeds"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "is-this-the-world-s-most-beautiful-cathedral-discovering-monreale-cathedral-above-palermo",
+      "title": "Is This the World’s Most Beautiful Cathedral? Discovering Monreale Cathedral Above Palermo",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/monreale-photo.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/is-this-the-world-s-most-beautiful-cathedral-discovering-monreale-cathedral-above-palermo-6fc36125.jpg",
+      "images": [
+        {
+          "alt": "Is This the World’s Most Beautiful Cathedral? Discovering Monreale Cathedral Above Palermo",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/is-this-the-world-s-most-beautiful-cathedral-discovering-monreale-cathedral-above-palermo-6fc36125.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "Is This the World’s Most Beautiful Cathedral? Discovering Monreale Cathedral Above Palermo — monreale-cathedral-biblical-mosaics",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/is-this-the-world-s-most-beautiful-cathedral-discovering-monreale-cathedral-above-palermo-abfbe645.jpg",
+          "caption": "monreale-cathedral-biblical-mosaics"
+        },
+        {
+          "alt": "Is This the World’s Most Beautiful Cathedral? Discovering Monreale Cathedral Above Palermo — monreale-cathedral-cloister",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/is-this-the-world-s-most-beautiful-cathedral-discovering-monreale-cathedral-above-palermo-fda07f5b.jpg",
+          "caption": "monreale-cathedral-cloister"
+        },
+        {
+          "alt": "Is This the World’s Most Beautiful Cathedral? Discovering Monreale Cathedral Above Palermo — monreale-cathedral-marble-detail",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/is-this-the-world-s-most-beautiful-cathedral-discovering-monreale-cathedral-above-palermo-7c9be2ba.jpg",
+          "caption": "monreale-cathedral-marble-detail"
+        },
+        {
+          "alt": "Is This the World’s Most Beautiful Cathedral? Discovering Monreale Cathedral Above Palermo — monreale-cathedral-view-through-columns",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/is-this-the-world-s-most-beautiful-cathedral-discovering-monreale-cathedral-above-palermo-2004c9de.jpg",
+          "caption": "monreale-cathedral-view-through-columns"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "locarno-by-train-switzerland-s-most-atmospheric-lakeside-town",
+      "title": "Locarno by Train: Switzerland's Most Atmospheric Lakeside Town",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/locarno.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/locarno-by-train-switzerland-s-most-atmospheric-lakeside-town-1d7a5063.jpg",
+      "images": [
+        {
+          "alt": "Locarno by Train: Switzerland's Most Atmospheric Lakeside Town",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/locarno-by-train-switzerland-s-most-atmospheric-lakeside-town-1d7a5063.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "Locarno by Train: Switzerland's Most Atmospheric Lakeside Town — Locarno Mountain View",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/locarno-by-train-switzerland-s-most-atmospheric-lakeside-town-a7a5dad5.jpg",
+          "caption": "Locarno Mountain View"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "matera-italy-s-city-of-stone-and-light",
+      "title": "Matera: Italy’s City of Stone and Light",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/matera.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/matera-italy-s-city-of-stone-and-light.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    },
+    {
+      "slug": "mount-pilatus-by-train-lucerne-s-most-spectacular-mountain-day-trip",
+      "title": "Mount Pilatus by Train: Lucerne’s Most Spectacular Mountain Day Trip",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/mount-pilatus.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/mount-pilatus-by-train-lucerne-s-most-spectacular-mountain-day-trip.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    },
+    {
+      "slug": "palazzo-butera-palermo-s-most-surprising-museum-where-baroque-meets-the-unexpected",
+      "title": "Palermo Beyond the Obvious (Part 1): Palazzo Butera — A Hidden Palace of Art, Silence and Surprise",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/butara-palace.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/palazzo-butera-palermo-s-most-surprising-museum-where-baroque-meets-the-unexpected-dd9e4043.jpg",
+      "images": [
+        {
+          "alt": "Palermo Beyond the Obvious (Part 1): Palazzo Butera — A Hidden Palace of Art, Silence and Surprise",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/palazzo-butera-palermo-s-most-surprising-museum-where-baroque-meets-the-unexpected-dd9e4043.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "Palermo Beyond the Obvious (Part 1): Palazzo Butera — A Hidden Palace of Art, Silence and Surprise — Palazzo Butara Blue Cup",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/palazzo-butera-palermo-s-most-surprising-museum-where-baroque-meets-the-unexpected-8b71429d.jpg",
+          "caption": "Palazzo Butara Blue Cup"
+        },
+        {
+          "alt": "Palermo Beyond the Obvious (Part 1): Palazzo Butera — A Hidden Palace of Art, Silence and Surprise — Palazzo Butara Nude Painting",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/palazzo-butera-palermo-s-most-surprising-museum-where-baroque-meets-the-unexpected-4e6c0ae0.jpg",
+          "caption": "Palazzo Butara Nude Painting"
+        },
+        {
+          "alt": "Palermo Beyond the Obvious (Part 1): Palazzo Butera — A Hidden Palace of Art, Silence and Surprise — Palazzo Butara Painting",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/palazzo-butera-palermo-s-most-surprising-museum-where-baroque-meets-the-unexpected-05ef14fb.jpg",
+          "caption": "Palazzo Butara Painting"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "palermo-beyond-the-obvious-part-2-a-palace-of-power-silence-and-stories-that-haven-t-faded",
+      "title": "Palermo Beyond the Obvious — (Part 2): A Palace of Power, Silence, and Stories That Haven’t Faded",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/palazzo-steri.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/palermo-beyond-the-obvious-part-2-a-palace-of-power-silence-and-stories-that-haven-t-faded-43c3b47f.jpg",
+      "images": [
+        {
+          "alt": "Palermo Beyond the Obvious — (Part 2): A Palace of Power, Silence, and Stories That Haven’t Faded",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/palermo-beyond-the-obvious-part-2-a-palace-of-power-silence-and-stories-that-haven-t-faded-43c3b47f.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "Palermo Beyond the Obvious — (Part 2): A Palace of Power, Silence, and Stories That Haven’t Faded — Palazzo Steri Guttoso Painting",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/palermo-beyond-the-obvious-part-2-a-palace-of-power-silence-and-stories-that-haven-t-faded-7b81aa43.jpg",
+          "caption": "Palazzo Steri Guttoso Painting"
+        },
+        {
+          "alt": "Palermo Beyond the Obvious — (Part 2): A Palace of Power, Silence, and Stories That Haven’t Faded — Palazzo Steri Internal view",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/palermo-beyond-the-obvious-part-2-a-palace-of-power-silence-and-stories-that-haven-t-faded-a78dac7a.jpg",
+          "caption": "Palazzo Steri Internal view"
+        },
+        {
+          "alt": "Palermo Beyond the Obvious — (Part 2): A Palace of Power, Silence, and Stories That Haven’t Faded — Palazzo Steri King and Queen Mural",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/palermo-beyond-the-obvious-part-2-a-palace-of-power-silence-and-stories-that-haven-t-faded-7cbe66d4.jpg",
+          "caption": "Palazzo Steri King and Queen Mural"
+        },
+        {
+          "alt": "Palermo Beyond the Obvious — (Part 2): A Palace of Power, Silence, and Stories That Haven’t Faded — Palazzo Steri Mural with Cross",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/palermo-beyond-the-obvious-part-2-a-palace-of-power-silence-and-stories-that-haven-t-faded-d0db4730.jpg",
+          "caption": "Palazzo Steri Mural with Cross"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "san-vito-lo-capo-sicily-s-most-beautiful-coastline-without-hiring-a-car",
+      "title": "San Vito Lo Capo: Sicily's Most Beautiful Coastline Without Hiring a Car",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/san-vito-lo-capo.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/san-vito-lo-capo-sicily-s-most-beautiful-coastline-without-hiring-a-car-67700730.jpg",
+      "images": [
+        {
+          "alt": "San Vito Lo Capo: Sicily's Most Beautiful Coastline Without Hiring a Car",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/san-vito-lo-capo-sicily-s-most-beautiful-coastline-without-hiring-a-car-67700730.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "San Vito Lo Capo: Sicily's Most Beautiful Coastline Without Hiring a Car — San Vito Beach and Hills in Distance",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/san-vito-lo-capo-sicily-s-most-beautiful-coastline-without-hiring-a-car-4ba97675.jpg",
+          "caption": "San Vito Beach and Hills in Distance"
+        },
+        {
+          "alt": "San Vito Lo Capo: Sicily's Most Beautiful Coastline Without Hiring a Car — San Vito Beach Below",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/san-vito-lo-capo-sicily-s-most-beautiful-coastline-without-hiring-a-car-bd9327d1.jpg",
+          "caption": "San Vito Beach Below"
+        },
+        {
+          "alt": "San Vito Lo Capo: Sicily's Most Beautiful Coastline Without Hiring a Car — San Vito hairpin road",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/san-vito-lo-capo-sicily-s-most-beautiful-coastline-without-hiring-a-car-f6ad8bfc.jpg",
+          "caption": "San Vito hairpin road"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "sorrento-weekend-spring-2026-how-to-plan-the-perfect-coastal-escape-by-train",
+      "title": "Sorrento Weekend Spring 2026 – How to Plan the Perfect Coastal Escape by Train",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/view-sorrento.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/sorrento-weekend-spring-2026-how-to-plan-the-perfect-coastal-escape-by-train-237f240c.jpg",
+      "images": [
+        {
+          "alt": "Sorrento Weekend Spring 2026 – How to Plan the Perfect Coastal Escape by Train",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/sorrento-weekend-spring-2026-how-to-plan-the-perfect-coastal-escape-by-train-237f240c.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "Sorrento Weekend Spring 2026 – How to Plan the Perfect Coastal Escape by Train — sorrento 2",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/sorrento-weekend-spring-2026-how-to-plan-the-perfect-coastal-escape-by-train-8019d1cf.jpg",
+          "caption": "sorrento 2"
+        },
+        {
+          "alt": "Sorrento Weekend Spring 2026 – How to Plan the Perfect Coastal Escape by Train — sorrento 5",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/sorrento-weekend-spring-2026-how-to-plan-the-perfect-coastal-escape-by-train-94d7da40.jpg",
+          "caption": "sorrento 5"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "spring-walking-escape-on-the-massa-lubrense-peninsula",
+      "title": "Spring Walking Escape on the Massa Lubrense Peninsula",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/massa-lubrense.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/spring-walking-escape-on-the-massa-lubrense-peninsula-174dbdad.jpg",
+      "images": [
+        {
+          "alt": "Spring Walking Escape on the Massa Lubrense Peninsula",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/spring-walking-escape-on-the-massa-lubrense-peninsula-174dbdad.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "Spring Walking Escape on the Massa Lubrense Peninsula — Massa Lubrense view with rocks off shore",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/spring-walking-escape-on-the-massa-lubrense-peninsula-102b9024.jpg",
+          "caption": "Massa Lubrense view with rocks off shore"
+        },
+        {
+          "alt": "Spring Walking Escape on the Massa Lubrense Peninsula — Massa Lubrense views",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/spring-walking-escape-on-the-massa-lubrense-peninsula-d4c6db46.jpg",
+          "caption": "Massa Lubrense views"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "tarifa-and-the-dunes-of-valdevaqueros-without-a-car-where-europe-meets-africa",
+      "title": "Tarifa and the Dunes of Valdevaqueros Without a Car: Where Europe Meets Africa",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/tarifa.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/tarifa-and-the-dunes-of-valdevaqueros-without-a-car-where-europe-meets-africa.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    },
+    {
+      "slug": "the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior",
+      "title": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/palatine-chapel-palermo.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-c81d1bfb.jpg",
+      "images": [
+        {
+          "alt": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/covers/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-c81d1bfb.jpg",
+          "caption": ""
+        },
+        {
+          "alt": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior — Norman Palace Animal Mosaic",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-222bd2df.jpg",
+          "caption": "Norman Palace Animal Mosaic"
+        },
+        {
+          "alt": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior — Norman Palace Mosaic Detail",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-1e11ac4f.jpg",
+          "caption": "Norman Palace Mosaic Detail"
+        },
+        {
+          "alt": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior — Norman Palace outside Palatine Chapel Palermo",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-cde0ef44.jpg",
+          "caption": "Norman Palace outside Palatine Chapel Palermo"
+        },
+        {
+          "alt": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior — Norman Palace Painting of Nymphs",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-0dd1c001.jpg",
+          "caption": "Norman Palace Painting of Nymphs"
+        },
+        {
+          "alt": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior — Norman Palace Palatine Chapel Ceiling",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-5feaee9f.jpg",
+          "caption": "Norman Palace Palatine Chapel Ceiling"
+        },
+        {
+          "alt": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior — Norman Palace Palatine Chapel Ceiling and Mosaic Detail",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-ace5b668.jpg",
+          "caption": "Norman Palace Palatine Chapel Ceiling and Mosaic Detail"
+        },
+        {
+          "alt": "The Norman Palace and Palatine Chapel, Palermo: Sicily’s Most Extraordinary Interior — Norman Palace Palatine Chapel Detail",
+          "src": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/content/the-norman-palace-and-palatine-chapel-palermo-sicily-s-most-extraordinary-interior-48e0fc21.jpg",
+          "caption": "Norman Palace Palatine Chapel Detail"
+        }
+      ],
+      "cover_also_in_images": true
+    },
+    {
+      "slug": "the-palio-dei-rioni-castiglion-fiorentino-s-fiercest-tradition",
+      "title": "The Palio dei Rioni: Castiglion Fiorentino's Fiercest Tradition",
+      "video_url": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/blog-videos/palio-dei-rioni.mp4",
+      "cover": "https://orjsrwlemsxjyexqbfqo.supabase.co/storage/v1/object/public/post-images/the-palio-dei-rioni-castiglion-fiorentino-s-fiercest-tradition.jpg",
+      "images": null,
+      "cover_also_in_images": false
+    }
+  ]
+}
