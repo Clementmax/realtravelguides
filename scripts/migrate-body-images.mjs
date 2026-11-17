@@ -1897,7 +1897,7 @@ async function main() {
       `Photograph placements (a shared photo counted once per article): ${estimate.photographPlacements}. Per-article copies would be about ${fmt(placementBytes)} because each article gets its own file.`
     );
     console.log(
-      "Bandwidth: this script still stores direct public WebP URLs in posts.body. The site resizes those photographs through next/image when the page renders. The cover remains the next/image LCP."
+      "Bandwidth: this script still stores direct public WebP URLs in posts.body. The site resizes those images through next/image when the page renders. The cover remains the next/image LCP."
     );
     console.log(
       `Rollback: restore posts.body from the JSON files in ${BACKUP_DIR}. Original Wix and /images URLs stay valid, so do not delete those originals.`

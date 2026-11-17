@@ -7,12 +7,8 @@ const BODY_IMAGE_SIZES = "(max-width: 42rem) calc(100vw - 3rem), 39rem";
 
 const dimensionList = dimensionFile as Record<string, { width: number; height: number }>;
 
-/**
- * Book-cover and decorative files under post-images/graphics/.
- * Set from a visual check of one graphic through the optimiser.
- * Photographs always use next/image.
- */
-export const optimiseBodyGraphics = false;
+/** Lettering stayed sharp at w=1280, q=75, so these graphics use next/image too. */
+export const optimiseBodyGraphics = true;
 
 type ChildNode = DefaultTreeAdapterTypes.ChildNode;
 type ElementNode = DefaultTreeAdapterTypes.Element;
