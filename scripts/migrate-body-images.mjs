@@ -47,10 +47,10 @@
  * so a photo shared by two articles is not overwritten globally. A rerun of
  * the same source URL keeps the same name.
  *
- * Body images are ordinary <img src="..."> tags. The post page renders `body`
- * as HTML, so the browser fetches the WebP itself. They are not passed
- * through next/image, and Vercel image optimisation is not used. The cover
- * is separate and is left alone.
+ * Body images are ordinary <img src="..."> tags in posts.body. This script
+ * stores the public WebP URL and does not write /_next/image into the
+ * database. The post page turns those tags into next/image at render time.
+ * The cover is separate and is left alone.
  *
  * Reads .env.local (NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY,
  * or the anon key for a read). Never prints those values.
@@ -983,6 +983,7 @@ async function putWebp(writer, storagePath, publicUrl, buffer) {
   }
   const { error } = await writer.storage.from(BUCKET).upload(storagePath, buffer, {
     contentType: "image/webp",
+    cacheControl: "31536000",
     upsert: false,
   });
   if (!error) return { uploaded: true };
@@ -1721,6 +1722,7 @@ async function main() {
       if (!apply) refuseUpload();
       const { error } = await writer.storage.from(BUCKET).upload(storagePath, buffer, {
         contentType: "image/webp",
+        cacheControl: "31536000",
         upsert: true,
       });
       if (error) throw new Error(error.message);
@@ -1895,7 +1897,7 @@ async function main() {
       `Photograph placements (a shared photo counted once per article): ${estimate.photographPlacements}. Per-article copies would be about ${fmt(placementBytes)} because each article gets its own file.`
     );
     console.log(
-      "Bandwidth: body images stay ordinary <img> tags pointing at the public WebP URL. The browser fetches that file directly. They are not added to next/image, so Vercel image optimisation is not used. The cover is unchanged and remains the next/image LCP."
+      "Bandwidth: this script still stores direct public WebP URLs in posts.body. The site resizes those photographs through next/image when the page renders. The cover remains the next/image LCP."
     );
     console.log(
       `Rollback: restore posts.body from the JSON files in ${BACKUP_DIR}. Original Wix and /images URLs stay valid, so do not delete those originals.`

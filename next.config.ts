@@ -2,6 +2,11 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    // Defaults are 640, 750, 828, 1080, 1200, 1920, 2048, 3840.
+    // 1280 keeps a desktop article column from jumping to 1920.
+    deviceSizes: [640, 750, 828, 1080, 1200, 1280, 1920, 2048, 3840],
+    // Documented long TTL for resized files. Upstream Cache-Control can only raise it.
+    minimumCacheTTL: 2678400,
     remotePatterns: [
       {
         // Wildcard rather than a hardcoded project ref, so this keeps

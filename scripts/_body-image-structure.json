@@ -1,0 +1,386 @@
+{
+  "parentCounts": {
+    "figure": 319,
+    "#document-fragment": 15
+  },
+  "imgsInAnchor": 0,
+  "figuresWithCaption": 180,
+  "figuresWithoutCaption": 148,
+  "captionExamples": [
+    {
+      "slug": "milan-to-bolzano-by-train-a-scenic-rail-journey-into-the-dolomites",
+      "imgParent": "figure",
+      "alt": "Bolzano, Italy",
+      "caption": "Bolzano, Italy",
+      "childNames": [
+        "img",
+        "p",
+        "figcaption",
+        "p"
+      ]
+    },
+    {
+      "slug": "5-easy-day-trips-from-milan-by-train",
+      "imgParent": "figure",
+      "alt": "Sunset over Lake Como",
+      "caption": "Sunset over Lake Como",
+      "childNames": [
+        "img",
+        "p",
+        "figcaption",
+        "p"
+      ]
+    },
+    {
+      "slug": "escape-the-amalfi-coast-crowds-coastal-walks-punta-campanella-by-train-bus",
+      "imgParent": "figure",
+      "alt": "View of Capri from Punta Campanella",
+      "caption": "View of Capri from Punta Campanella",
+      "childNames": [
+        "img",
+        "p",
+        "figcaption",
+        "p"
+      ]
+    }
+  ],
+  "anchorExamples": [],
+  "outsideFigure": [
+    {
+      "slug": "pisa-day-trip-by-train-from-florence-tower-squares-riverside-walks",
+      "parent": "#document-fragment",
+      "alt": ""
+    },
+    {
+      "slug": "truffle-season-in-italy-white-vs-black-where-to-hunt-taste-in-2025",
+      "parent": "#document-fragment",
+      "alt": ""
+    },
+    {
+      "slug": "ostia-antica-day-trip-ancient-roman-port-coast-by-train-from-rome",
+      "parent": "#document-fragment",
+      "alt": ""
+    },
+    {
+      "slug": "bologna-foodie-day-trip-the-best-food-markets-by-train-from-milan-or-florence",
+      "parent": "#document-fragment",
+      "alt": ""
+    },
+    {
+      "slug": "paestum-day-trip-ancient-greek-temples-mozzarella-farms-by-train-from-salerno",
+      "parent": "#document-fragment",
+      "alt": ""
+    },
+    {
+      "slug": "venice-in-autumn-at-the-biennale-2025-where-to-eat-stay-near-the-pavilions",
+      "parent": "#document-fragment",
+      "alt": ""
+    },
+    {
+      "slug": "porto-ercole-weekend-getaway-beaches-forts-from-rome-by-train-1",
+      "parent": "#document-fragment",
+      "alt": "Create a vibrant and retro-styled hero image for a website w"
+    },
+    {
+      "slug": "truffle-brunello-weekend-from-florence-san-miniato-montalcino-by-train",
+      "parent": "#document-fragment",
+      "alt": ""
+    }
+  ],
+  "focus": {
+    "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local": {
+      "count": 11,
+      "imgs": [
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/aerial-view-of-eiffel-tower-paris-in-sum-1bacc84a.webp",
+          "graphic": false,
+          "alt": "Aerial View of Eiffel Tower, Paris,  in Summer",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/the-golden-hour-the-seine-paris-55da5a5f.webp",
+          "graphic": false,
+          "alt": "The golden hour, The Seine, Paris",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/detail-from-doorway-of-notre-dame-cathed-e8aa3a4b.webp",
+          "graphic": false,
+          "alt": "Detail from Doorway of Notre Dame Cathedral, Paris",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/quiet-collonades-early-morning-in-paris-2a3b9bde.webp",
+          "graphic": false,
+          "alt": "Quiet Collonades , Early Morning in Paris",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/le-petite-palace-paris-france-7f30d8cc.webp",
+          "graphic": false,
+          "alt": "Le Petite Palace, Paris, France",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/bridge-over-seine-at-sunset-515f7119.webp",
+          "graphic": false,
+          "alt": "Bridge over Seine at Sunset",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/sacre-coeur-in-summer-paris-48e4823e.webp",
+          "graphic": false,
+          "alt": "Sacre Coeur in Summer, Paris",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/le-metro-paris-france-c187792b.webp",
+          "graphic": false,
+          "alt": "Le Metro, Paris, France",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/view-from-le-marais-paris-france-05c9919d.webp",
+          "graphic": false,
+          "alt": "View from Le Marais, Paris, France",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "a-summer-weekend-in-paris-by-train-how-to-experience-the-city-like-a-local/paris-trams-68ab366b.webp",
+          "graphic": false,
+          "alt": "Paris Trams",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "graphics/touring-france-by-train-4ef13afc.webp",
+          "graphic": true,
+          "alt": "Touring France by Train Guide Now Available on Amazon",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        }
+      ]
+    },
+    "naples-in-spring-a-foodie-weekend-by-train": {
+      "count": 2,
+      "imgs": [
+        {
+          "srcTail": "naples-in-spring-a-foodie-weekend-by-train/5f33fc-b10754452abc4a4f8d6b9939d7f11ead-2a66bf37.webp",
+          "graphic": false,
+          "alt": "Narrow cobblestone alley lined with balconies, laundry, and parked scooters",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        },
+        {
+          "srcTail": "naples-in-spring-a-foodie-weekend-by-train/5f33fc-ecfb71ae25bc42f9b0c8edf931327ff0-929a488e.webp",
+          "graphic": false,
+          "alt": "Red wall with a Via dei Tribunali sign and Mammarella pizzeria poster",
+          "chain": [
+            "figure"
+          ],
+          "pin": true
+        }
+      ]
+    },
+    "48-hours-in-florence-this-autumn": {
+      "count": 18,
+      "imgs": [
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/a-trenitalia-train-at-a-platform-in-flor-6bb6f8d6.webp",
+          "graphic": false,
+          "alt": "A Trenitalia train at a platform in Florence Santa Maria Novella station",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/the-entrance-to-aquaflor-perfumery-with-01cf0bd1.webp",
+          "graphic": false,
+          "alt": "The entrance to Aquaflor perfumery, with reed diffusers and ferns beside the wooden doors",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/a-queue-outside-schiacciateria-de-neri-o-79f47570.webp",
+          "graphic": false,
+          "alt": "A queue outside Schiacciateria de' Neri on a stone street in Florence",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/michelangelo-s-marble-bacchus-in-a-paint-6250aa85.webp",
+          "graphic": false,
+          "alt": "Michelangelo's marble Bacchus in a painted hall of the Bargello",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/a-gallery-in-the-bargello-beneath-a-blue-3fa454e3.webp",
+          "graphic": false,
+          "alt": "A gallery in the Bargello beneath a blue vault painted with gold stars and lions",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/a-gilded-wooden-figure-of-a-praying-woma-6057e8c0.webp",
+          "graphic": false,
+          "alt": "A gilded wooden figure of a praying woman in the Bargello, her shadow cast on the wall",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/classical-busts-globes-and-a-painted-pro-18527ead.webp",
+          "graphic": false,
+          "alt": "Classical busts, globes and a painted profile in an Oltrarno shop window",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/the-brancacci-chapel-with-frescoed-walls-ab5763e4.webp",
+          "graphic": false,
+          "alt": "The Brancacci Chapel, with frescoed walls and a gold Madonna and Child above the altar",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/frescoes-on-the-wall-of-the-brancacci-ch-420b63b2.webp",
+          "graphic": false,
+          "alt": "Frescoes on the wall of the Brancacci Chapel, including the Tribute Money and the Crucifixion of St Peter",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/tables-under-orange-awnings-on-the-loggi-2a9b6f44.webp",
+          "graphic": false,
+          "alt": "Tables under orange awnings on the loggia of Palazzo Guadagni, looking over Florence's rooftops",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/chefs-working-in-the-kitchen-of-vini-e-v-72dc4f4d.webp",
+          "graphic": false,
+          "alt": "Chefs working in the kitchen of Vini e Vecchi Sapori, seen through a metal screen",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/the-arno-in-the-evening-with-the-ponte-v-f24135cc.webp",
+          "graphic": false,
+          "alt": "The Arno in the evening, with the Ponte Vecchio and the tower of Palazzo Vecchio",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/quelo-bar-at-night-on-borgo-santa-croce-672782e6.webp",
+          "graphic": false,
+          "alt": "Quelo Bar at night on Borgo Santa Croce, with the church lit at the end of the street",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/a-baroque-painting-of-a-woman-holding-a-320701bf.webp",
+          "graphic": false,
+          "alt": "A Baroque painting of a woman holding a lit oil lamp and looking toward a star",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/a-visitor-in-a-red-lit-room-where-painti-5cb28058.webp",
+          "graphic": false,
+          "alt": "A visitor in a red-lit room where paintings are projected across the walls and floor",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/artemisia-gentileschi-s-susanna-and-the-e3b3a172.webp",
+          "graphic": false,
+          "alt": "Artemisia Gentileschi's Susanna and the Elders, with two men leaning over a wall above Susanna",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/a-butcher-s-counter-inside-the-covered-m-35f8c936.webp",
+          "graphic": false,
+          "alt": "A butcher's counter inside the covered market at Sant'Ambrogio",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        },
+        {
+          "srcTail": "48-hours-in-florence-this-autumn/two-people-rowing-on-the-arno-beside-the-55a5d7d0.webp",
+          "graphic": false,
+          "alt": "Two people rowing on the Arno beside the Ponte Vecchio",
+          "chain": [
+            "figure"
+          ],
+          "pin": false
+        }
+      ]
+    }
+  }
+}

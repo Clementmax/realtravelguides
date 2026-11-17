@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import PostCard from "@/components/PostCard";
+import { BodyImage, PostBody } from "@/lib/post-body";
 import { getPost, getPosts, getCategoryLabelMap } from "@/lib/queries";
 import { selectRelatedPosts } from "@/lib/related-posts";
 import { ManagedPostImage } from "@/lib/types";
@@ -262,7 +263,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
       <div className="post-content mt-10">
         {/<[a-z][\s\S]*>/i.test(post.body) ? (
-          <div dangerouslySetInnerHTML={{ __html: renderedBody }} />
+          <PostBody html={renderedBody} />
         ) : (
           post.body.split("\n\n").map((para, i, paras) => {
             const fractions = evenFractions(managedForPlainText.length);
@@ -277,7 +278,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 <p>{para}</p>
                 {image ? (
                   <figure className="my-8">
-                    <img src={image.src} alt={image.alt || ""} loading="lazy" decoding="async" className="h-auto w-full rounded-md" />
+                    <BodyImage
+                      src={image.src}
+                      alt={image.alt || ""}
+                      className="h-auto w-full rounded-md"
+                    />
                     {image.caption ? <figcaption className="mt-2 text-sm text-stone-light">{image.caption}</figcaption> : null}
                   </figure>
                 ) : null}

@@ -228,7 +228,11 @@ async function main() {
       const storagePath = `${folder}/${storageKeyPart(group.slug)}-${randomUUID().slice(0, 8)}.jpg`;
       const { error: uploadError } = await supabase.storage
         .from(POST_IMAGES_BUCKET)
-        .upload(storagePath, resized, { contentType: "image/jpeg", upsert: true });
+        .upload(storagePath, resized, {
+          contentType: "image/jpeg",
+          cacheControl: "31536000",
+          upsert: true,
+        });
       if (uploadError) throw uploadError;
       const { data: urlData } = supabase.storage.from(POST_IMAGES_BUCKET).getPublicUrl(storagePath);
 

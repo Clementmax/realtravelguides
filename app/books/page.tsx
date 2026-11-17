@@ -96,6 +96,7 @@ export default async function BooksPage() {
                   src={book.cover}
                   alt={`${book.title} book cover`}
                   fill
+                  sizes="(max-width: 767px) calc(100vw - 3rem), 280px"
                   className="object-cover"
                 />
               </a>

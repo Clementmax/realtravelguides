@@ -382,7 +382,11 @@ async function uploadCoverImage(supabase, url, storagePath) {
 
   const { error } = await supabase.storage
     .from(POST_IMAGES_BUCKET)
-    .upload(storagePath, buffer, { contentType: "image/jpeg", upsert: true });
+    .upload(storagePath, buffer, {
+      contentType: "image/jpeg",
+      cacheControl: "31536000",
+      upsert: true,
+    });
   if (error) throw error;
 
   const { data } = supabase.storage.from(POST_IMAGES_BUCKET).getPublicUrl(storagePath);

@@ -12,7 +12,15 @@ const BOOK_DESCRIPTIONS: Record<string, string> = {
     "From Andalucía and the Mediterranean to the Basque Country and Galicia, discover Spain’s great cities, coastlines and hidden gems by rail.",
 };
 
-export default function BookCard({ book }: { book: Book }) {
+const BOOK_CARD_SIZES = "(max-width: 768px) 45vw, 280px";
+
+export default function BookCard({
+  book,
+  sizes = BOOK_CARD_SIZES,
+}: {
+  book: Book;
+  sizes?: string;
+}) {
   const description = BOOK_DESCRIPTIONS[book.title] ?? book.tagline;
 
   return (
@@ -28,6 +36,7 @@ export default function BookCard({ book }: { book: Book }) {
             src={book.cover}
             alt={`${book.title} book cover`}
             fill
+            sizes={sizes}
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>

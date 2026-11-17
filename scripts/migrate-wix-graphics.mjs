@@ -986,6 +986,7 @@ async function optimiseAndStore(supabase, supabaseUrl, group, progress) {
   } else {
     const { error } = await supabase.storage.from(BUCKET).upload(storagePath, encoded.buffer, {
       contentType: encoded.contentType,
+      cacheControl: "31536000",
       upsert: false,
     });
     if (error) {
