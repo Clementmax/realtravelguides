@@ -1,0 +1,19 @@
+HTTP/1.1 200 OK
+Accept-Ranges: bytes
+Access-Control-Allow-Origin: *
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Disposition: inline
+Content-Length: 183668
+Content-Type: text/html; charset=utf-8
+Date: Wed, 18 Nov 2026 18:59:56 GMT
+Etag: "9707f1306287ea5143f64351b9d5fb79"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000
+Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+X-Matched-Path: /post/munich-to-milan-and-rome-by-frecciarossa
+X-Nextjs-Prerender: 1
+X-Nextjs-Stale-Time: 300
+X-Vercel-Cache: PRERENDER
+X-Vercel-Id: lhr1::vztvx-1795028396061-c61b3c4abc50
+
